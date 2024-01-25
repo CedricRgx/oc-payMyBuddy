@@ -17,7 +17,7 @@ public class AppAccount {
     private double balance;
 
     @OneToOne
-    @JoinColumn(name="user_id",
+    @JoinColumn(name="app_owner_id",
             unique = true,
             nullable = false) //each AppAccount is linked to only one User, and it value cannot be nullable
     private User user;
