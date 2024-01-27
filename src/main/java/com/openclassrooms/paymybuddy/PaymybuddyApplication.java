@@ -33,7 +33,7 @@ public class PaymybuddyApplication implements CommandLineRunner {
 
 	@Override
 	@Transactional
-	public void run(String... args) throws Exception {
+	public void run(String... args) {
 
 		Iterable<User> users = userService.getUsers();
 		users.forEach(user -> System.out.println(user.getFirstname()));
