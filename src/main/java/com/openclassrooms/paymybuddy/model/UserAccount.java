@@ -4,7 +4,9 @@ import io.micrometer.core.annotation.Counted;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -14,8 +16,9 @@ import java.time.LocalDateTime;
  */
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name="user_account")
-public class UserAccount {
+public class UserAccount implements Serializable {
 
     /**
      * The unique identifier for the account.
@@ -23,7 +26,7 @@ public class UserAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_account_id")
-    private int userAccountId;
+    private Long userAccountId;
 
     /**
      * The email of the user (associated with account).
@@ -50,21 +53,6 @@ public class UserAccount {
     private Boolean isActive;
 
     /**
-     * The id of the user.
-     */
-    @OneToOne
-    @JoinColumn(name="user_id",
-            unique = true,
-            nullable = false) //each UserAccount is linked to only one User, and it value cannot be nullable
-    private User user;
-
-    /**
-     * Default constructor
-     */
-    public UserAccount() {
-    }
-
-    /**
      * Constructor with essential fields.
      *
      * @param email The email of the user
@@ -79,7 +67,6 @@ public class UserAccount {
         this.password = password;
         this.lastConnectionDate = lastConnectionDate;
         this.isActive = isActive;
-        this.user = user;
     }
 
 }

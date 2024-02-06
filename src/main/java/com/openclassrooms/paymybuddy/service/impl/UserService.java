@@ -1,7 +1,8 @@
-package com.openclassrooms.paymybuddy.service;
+package com.openclassrooms.paymybuddy.service.impl;
 
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
+import com.openclassrooms.paymybuddy.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import java.util.Optional;
  */
 @Service
 @Slf4j
-public class UserService {
+public class UserService implements IUserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -29,11 +30,12 @@ public class UserService {
     }
 
     /**
-     * Retrieves a user by their ID.
+     * Retrieves a user by its ID.
      * @param id The ID of the user to retrieve.
      * @return An Optional containing the user, or an empty Optional if not found.
      */
-    public Optional<User> getUserById(int id){
+    public Optional<User> getUserById(Long id){
+        log.info("Retrieving an user by its id");
         return userRepository.findById(id);
     }
 
@@ -43,16 +45,16 @@ public class UserService {
      * @return The added User object.
      */
     public User addUser(User user){
+        log.info("Adding an user");
         return userRepository.save(user);
     }
-
 
     /**
      * Deletes a user by their ID.
      * @param id The ID of the user to be deleted.
      */
-    public void deleteUserById(int id){
+    public void deleteUserById(Long id){
+        log.info("Deleting an user");
         userRepository.deleteById(id);
     }
-
 }

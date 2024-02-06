@@ -4,7 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -24,13 +26,16 @@ class UserTest {
         userTest = User.builder()
                 .firstname("Francis")
                 .lastname("Bacon")
+                .birthdate(LocalDate.of(1985, 9, 10))
+                .phone("0987654321")
+                .address("Test Street, 99999 VilleTest")
                 .build();
     }
 
     @Test
     public void setAndGetUserIdTest(){
         log.info("Running setAndGetUserIdTest() test in UserTest class");
-        int valueIdToTest = 1;
+        Long valueIdToTest = 1L;
         userTest.setUserId(valueIdToTest);
         assertEquals(valueIdToTest, userTest.getUserId());
     }
@@ -77,13 +82,13 @@ class UserTest {
         assertEquals(friends, userTest.getFriends());
     }
 
-    @Test
-    public void sentTransfertsAssociationTest() {
-        log.info("Running sentTransfertsAssociationTest() test in UserTest class");
-        List<Transfert> sentTransferts = Arrays.asList(new Transfert(), new Transfert());
-        userTest.setSentTransferts(sentTransferts);
-        assertEquals(sentTransferts, userTest.getSentTransferts());
-    }
+//    @Test
+//    public void sentTransfertsAssociationTest() {
+//        log.info("Running sentTransfertsAssociationTest() test in UserTest class");
+//        List<Transfert> sentTransferts = Arrays.asList(new Transfert(), new Transfert());
+//        userTest.setSentTransferts(sentTransferts);
+//        assertEquals(sentTransferts, userTest.getSentTransferts());
+//    }
 
     @Test
     public void receivedTransfertsAssociationTest() {
@@ -94,13 +99,13 @@ class UserTest {
     }
 
 
-    @Test
-    public void depositsAssociationTest() {
-        log.info("Running depositsAssociationTest() test in UserTest class");
-        List<Deposit> deposits = Arrays.asList(new Deposit(), new Deposit());
-        userTest.setDeposits(deposits);
-        assertEquals(deposits, userTest.getDeposits());
-    }
+//    @Test
+//    public void depositsAssociationTest() {
+//        log.info("Running depositsAssociationTest() test in UserTest class");
+//        List<Deposit> deposits = Arrays.asList(new Deposit(), new Deposit());
+//        userTest.setDeposits(deposits);
+//        assertEquals(deposits, userTest.getDeposits());
+//    }
 
     @Test
     public void equalsSameInstanceTest() {

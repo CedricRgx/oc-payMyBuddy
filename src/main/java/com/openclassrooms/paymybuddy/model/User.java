@@ -3,9 +3,12 @@ package com.openclassrooms.paymybuddy.model;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Represents a user in the PayMyBuddy application.
@@ -14,8 +17,9 @@ import java.util.Objects;
  */
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name="user")
-public class User {
+public class User implements Serializable {
 
     /**
      * The unique identifier for the user.
@@ -23,34 +27,50 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_id")
-    private int userId;
+    private Long userId;
 
     /**
-     * The first name of the user.
+     * The firstname of the user.
      */
     @Column(name="firstname")
     private String firstname;
 
     /**
-     * The last name of the user.
+     * The lastname of the user.
      */
     @Column(name="lastname")
     private String lastname;
 
     /**
+     * The birthdate of the user.
+     */
+    @Column(name="birthdate")
+    private LocalDate birthdate;
+
+    /**
+     * The phone of the user.
+     */
+    @Column(name="phone")
+    private String phone;
+
+    /**
+     * The address of the user.
+     */
+    @Column(name="address")
+    private String address;
+
+    /**
      * The account of the user.
      */
-    @OneToOne(mappedBy = "user",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+    @OneToOne
+    @JoinColumn(name="user_account_id")
     private UserAccount userAccount;
 
     /**
      * The app account of the user.
      */
-    @OneToOne(mappedBy = "appOwner",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+    @OneToOne
+    @JoinColumn(name="app_account_id")
     private AppAccount appAccount;
 
     /**
@@ -58,39 +78,24 @@ public class User {
      */
     @ManyToMany
     @JoinTable(name="assoc_user_friend",
-            joinColumns = @JoinColumn(name="user_id"),
-            inverseJoinColumns = @JoinColumn(name="friend_id"))
+            joinColumns = @JoinColumn(name="user_id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name="friend_id", nullable = false))
     private List<User> friends;
 
     /**
      * The list of transfers sent by the user.
      */
-    @OneToMany(mappedBy = "sender",
-            cascade = CascadeType.ALL,
+    @OneToMany(mappedBy = "author",
             orphanRemoval = true)
-    private List<Transfert> sentTransferts;
+    private List<Deposit> sourceTransac;
 
     /**
      * The list of transfers received by the user.
      */
     @OneToMany(mappedBy = "recipient",
-            cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<Transfert> receivedTransferts;
 
-    /**
-     * The list of deposits made by the user.
-     */
-    @OneToMany(mappedBy = "depositor",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
-    private List<Deposit> deposits;
-
-    /**
-     * Default constructor
-     */
-    public User() {
-    }
 
     /**
      * Constructor with essential fields.
@@ -99,9 +104,12 @@ public class User {
      * @param lastname  The last name of the user
      */
     @Builder
-    public User(String firstname, String lastname){
+    public User(String firstname, String lastname, LocalDate birthdate, String phone, String address){
         this.firstname = firstname;
         this.lastname = lastname;
+        this.birthdate = birthdate;
+        this.phone = phone;
+        this.address = address;
     }
 
 }

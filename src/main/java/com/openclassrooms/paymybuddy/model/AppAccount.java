@@ -3,7 +3,9 @@ package com.openclassrooms.paymybuddy.model;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -13,8 +15,9 @@ import java.time.LocalDateTime;
  */
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name="app_account")
-public class AppAccount {
+public class AppAccount implements Serializable {
 
     /**
      * The unique identifier for the app account.
@@ -22,28 +25,13 @@ public class AppAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="app_account_id")
-    private int appAccountId;
+    private Long appAccountId;
 
     /**
      * The balance of the transfert.
      */
     @Column(name="balance")
     private double balance;
-
-    /**
-     * The identifier of the app owner.
-     */
-    @OneToOne
-    @JoinColumn(name="app_owner_id",
-            unique = true,
-            nullable = false) //each AppAccount is linked to only one User, and it value cannot be nullable
-    private User appOwner;
-
-    /**
-     * Default constructor
-     */
-    public AppAccount() {
-    }
 
     /**
      * Constructor with essential fields.
@@ -54,6 +42,5 @@ public class AppAccount {
     @Builder
     public AppAccount(double balance, User appOwner){
         this.balance = balance;
-        this.appOwner = appOwner;
     }
 }
