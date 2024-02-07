@@ -59,10 +59,9 @@ public class UserAccount implements Serializable {
      * @param password  The password of the user
      * @param lastConnectionDate The last date of connection on the application
      * @param isActive The status of the account
-     * @param user The user
      */
     @Builder
-    public UserAccount(String email, String password, LocalDateTime lastConnectionDate, Boolean isActive, User user){
+    public UserAccount(String email, String password, LocalDateTime lastConnectionDate, Boolean isActive){
         this.email = email;
         this.password = password;
         this.lastConnectionDate = lastConnectionDate;

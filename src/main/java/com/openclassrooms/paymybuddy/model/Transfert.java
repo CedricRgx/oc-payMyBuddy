@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import org.springframework.cglib.core.Local;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -14,6 +17,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @Entity
+@SuperBuilder
 @NoArgsConstructor
 @Table(name="transfert")
 public class Transfert extends Transaction {

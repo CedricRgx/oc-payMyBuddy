@@ -57,6 +57,22 @@ class UserTest {
     }
 
     @Test
+    public void setAndGetPhoneTest(){
+        log.info("Running setAndGetPhoneTest() test in UserTest class");
+        valueToTest = "0000000001";
+        userTest.setPhone(valueToTest);
+        assertEquals(valueToTest, userTest.getPhone());
+    }
+
+    @Test
+    public void setAndGetAddressTest(){
+        log.info("Running setAndGetAddressTest() test in UserTest class");
+        valueToTest = "11 rue des Huns, 67009 Attila";
+        userTest.setAddress(valueToTest);
+        assertEquals(valueToTest, userTest.getAddress());
+    }
+
+    @Test
     public void setAndGetAppAccountTest(){
         log.info("Running setAndGetAppAccountTest() test in UserTest class");
         User user = new User();
