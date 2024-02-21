@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -36,11 +39,18 @@ public class PaymybuddyApplication implements CommandLineRunner {
 	@Override
 	@Transactional
 	public void run(String... args) {
-
+		System.out.println("PayMyBuddy UP !!");
+		/*
 		Iterable<User> users = userService.getUsers();
 		users.forEach(user -> System.out.println(user.getFirstname()));
 
-		User userToAdd = new User("Thisfirstname", "Lastname", LocalDate.of(2024, 06, 06), "555-555-555", "Toto street, 67009 Ville");
+		User userToAdd = User.builder()
+				.firstname("Francis")
+				.lastname("Bacon")
+				.birthdate(LocalDate.of(1985, 9, 10))
+				.phone("0987654321")
+				.address("Test Street, 99999 VilleTest")
+				.build();
 		userService.addUser(userToAdd);
 
 		Iterable<User> usersWithUseradded = userService.getUsers();
@@ -63,6 +73,6 @@ public class PaymybuddyApplication implements CommandLineRunner {
 
 		Iterable<Transfert> transferts = transfertService.getTransferts();
 		transferts.forEach(transfert -> System.out.println(transfert.getAmount()));
-
+*/
 	}
 }

@@ -34,7 +34,7 @@ class AppAccountTest {
     }
 
     @Test
-    public void setAndGetAppAccountIdTest() {
+    public void testSetAndGetAppAccountId() {
         log.info("Running setAndGetAppAccountIdTest() test in AppAccountTest class");
         Long valueIdToTest = 2L;
         appAccountTest.setAppAccountId(valueIdToTest);
@@ -42,7 +42,7 @@ class AppAccountTest {
     }
 
     @Test
-    public void setAndGetBalance() {
+    public void testSetAndGetBalance() {
         log.info("Running setAndGetBalance() test in AppAccountTest class");
         double valueDoubleToTest = 99.99;
         appAccountTest.setBalance(valueDoubleToTest);
@@ -50,7 +50,7 @@ class AppAccountTest {
     }
 
     @Test
-    public void equalsSameInstanceTest() {
+    public void testEqualsSameInstance() {
         log.info("Running equalsSameInstanceTest() test in AppAccountTest class");
         AppAccount appAccount = AppAccount.builder()
                 .balance(100.0)
@@ -60,7 +60,7 @@ class AppAccountTest {
     }
 
     @Test
-    public void equalsSameValuesTest() {
+    public void testEqualsSameValues() {
         log.info("Running equalsSameValuesTest() test in AppAccountTest class");
         AppAccount appAccount1 = AppAccount.builder()
                 .balance(100.0)
@@ -74,7 +74,7 @@ class AppAccountTest {
     }
 
     @Test
-    public void equalsDifferentValuesTest() {
+    public void testEqualsDifferentValues() {
         log.info("Running equalsDifferentValuesTest() test in AppAccountTest class");
         AppAccount appAccount1 = AppAccount.builder()
                 .balance(100.0)
@@ -88,7 +88,7 @@ class AppAccountTest {
     }
 
     @Test
-    public void equalsNullObjectTest() {
+    public void testEqualsNullObject() {
         log.info("Running equalsNullObjectTest() test in AppAccountTest class");
         AppAccount appAccount = AppAccount.builder()
                 .balance(100.0)
@@ -98,7 +98,7 @@ class AppAccountTest {
     }
 
     @Test
-    public void equalsDifferentClassTest() {
+    public void testEqualsDifferentClass() {
         log.info("Running equalsDifferentClassTest() test in AppAccountTest class");
         AppAccount appAccount = AppAccount.builder()
                 .balance(100.0)
@@ -109,7 +109,7 @@ class AppAccountTest {
     }
 
     @Test
-    public void hashCodeTest() {
+    public void testHashCode() {
         log.info("Running hashCodeTest() test in AppAccountTest class");
         AppAccount appAccount1 = AppAccount.builder()
                 .balance(123.00)
@@ -128,7 +128,7 @@ class AppAccountTest {
     }
 
     @Test
-    public void toStringTest() {
+    public void testToString() {
         log.info("Running toStringTest() test in AppAccountTest class");
         AppAccount appAccount = AppAccount.builder()
                 .balance(123.00)

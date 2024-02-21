@@ -32,7 +32,7 @@ public class UserAccountService implements IUserAccountService {
      * @param id The ID of the user account to retrieve.
      * @return An Optional containing the user account, or an empty Optional if not found.
      */
-    public Optional<UserAccount> getUserAccountsById(Long id){
+    public Optional<UserAccount> getUserAccountById(Long id){
         log.info("Retrieving an user account by its id");
         return userAccountRepository.findById(id);
     }
@@ -55,4 +55,10 @@ public class UserAccountService implements IUserAccountService {
         log.info("Deleting an user account");
         userAccountRepository.deleteById(id);
     }
+
+    public UserAccount findByEmail(String email){
+        log.info("Found an user account by its email address");
+        return userAccountRepository.findByEmail(email);
+    }
+
 }

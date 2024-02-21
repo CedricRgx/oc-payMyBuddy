@@ -53,19 +53,27 @@ public class UserAccount implements Serializable {
     private Boolean isActive;
 
     /**
+     * The role of the user
+     */
+    @Column(name="role")
+    private String role;
+
+    /**
      * Constructor with essential fields.
      *
      * @param email The email of the user
      * @param password  The password of the user
      * @param lastConnectionDate The last date of connection on the application
      * @param isActive The status of the account
+     * @param role The role of the user
      */
     @Builder
-    public UserAccount(String email, String password, LocalDateTime lastConnectionDate, Boolean isActive){
+    public UserAccount(String email, String password, LocalDateTime lastConnectionDate, Boolean isActive, String role){
         this.email = email;
         this.password = password;
         this.lastConnectionDate = lastConnectionDate;
         this.isActive = isActive;
+        this.role = role;
     }
 
 }

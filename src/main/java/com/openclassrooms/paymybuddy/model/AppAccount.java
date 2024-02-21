@@ -36,8 +36,8 @@ public class AppAccount implements Serializable {
     /**
      * Constructor with essential fields.
      *
-     * @param balance The amount of the transfert
-     * @param appOwner The date of transaction
+     * @param balance The balance of the account
+     * @param appOwner The owner of app account
      */
     @Builder
     public AppAccount(double balance, User appOwner){

@@ -30,7 +30,7 @@ class DepositTest {
     }
 
     @Test
-    public void setAndGetTransactionIdTest() {
+    public void testSetAndGetTransactionId() {
         log.info("Running setAndGetTransactionIdTest() test in DepositTest class");
         Long valueIdToTest = 2L;
         depositTest.setTransactionId(valueIdToTest);
@@ -38,7 +38,7 @@ class DepositTest {
     }
 
     @Test
-    public void setAndGetAmountTest() {
+    public void testSetAndGetAmount() {
         log.info("Running setAndGetAmountTest() test in DepositTest class");
         double valueDoubleToTest = 99.99;
         depositTest.setAmount(valueDoubleToTest);
@@ -46,7 +46,15 @@ class DepositTest {
     }
 
     @Test
-    public void setAndGetTransactionDateTest() {
+    public void testSetAndGetDescription() {
+        log.info("Running setAndGetDescriptionTest() test in DepositTest class");
+        String valueToTest = "Nouvelle description";
+        depositTest.setDescription(valueToTest);
+        assertEquals(valueToTest, depositTest.getDescription());
+    }
+
+    @Test
+    public void testSetAndGetTransactionDate() {
         log.info("Running setAndGetTransactionDateTest() test in DepositTest class");
         LocalDateTime valueDateToTest = LocalDateTime.of(2024,1 ,24, 20,20,20, 1);
         depositTest.setTransactionDate(valueDateToTest);
@@ -54,7 +62,7 @@ class DepositTest {
     }
 
     @Test
-    public void setAndGetFeeTest() {
+    public void testSetAndGetFee() {
         log.info("Running setAndGetFeeTest() test in DepositTest class");
         double valueDoubleToTest = 99.99;
         depositTest.setFee(valueDoubleToTest);
@@ -62,7 +70,7 @@ class DepositTest {
     }
 
     @Test
-    public void setAndGetAuthorTest() {
+    public void testSetAndGetAuthor() {
         log.info("Running setAndGetAuthorTest() test in DepositTest class");
         User depositorToTest = User.builder()
                 .firstname("Jean-Baptise")
@@ -76,7 +84,7 @@ class DepositTest {
     }
 
     @Test
-    public void equalsSameInstanceTest() {
+    public void testEqualsSameInstance() {
         log.info("Running equalsSameInstanceTest() test in DepositTest class");
         Deposit deposit = Deposit.builder()
                 .amount(42.3)
@@ -89,7 +97,7 @@ class DepositTest {
     }
 
     @Test
-    public void equalsSameValuesTest() {
+    public void testEqualsSameValues() {
         log.info("Running equalsSameValuesTest() test in DepositTest class");
         Deposit deposit1 = Deposit.builder()
                 .amount(42.3)
@@ -129,7 +137,7 @@ class DepositTest {
 //    }
 
     @Test
-    public void equalsNullObjectTest() {
+    public void testEqualsNullObject() {
         log.info("Running equalsNullObjectTest() test in DepositTest class");
         Deposit deposit = Deposit.builder()
                 .amount(42.3)
@@ -142,7 +150,7 @@ class DepositTest {
     }
 
     @Test
-    public void equalsDifferentClassTest() {
+    public void testEqualsDifferentClass() {
         log.info("Running equalsDifferentClassTest() test in DepositTest class");
         Deposit deposit = Deposit.builder()
                 .amount(42.3)

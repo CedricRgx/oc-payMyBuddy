@@ -32,7 +32,7 @@ public class TransfertService implements ITransfertService {
      * @param id The ID of the Transfert to retrieve.
      * @return An Optional containing the transfert, or an empty Optional if not found.
      */
-    public Optional<Transfert> getTransfertsById(Long id){
+    public Optional<Transfert> getTransfertById(Long id){
         log.info("Retrieving an transfert by its id");
         return transfertRepository.findById(id);
     }

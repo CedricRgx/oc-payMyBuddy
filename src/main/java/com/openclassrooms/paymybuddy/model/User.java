@@ -101,7 +101,10 @@ public class User implements Serializable {
      * Constructor with essential fields.
      *
      * @param firstname The first name of the user
-     * @param lastname  The last name of the user
+     * @param lastname The last name of the user
+     * @param birthdate The birthdate of the user
+     * @param phone The phone of the user
+     * @param address The address of the user
      */
     @Builder
     public User(String firstname, String lastname, LocalDate birthdate, String phone, String address){

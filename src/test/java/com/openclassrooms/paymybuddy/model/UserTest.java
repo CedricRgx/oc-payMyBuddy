@@ -33,7 +33,7 @@ class UserTest {
     }
 
     @Test
-    public void setAndGetUserIdTest(){
+    public void testSetAndGetUserId(){
         log.info("Running setAndGetUserIdTest() test in UserTest class");
         Long valueIdToTest = 1L;
         userTest.setUserId(valueIdToTest);
@@ -41,7 +41,7 @@ class UserTest {
     }
 
     @Test
-    public void setAndGetFirstnameTest(){
+    public void testSetAndGetFirstname(){
         log.info("Running setAndGetFirstnameTest() test in UserTest class");
         valueToTest = "John";
         userTest.setFirstname(valueToTest);
@@ -49,7 +49,7 @@ class UserTest {
     }
 
     @Test
-    public void setAndGetLastnameTest(){
+    public void testSetAndGetLastname(){
         log.info("Running setAndGetLastnameTest() test in UserTest class");
         valueToTest = "Newton";
         userTest.setLastname(valueToTest);
@@ -57,7 +57,7 @@ class UserTest {
     }
 
     @Test
-    public void setAndGetPhoneTest(){
+    public void testSetAndGetPhone(){
         log.info("Running setAndGetPhoneTest() test in UserTest class");
         valueToTest = "0000000001";
         userTest.setPhone(valueToTest);
@@ -65,7 +65,7 @@ class UserTest {
     }
 
     @Test
-    public void setAndGetAddressTest(){
+    public void testSetAndGetAddress(){
         log.info("Running setAndGetAddressTest() test in UserTest class");
         valueToTest = "11 rue des Huns, 67009 Attila";
         userTest.setAddress(valueToTest);
@@ -73,7 +73,15 @@ class UserTest {
     }
 
     @Test
-    public void setAndGetAppAccountTest(){
+    public void testSetAndGetBirthdate(){
+        log.info("Running setAndGetBirthdateTest() test in UserTest class");
+        LocalDate dateToTest = LocalDate.of(1980, 7, 5);
+        userTest.setBirthdate(dateToTest);
+        assertEquals(dateToTest, userTest.getBirthdate());
+    }
+
+    @Test
+    public void testSetAndGetAppAccount(){
         log.info("Running setAndGetAppAccountTest() test in UserTest class");
         User user = new User();
         AppAccount appAccountTest = new AppAccount();
@@ -83,7 +91,7 @@ class UserTest {
     }
 
     @Test
-    public void userAccountAssociationTest() {
+    public void testUserAccountAssociation() {
         log.info("Running userAccountAssociationTest() test in UserTest class");
         UserAccount userAccount = new UserAccount();
         userTest.setUserAccount(userAccount);
@@ -91,7 +99,7 @@ class UserTest {
     }
 
     @Test
-    public void friendsAssociationTest() {
+    public void testFriendsAssociation() {
         log.info("Running friendsAssociationTest() test in UserTest class");
         List<User> friends = Arrays.asList(new User(), new User());
         userTest.setFriends(friends);
@@ -107,7 +115,7 @@ class UserTest {
 //    }
 
     @Test
-    public void receivedTransfertsAssociationTest() {
+    public void testReceivedTransfertsAssociation() {
         log.info("Running receivedTransfertsAssociationTest() test in UserTest class");
         List<Transfert> receivedTransferts = Arrays.asList(new Transfert(), new Transfert());
         userTest.setReceivedTransferts(receivedTransferts);
@@ -124,14 +132,14 @@ class UserTest {
 //    }
 
     @Test
-    public void equalsSameInstanceTest() {
+    public void testEqualsSameInstance() {
         log.info("Running equalsSameInstanceTest() test in UserTest class");
         User user = User.builder().firstname("John").lastname("Newton").build();
         assertTrue(user.equals(user));
     }
 
     @Test
-    public void equalsSameValuesTest() {
+    public void testEqualsSameValues() {
         log.info("Running equalsSameValuesTest() test in UserTest class");
         User user1 = User.builder().firstname("John").lastname("Newton").build();
         User user2 = User.builder().firstname("John").lastname("Newton").build();
@@ -139,7 +147,7 @@ class UserTest {
     }
 
     @Test
-    public void equalsDifferentValuesTest() {
+    public void testEqualsDifferentValues() {
         log.info("Running equalsDifferentValuesTest() test in UserTest class");
         User user1 = User.builder().firstname("John").lastname("Newton").build();
         User user2 = User.builder().firstname("Jean").lastname("Newton").build();
@@ -147,14 +155,14 @@ class UserTest {
     }
 
     @Test
-    public void equalsNullObjectTest() {
+    public void testEqualsNullObject() {
         log.info("Running equalsNullObjectTest() test in UserTest class");
         User user = User.builder().firstname("John").lastname("Newton").build();
         assertFalse(user.equals(null));
     }
 
     @Test
-    public void equalsDifferentClassTest() {
+    public void TestEqualsDifferentClass() {
         log.info("Running equals_DifferentClassTest() test in UserTest class");
         User user = User.builder().firstname("John").lastname("Newton").build();
         String differentClassObject = "This is not an User object";
@@ -162,7 +170,7 @@ class UserTest {
     }
 
     @Test
-    public void toStringTest() {
+    public void testToString() {
         log.info("Running toStringTest() test in UserTest class");
         User user = User.builder().firstname("Francis").lastname("Bacon").build();
         assertThat(user.toString())
@@ -173,7 +181,7 @@ class UserTest {
     }
 
     @Test
-    public void equalsTest() {
+    public void testEquals() {
         log.info("Running equalsTest() test in UserTest class");
         User user1 = User.builder().firstname("John").lastname("Newton").build();
         User user2 = User.builder().firstname("John").lastname("Newton").build();

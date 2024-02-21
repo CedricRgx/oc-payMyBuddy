@@ -47,7 +47,7 @@ class TransfertTest {
     }
 
     @Test
-    public void setAndGetTransfertIdTest() {
+    public void testSetAndGetTransfertId() {
         log.info("Running setAndGetTransfertIdTest() test in TransfertTest class");
         Long valueIdToTest = 2L;
         transfertTest.setTransactionId(valueIdToTest);
@@ -55,7 +55,7 @@ class TransfertTest {
     }
 
     @Test
-    public void setAndGetAmountTest() {
+    public void testSetAndGetAmount() {
         log.info("Running setAndGetAmountTest() test in TransfertTest class");
         double valueDoubleToTest = 99.99;
         transfertTest.setAmount(valueDoubleToTest);
@@ -63,7 +63,15 @@ class TransfertTest {
     }
 
     @Test
-    public void setAndGetTransactionDateTest() {
+    public void testSetAndGetDescription() {
+        log.info("Running setAndGetDescriptionTest() test in TransfertTest class");
+        String valueToTest = "Nouvelle description";
+        transfertTest.setDescription(valueToTest);
+        assertEquals(valueToTest, transfertTest.getDescription());
+    }
+
+    @Test
+    public void testSetAndGetTransactionDate() {
         log.info("Running setAndGetTransactionDateTest() test in TransfertTest class");
         LocalDateTime valueDateToTest = LocalDateTime.of(2024,1 ,24, 20,20,20, 1);
         transfertTest.setTransactionDate(valueDateToTest);
@@ -71,7 +79,7 @@ class TransfertTest {
     }
 
     @Test
-    public void setAndGetFeeTest() {
+    public void testSetAndGetFee() {
         log.info("Running setAndGetFeeTest() test in TransfertTest class");
         double valueDoubleToTest = 99.99;
         transfertTest.setFee(valueDoubleToTest);
@@ -79,7 +87,7 @@ class TransfertTest {
     }
 
     @Test
-    public void setAndGetAuthorTest() {
+    public void testSetAndGetAuthor() {
         log.info("Running setAndGetAuthorTest() test in TransfertTest class");
         User authorToTest = User.builder()
                 .firstname("Renée")
@@ -93,7 +101,7 @@ class TransfertTest {
     }
 
     @Test
-    public void setAndGetRecipientTest() {
+    public void testSetAndGetRecipient() {
         log.info("Running setAndGetRecipientTest() test in TransfertTest class");
         User recipientToTest = User.builder()
                 .firstname("Renée")
@@ -107,7 +115,7 @@ class TransfertTest {
     }
 
     @Test
-    public void equalsSameInstanceTest() {
+    public void testEqualsSameInstance() {
         log.info("Running equalsSameInstanceTest() test in TransfertTest class");
         Transfert transfert = Transfert.builder()
                 .amount(123.00)
@@ -121,7 +129,7 @@ class TransfertTest {
     }
 
     @Test
-    public void equalsSameValuesTest() {
+    public void testEqualsSameValues() {
         log.info("Running equalsSameValuesTest() test in TransfertTest class");
         Transfert transfert1 = Transfert.builder()
                 .amount(123.00)
@@ -165,7 +173,7 @@ class TransfertTest {
 //    }
 
     @Test
-    public void equalsNullObjectTest() {
+    public void testEqualsNullObject() {
         log.info("Running equalsNullObjectTest() test in TransfertTest class");
         Transfert transfert = Transfert.builder()
                 .amount(123.00)
@@ -179,7 +187,7 @@ class TransfertTest {
     }
 
     @Test
-    public void equalsDifferentClassTest() {
+    public void testEqualsDifferentClass() {
         log.info("Running equalsDifferentClassTest() test in TransfertTest class");
         Transfert transfert = Transfert.builder()
                 .amount(123.00)

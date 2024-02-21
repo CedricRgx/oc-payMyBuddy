@@ -36,7 +36,7 @@ class UserAccountTest {
     }
 
     @Test
-    public void setAndGetUserAccountId() {
+    public void TestSetAndGetUserAccountId() {
         log.info("Running setAndGetUserAccountId() test in UserAccountTest class");
         Long valueIdToTest = 1L;
         userAccountTest.setUserAccountId(valueIdToTest);
@@ -44,7 +44,7 @@ class UserAccountTest {
     }
 
     @Test
-    public void setAndGetEmail() {
+    public void testSetAndGetEmail() {
         log.info("Running setAndGetEmail() test in UserAccountTest class");
         valueToTest = "mail@emmail.com";
         userAccountTest.setEmail(valueToTest);
@@ -52,7 +52,7 @@ class UserAccountTest {
     }
 
     @Test
-    public void setAndGetPassword() {
+    public void testSetAndGetPassword() {
         log.info("Running setAndGetPassword() test in UserAccountTest class");
         valueToTest = "superMotDePasse";
         userAccountTest.setPassword(valueToTest);
@@ -60,7 +60,7 @@ class UserAccountTest {
     }
 
     @Test
-    public void setAndGetLastConnectionDate() {
+    public void testSetAndGetLastConnectionDate() {
         log.info("Running setAndGetLastConnectionDate() test in UserAccountTest class");
         LocalDateTime valueDateToTest = LocalDateTime.of(2024,1 ,24, 20,20,20, 1);
         userAccountTest.setLastConnectionDate(valueDateToTest);
@@ -68,7 +68,7 @@ class UserAccountTest {
     }
 
     @Test
-    public void setAndGetIsActive() {
+    public void testSetAndGetIsActive() {
         log.info("Running setAndGetIsActive() test in UserAccountTest class");
         Boolean valueBooleanToTest = false;
         userAccountTest.setIsActive(valueBooleanToTest);
@@ -76,14 +76,14 @@ class UserAccountTest {
     }
 
     @Test
-    public void equalsSameInstanceTest() {
+    public void testEqualsSameInstance() {
         log.info("Running equalsSameInstanceTest() test in UserAccountTest class");
         UserAccount userAccount = UserAccount.builder().email("emailOne@mail.com").password("motDePasseOne").lastConnectionDate(null).isActive(true).build();
         assertTrue(userAccount.equals(userAccount));
     }
 
     @Test
-    public void equalsSameValuesTest() {
+    public void testEqualsSameValues() {
         log.info("Running equalsSameValuesTest() test in UserAccountTest class");
         UserAccount userAccount1 = UserAccount.builder().email("emailOne@mail.com").password("motDePasseOne").lastConnectionDate(null).isActive(true).build();
         UserAccount userAccount2 = UserAccount.builder().email("emailOne@mail.com").password("motDePasseOne").lastConnectionDate(null).isActive(true).build();
@@ -91,7 +91,7 @@ class UserAccountTest {
     }
 
     @Test
-    public void equalsDifferentValuesTest() {
+    public void testEqualsDifferentValues() {
         log.info("Running equalsDifferentValuesTest() test in UserAccountTest class");
         UserAccount userAccount1 = UserAccount.builder().email("emailOne@mail.com").password("motDePasseOne").lastConnectionDate(null).isActive(true).build();
         UserAccount userAccount2 = UserAccount.builder().email("emailTwo@mail.com").password("motDePasseOne").lastConnectionDate(null).isActive(true).build();
@@ -99,14 +99,14 @@ class UserAccountTest {
     }
 
     @Test
-    public void equalsNullObjectTest() {
+    public void testEqualsNullObject() {
         log.info("Running equalsNullObjectTest() test in UserAccountTest class");
         UserAccount userAccount = UserAccount.builder().email("emailOne@mail.com").password("motDePasseOne").lastConnectionDate(null).isActive(true).build();
         assertFalse(userAccount.equals(null));
     }
 
     @Test
-    public void equalsDifferentClassTest() {
+    public void testEqualsDifferentClass() {
         log.info("Running equalsDifferentClassTest() test in UserAccountTest class");
         UserAccount userAccount = UserAccount.builder().email("emailOne@mail.com").password("motDePasseOne").lastConnectionDate(null).isActive(true).build();
         String differentClassObject = "This is not an UserAccount object";
@@ -114,7 +114,7 @@ class UserAccountTest {
     }
 
     @Test
-    public void hashCodeTest() {
+    public void testHashCode() {
         log.info("Running hashCodeTest() test in UserAccountTest class");
         UserAccount userAccount1 = UserAccount.builder().email("emailOne@mail.com").password("motDePasseOne").lastConnectionDate(null).isActive(true).build();
         UserAccount userAccount2 = UserAccount.builder().email("emailOne@mail.com").password("motDePasseOne").lastConnectionDate(null).isActive(true).build();
@@ -124,7 +124,7 @@ class UserAccountTest {
     }
 
     @Test
-    public void toStringTest() {
+    public void testToString() {
         log.info("Running toStringTest() test in UserAccountTest class");
         UserAccount userAccount = UserAccount.builder().email("email@mail.com").password("motDePasse").lastConnectionDate(null).isActive(true).build();
         assertThat(userAccount.toString())

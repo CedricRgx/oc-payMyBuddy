@@ -8,7 +8,7 @@ public interface ITransfertService {
 
     public Iterable<Transfert> getTransferts();
 
-    public Optional<Transfert> getTransfertsById(Long id);
+    public Optional<Transfert> getTransfertById(Long id);
 
     public Transfert addTransfert(Transfert transfert);
 
