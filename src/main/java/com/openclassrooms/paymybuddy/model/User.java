@@ -110,12 +110,14 @@ public class User implements Serializable {
      * @param address The address of the user
      */
     @Builder
-    public User(String firstname, String lastname, LocalDate birthdate, String phone, String address){
+    public User(String firstname, String lastname, LocalDate birthdate, String phone, String address, AppAccount appAccount, UserAccount userAccount){
         this.firstname = firstname;
         this.lastname = lastname;
         this.birthdate = birthdate;
         this.phone = phone;
         this.address = address;
+        this.appAccount = appAccount;
+        this.userAccount = userAccount;
     }
 
 }

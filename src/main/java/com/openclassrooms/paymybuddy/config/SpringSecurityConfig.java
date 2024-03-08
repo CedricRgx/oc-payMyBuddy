@@ -26,20 +26,24 @@ public class SpringSecurityConfig {
              auth.anyRequest().authenticated();
         }).formLogin(Customizer.withDefaults()).build();*/
        http.authorizeHttpRequests()
-                .requestMatchers("/webjars/**", "/registrationForm", "*.jpeg").permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/login")
-                .permitAll()
-                .passwordParameter("password")
-                .usernameParameter("email")
-                .defaultSuccessUrl("/home", true)
-                .and()
-                .rememberMe()
-                .rememberMeParameter("remember-me")
-                .tokenValiditySeconds(86400); // 86400 milliseconds = 24 hours
+               .requestMatchers("/webjars/**", "/registration", "*.jpeg").permitAll()
+               .anyRequest()
+               .authenticated()
+               .and()
+               .formLogin()
+               .loginPage("/login")
+               .permitAll()
+               .passwordParameter("password")
+               .usernameParameter("email")
+               .defaultSuccessUrl("/home", true)
+               .and()
+               .rememberMe()
+               .rememberMeParameter("remember-me")
+               .tokenValiditySeconds(86400) // 86400 milliseconds = 24 hours
+               .and()
+               .logout()
+               .logoutUrl("/logout")
+               .logoutSuccessUrl("/login");
         return http.build();
     }
 

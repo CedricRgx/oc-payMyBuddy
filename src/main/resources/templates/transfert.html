@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{menu}">
+<head>
+  <meta charset="UTF-8">
+  <title>Transfert</title>
+  <link rel="stylesheet" href="/webjars/bootstrap/5.3.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/webjars/bootstrap-icons/1.11.3/font/bootstrap-icons.css">
+</head>
+<body>
+<div layout:fragment="content">
+
+  <h2>Transfer list</h2>
+
+  <div class="mb-5">
+    <h2>Send Money</h2>
+    <form action="#"  th:action="@{/actionTransfert}" method="post">
+      <div class="form-group">
+        <label for="connection">Select A Connection</label>
+        <select name="connection" class="form-control" id="connection">
+          <option value="" th.text="Select A Connection"></option>
+          <option th:each="connection : ${listOfConnections}" th:value="${connection}" th.text="${connection}"></option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="amount">Amount</label>
+        <input type="number" class="form-control" id="amount" placeholder="0€">
+      </div>
+      <button type="submit" class="btn btn-primary">Pay</button>
+    </form>
+  </div>
+  <section>
+    <h2>My Transactions</h2>
+    <table class="table table-striped table-bordered">
+      <thead>
+      <tr>
+        <th>Connections</th>
+        <th>Description</th>
+        <th>Amount</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="t:${listTransfertsDTO}">
+        <td th:text="${#strings.concat(t.recipientFirstname, ' ', t.recipientLastname)}"></td>
+        <td th:text="${t.description}"></td>
+        <td th:text="${t.amount}"></td>
+      </tr>
+      </tbody>
+    </table>
+    <!--<ul class="nav nav-pills">
+      <li th:each="page,status:${pages}">
+        <a th:href="@{/transfert(page=${status.index})}"
+           th:class="${currentPage==status.index?'btn btn-info ms-1':'btn btn-outline-info ms-1'}"
+           th:text="${status.index}"></a>
+      </li>
+    </ul>-->
+  </section>
+</div>
+</body>
+</html>

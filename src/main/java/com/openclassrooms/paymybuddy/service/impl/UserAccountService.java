@@ -7,6 +7,7 @@ import com.openclassrooms.paymybuddy.repository.UserRepository;
 import com.openclassrooms.paymybuddy.service.IUserAccountService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -17,6 +18,9 @@ public class UserAccountService implements IUserAccountService {
 
     @Autowired
     private UserAccountRepository userAccountRepository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     /**
      * Retrieves all user accounts from the repository.
@@ -59,6 +63,22 @@ public class UserAccountService implements IUserAccountService {
     public UserAccount findByEmail(String email){
         log.info("Found an user account by its email address");
         return userAccountRepository.findByEmail(email);
+    }
+
+    public UserAccount findIdByEmail(String email){
+        log.info("Found an user account by its email address");
+        return userAccountRepository.findByEmail(email);
+    }
+
+    /**
+     * Check if email is unique for registration
+     * @param email
+     * @return boolean
+     */
+    public boolean isEmailUnique(String email){
+        String sql = "SELECT COUNT(*) FROM user_account ua WHERE ua.email = ?;";
+        int count = jdbcTemplate.queryForObject(sql, new Object[]{email}, Integer.class);
+        return count==0;
     }
 
 }

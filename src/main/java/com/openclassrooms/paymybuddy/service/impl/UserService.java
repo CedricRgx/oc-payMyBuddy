@@ -1,10 +1,14 @@
 package com.openclassrooms.paymybuddy.service.impl;
 
 import com.openclassrooms.paymybuddy.model.User;
+import com.openclassrooms.paymybuddy.model.UserAccount;
+import com.openclassrooms.paymybuddy.repository.UserAccountRepository;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
 import com.openclassrooms.paymybuddy.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -19,6 +23,12 @@ public class UserService implements IUserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserAccountRepository userAccountRepository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     /**
      * Retrieves all users from the repository.
@@ -57,4 +67,32 @@ public class UserService implements IUserService {
         log.info("Deleting an user");
         userRepository.deleteById(id);
     }
+
+    /**
+     * Retrieve firstname and lastname of an user from its email address
+     * @param email
+     * @return firstname and lastname
+     */
+    public User findByFirstnameAndLastname(String email){
+        UserAccount userAccount = userAccountRepository.findByEmail(email);
+        if(userAccount == null){
+            return null;
+        }
+        Long userAccountId = userAccount.getUserAccountId();
+        return userRepository.findById(userAccountId).orElse(null);
+    }
+
+    /**
+     * Retrieve userId of an user from its email address
+     * @param email
+     * @return userId
+     */
+    public Long getUserIdByEmail(String email){
+        String sql = "SELECT u.user_id FROM user u " +
+                "JOIN user_account ua ON u.user_account_id = ua.user_account_id " +
+                "WHERE ua.email = ?";
+        Long userId = jdbcTemplate.queryForObject(sql, new Object[]{email}, Long.class);
+        return userId;
+    }
+
 }
