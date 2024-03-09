@@ -25,7 +25,6 @@ public class HomeController {
     @Autowired
     private UserService userService;
 
-
     @GetMapping("/home")
     public String viewHomePage(Model model){
         log.info("home template");
@@ -40,7 +39,6 @@ public class HomeController {
             log.info(firstname + "--" + lastname);
             return "home";
         }
-        //return "home";
         return null;
     }
 

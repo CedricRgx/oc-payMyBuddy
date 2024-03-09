@@ -20,7 +20,7 @@
         <label for="connection">Select A Connection</label>
         <select name="connection" class="form-control" id="connection">
           <option value="" th.text="Select A Connection"></option>
-          <option th:each="connection : ${listOfConnections}" th:value="${connection}" th.text="${connection}"></option>
+          <option th:each="connection : ${listOfConnections}" th:value="${connection}" th:text="${connection}"></option>
         </select>
       </div>
       <div class="form-group">
