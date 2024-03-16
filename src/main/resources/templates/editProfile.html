@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{menu}">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit profile</title>
+  <link rel="stylesheet" href="/webjars/bootstrap/5.3.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/webjars/bootstrap-icons/1.11.3/font/bootstrap-icons.css">
+</head>
+  <body>
+    <div layout:fragment="content">
+
+      <div class="p-3">
+        <form th:action="@{/editProfile}" th:object="${profileDTO}" method="post">
+          <div class="col-md-4 offset-4">
+            <div class="card">
+              <div class="card-header">Update my profil</div>
+              <div class="card-body">
+                <div class="mb-2">
+                  <label class="form-label">Email</label>
+                  <input type="text" id="email" name="email" class="form-control-plaintext" th:value="${profileDTO.email}" readonly>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label">Password</label>
+                  <input type="password" name="password" class="form-control" placeholder="Enter your password" th:value="${profileDTO.password}">
+                  <div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label">Firstname</label>
+                  <input type="text" name="firstname" class="form-control" placeholder="Enter your firstname" th:value="${profileDTO.firstname}">
+                  <div class="text-danger" th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}"></div>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label">Lastname</label>
+                  <input type="text" name="lastname" class="form-control" placeholder="Enter your lastname" th:value="${profileDTO.lastname}">
+                  <div class="text-danger" th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}"></div>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label">Birthdate</label>
+                  <input type="date" name="birthdate" class="form-control" placeholder="Enter your birthdate" th:value="${profileDTO.birthdate}">
+                  <div class="text-danger" th:if="${#fields.hasErrors('birthdate')}" th:errors="*{birthdate}"></div>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label">Address</label>
+                  <input type="text" name="address" class="form-control" placeholder="Enter your address" th:value="${profileDTO.address}">
+                  <div class="text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label">Phone</label>
+                  <input type="tel" name="phone" class="form-control" placeholder="Enter your phone" th:value="${profileDTO.phone}">
+                  <div class="text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+                </div>
+                <button type="submit" class="btn btn-success">Save</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+
+
+    </div>
+  </body>
+</html>
