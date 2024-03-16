@@ -108,6 +108,8 @@ public class User implements Serializable {
      * @param birthdate The birthdate of the user
      * @param phone The phone of the user
      * @param address The address of the user
+     * @param appAccount The appAccount of the user
+     * @param userAccount The userAccount of the user
      */
     @Builder
     public User(String firstname, String lastname, LocalDate birthdate, String phone, String address, AppAccount appAccount, UserAccount userAccount){

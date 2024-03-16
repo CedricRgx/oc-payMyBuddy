@@ -39,7 +39,7 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String addUser(@Valid @ModelAttribute("registerDTO") RegisterDTO registerDTO, BindingResult result, Model model){
-        log.info("inscription d'un utilisateur");
+        log.info("registration of an user");
         if(result.hasErrors()){
             return "registrationForm";
         }

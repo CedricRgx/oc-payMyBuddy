@@ -5,10 +5,10 @@ import lombok.Data;
 
 @Data
 @Builder
-public class TransfertDTO {
+public class DisplayTransfertsDTO {
 
     private String recipientFirstname;
     private String recipientLastname;
     private String description;
-    private double amount;
+    private int amount;
 }

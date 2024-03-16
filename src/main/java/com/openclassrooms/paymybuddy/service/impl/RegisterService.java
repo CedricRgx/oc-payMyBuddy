@@ -30,9 +30,9 @@ public class RegisterService implements IRegisterService {
 
     @Override
     public User addUser(RegisterDTO registerDTO) {
-        log.info("Inscription d'un utilisateur");
+        log.info("Register of an user");
 
-        log.info("Vérification de l'addresse email");
+        log.info("Check if the email address is unique");
         if(!userAccountService.isEmailUnique(registerDTO.getEmail())){
             log.error("Email {} is already in use", registerDTO.getEmail());
             throw new EmailAlreadyUsedException(registerDTO.getEmail());

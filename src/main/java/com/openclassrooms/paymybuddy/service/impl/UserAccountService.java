@@ -60,9 +60,9 @@ public class UserAccountService implements IUserAccountService {
         userAccountRepository.deleteById(id);
     }
 
-    public UserAccount findByEmail(String email){
+    public Optional<UserAccount> findByEmail(String email){
         log.info("Found an user account by its email address");
-        return userAccountRepository.findByEmail(email);
+        return Optional.ofNullable(userAccountRepository.findByEmail(email));
     }
 
     public UserAccount findIdByEmail(String email){

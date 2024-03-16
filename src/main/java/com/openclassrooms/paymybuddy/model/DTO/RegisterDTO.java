@@ -36,7 +36,7 @@ public class RegisterDTO {
     private String lastname;
 
     @NotNull
-    @ValidBirthdate // Custom annotation for birthdate validation
+    @ValidBirthdate
     private LocalDate birthdate;
 
     @Target(ElementType.FIELD)
