@@ -19,24 +19,27 @@ import java.time.LocalDateTime;
 @Builder
 public class RegisterDTO {
 
-    @NotNull
-    @Email
-    @NotEmpty
+    @NotNull(message = "{email.notnull}")
+    @NotEmpty(message = "{email.notempty}")
+    @Email(message = "{email.email}")
     private String email;
 
-    @NotNull
-    @Size(min=4, max=50)
+    @NotNull(message = "{password.notnull")
+    @NotEmpty(message = "{password.notempty}")
+    @Size(min=4, max=50, message = "{password.size}")
     private String password;
 
-    @NotNull
-    @Size(min=2, max=250)
+    @NotNull(message = "{firstname.notnull}")
+    @NotEmpty(message = "{firstname.notempty}")
+    @Size(min=2, max=250, message = "{firstname.size}")
     private String firstname;
 
-    @NotNull
-    @Size(min=2, max=250)
+    @NotNull(message = "{lastname.notnull}")
+    @NotEmpty(message = "{lastname.notempty}")
+    @Size(min=2, max=250, message = "{lastname.size}")
     private String lastname;
 
-    @NotNull
+    @NotNull(message = "{birthdate.notnull}")
     @ValidBirthdate
     private LocalDate birthdate;
 
@@ -44,17 +47,19 @@ public class RegisterDTO {
     @Retention(RetentionPolicy.RUNTIME)
     @Constraint(validatedBy = BirthdateValidator.class)
     public @interface ValidBirthdate {
-        String message() default "Invalid birthdate (must be at least 18 years old)";
+        String message() default "{birthdate.valid}";
         Class<?>[] groups() default {};
         Class<? extends Payload>[] payload() default {};
     }
 
-    @NotNull
-    @Size(min=2, max=250)
+    @NotNull(message = "{address.notnull}")
+    @NotEmpty(message = "{address.notempty}")
+    @Size(min=2, max=250, message = "{address.size}")
     private String address;
 
-    @NotNull
-    @Pattern(regexp="^[0-9]+$")
+    @NotNull(message = "{phone.notnull}")
+    @NotEmpty(message = "{phone.notempty}")
+    @Pattern(regexp="^[0-9]+$", message ="{phone.pattern}")
     private String phone;
 
 }

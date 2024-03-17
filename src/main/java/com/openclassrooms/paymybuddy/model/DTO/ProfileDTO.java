@@ -17,29 +17,33 @@ import java.time.LocalDate;
 @Builder
 public class ProfileDTO {
 
-    @NotNull
-    @Email
-    @NotEmpty
+    @NotNull(message = "{email.notnull}")
+    @NotEmpty(message = "{email.notempty}")
+    @Email(message = "{email.email}")
     private String email;
 
-    @NotNull
-    @Size(min=2, max=250)
+    @NotNull(message = "{firstname.notnull}")
+    @NotEmpty(message = "{firstname.notempty}")
+    @Size(min=2, max=250, message = "{firstname.size}")
     private String firstname;
 
-    @NotNull
-    @Size(min=2, max=250)
+    @NotNull(message = "{lastname.notnull}")
+    @NotEmpty(message = "{lastname.notempty}")
+    @Size(min=2, max=250, message = "{lastname.size}")
     private String lastname;
 
-    @NotNull
+    @NotNull(message = "{birthdate.notnull}")
     @RegisterDTO.ValidBirthdate
     private LocalDate birthdate;
 
-    @NotNull
-    @Size(min=2, max=250)
+    @NotNull(message = "{address.notnull}")
+    @NotEmpty(message = "{address.notempty}")
+    @Size(min=2, max=250, message = "{address.size}")
     private String address;
 
-    @NotNull
-    @Pattern(regexp="^[0-9]+$")
+    @NotNull(message = "{phone.notnull}")
+    @NotEmpty(message = "{phone.notempty}")
+    @Pattern(regexp="^[0-9]+$", message ="{phone.pattern}")
     private String phone;
 
 }
