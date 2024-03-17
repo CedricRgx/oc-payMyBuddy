@@ -20,11 +20,6 @@ public class SpringSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        /*return http.authorizeHttpRequests(auth -> {
-            auth.requestMatchers("/admin").hasRole("ADMIN");
-             auth.requestMatchers("/user").hasRole("USER");
-             auth.anyRequest().authenticated();
-        }).formLogin(Customizer.withDefaults()).build();*/
        http.authorizeHttpRequests()
                .requestMatchers("/webjars/**", "/registration", "*.jpeg").permitAll()
                .anyRequest()
@@ -43,10 +38,8 @@ public class SpringSecurityConfig {
                .and()
                .logout()
                .logoutUrl("/logout")
-               .logoutSuccessUrl("/login");
-        //.invalidateHttpSession(true)
-        //.deleteCookies("JSESSIONID")
-        //.permitAll();
+               .logoutSuccessUrl("/login")
+        .permitAll();
         return http.build();
     }
 

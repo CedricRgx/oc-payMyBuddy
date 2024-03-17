@@ -21,11 +21,15 @@
                   <label class="form-label">Email</label>
                   <input type="text" id="email" name="email" class="form-control-plaintext" th:value="${profileDTO.email}" readonly>
                 </div>
-                <div class="mb-2">
+                <!--<div class="mb-2">
                   <label class="form-label">Password</label>
                   <input type="password" name="password" class="form-control" placeholder="Enter your password" th:value="${profileDTO.password}">
                   <div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
                 </div>
+
+                METTRE UN LIEN VERS UN FORMULAIRE sur une autre page (confirmation de l'ancien mot de passe (en clair), nouveau et confirmation du nouveau)
+
+                -->
                 <div class="mb-2">
                   <label class="form-label">Firstname</label>
                   <input type="text" name="firstname" class="form-control" placeholder="Enter your firstname" th:value="${profileDTO.firstname}">

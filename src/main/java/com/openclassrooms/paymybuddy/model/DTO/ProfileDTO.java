@@ -3,10 +3,7 @@ package com.openclassrooms.paymybuddy.model.DTO;
 import com.openclassrooms.paymybuddy.util.BirthdateValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
 
@@ -20,12 +17,29 @@ import java.time.LocalDate;
 @Builder
 public class ProfileDTO {
 
+    @NotNull
+    @Email
+    @NotEmpty
     private String email;
-    private String password;
+
+    @NotNull
+    @Size(min=2, max=250)
     private String firstname;
+
+    @NotNull
+    @Size(min=2, max=250)
     private String lastname;
+
+    @NotNull
+    @RegisterDTO.ValidBirthdate
     private LocalDate birthdate;
+
+    @NotNull
+    @Size(min=2, max=250)
     private String address;
+
+    @NotNull
+    @Pattern(regexp="^[0-9]+$")
     private String phone;
 
 }

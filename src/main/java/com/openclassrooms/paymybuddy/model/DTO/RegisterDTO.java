@@ -21,6 +21,7 @@ public class RegisterDTO {
 
     @NotNull
     @Email
+    @NotEmpty
     private String email;
 
     @NotNull

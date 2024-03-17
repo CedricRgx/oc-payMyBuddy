@@ -17,7 +17,6 @@
               <label class="form-label">Email</label>
               <input type="email" name="email" class="form-control" placeholder="Enter your email" th:value="${registerDTO.email}">
               <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
-              <div class="text-danger" th:if="${errorEmail}" th:text="${errorEmail}"></div>
             </div>
             <div class="mb-2">
               <label class="form-label">Password</label>
