@@ -14,35 +14,46 @@
 
   <div class="mb-5">
     <h3>Send Money</h3>
-    <form action="#"  th:action="@{/actionTransfert}" method="post">
-        <div class="row g-3 align-items-center">
-        <div class="col-auto">
-        <label for="connection" placeholder="Select A Connection"></label>
-        </div>
-        <div class="col-auto">
-        <select name="connection" class="form-control" id="connection" required>
-          <option value="" disabled selected>Select A Connection</option>
-          <option th:each="connection : ${listOfConnections}" th:value="${connection}" th:text="${connection}"></option>
-        </select>
-        </div>
+    <form th:action="@{/actionTransfert}" th:object="${newTransfertDTO}" method="post">
+        <div class="row g-3 align-items-center bg-light">
 
-      <div class="col-auto">
-        <label for="amount">Amount</label>
-      </div>
-      <div class="col-auto">
-        <input type="number" class="form-control" id="amount" placeholder="0€">
-      </div>
-      <div class="col-auto">
-      <button type="submit" class="btn btn-success">Pay</button>
-      </div>
+          <div class="col">
+            <label for="connection" class="form-label"></label>
+            <select name="recipientId" class="form-control" id="connection" required>
+              <option value="" disabled selected>Select A Connection</option>
+              <option th:each="connection : ${listOfConnections}" th:value="${connection.userId}" th:text="${connection.firstname + ' ' + connection.lastname}"></option>
+            </select>
+          </div>
+
+          <div class="col">
+            <label for="amount" class="form-label"></label>
+            <input type="number" class="form-control" id="amount" name="amount" placeholder="0€" required>
+          </div>
+
+          <div class="col">
+            <label for="description" class="form-label"></label>
+            <input type="text" class="form-control" id="description" name="description" placeholder="Enter a description" required>
+          </div>
+
+          <div class="col-auto">
+            <button type="submit" class="btn btn-success">Pay</button>
+          </div>
+
       </div>
     </form>
+
+  </div>
+  <div th:if="${successMessage}" class="alert alert-success" role="alert">
+    <p th:text="${successMessage}"></p>
+  </div>
+  <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+    <p th:text="${errorMessage}"></p>
   </div>
 
   <div>
     <h3>My Transactions</h3>
     <table class="table table-striped border border-dark text-center mb-0">
-      <thead class="bg-green text-white">
+      <thead class="bg-success text-white">
       <tr>
         <th>Connections</th>
         <th>Description</th>
@@ -51,7 +62,6 @@
       </thead>
       <tbody>
       <tr th:each="t:${listTransfertsDTO}">
-        <!--<td th:text="${#strings.concat(t.recipientFirstname, ' ', t.recipientLastname)}"></td>-->
         <td th:text="${t.recipientFirstname}"></td>
         <td th:text="${t.description}"></td>
         <td th:text="${t.amount} + ' €'"></td>
@@ -61,15 +71,15 @@
     <nav class="d-flex justify-content-center mt-0">
     <ul class="pagination">
       <li class="page-item" th:class="${currentPage == 0} ? 'disabled' : ''">
-        <a class="page-link" th:href="@{/transfert(page=${currentPage - 1}, size=${pageSize})}" aria-label="Previous">
-          <span>&laquo;</span>
+        <a class="page-link" th:href="@{/transfert(page=${currentPage != null ? currentPage - 1 : 0}, size=${pageSize})}" aria-label="Previous">
+        <span>&laquo;</span>
         </a>
       </li>
       <li th:each="i : ${#numbers.sequence(0, pages - 1)}" th:class="${currentPage == i} ? 'page-item active' : 'page-item'">
         <a class="page-link" th:href="@{/transfert(page=${i}, size=${pageSize})}" th:text="${i + 1}"></a>
       </li>
       <li class="page-item" th:class="${currentPage + 1 >= pages} ? 'disabled' : ''">
-        <a class="page-link" th:href="@{/transfert(page=${currentPage + 1}, size=${pageSize})}" aria-label="Next">
+        <a class="page-link" th:href="@{/transfert(page=${currentPage != null ? currentPage + 1 : 1}, size=${pageSize})}" aria-label="Next">
           <span>&raquo;</span>
         </a>
       </li>

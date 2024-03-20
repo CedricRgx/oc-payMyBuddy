@@ -2,9 +2,7 @@ package com.openclassrooms.paymybuddy.model;
 
 import io.micrometer.core.annotation.Counted;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -14,7 +12,8 @@ import java.time.LocalDateTime;
  * Account is associated with one user.
  * This class is annotated as a JPA entity and utilizes Lombok.
  */
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @Table(name="user_account")

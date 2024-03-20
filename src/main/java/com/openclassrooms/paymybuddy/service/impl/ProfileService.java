@@ -24,7 +24,6 @@ public class ProfileService {
         Optional<User> user = userService.getUserById(userId);
         ProfileDTO profileDTO = ProfileDTO.builder()
                 .email(user.get().getUserAccount().getEmail())
-                //.password(user.get().getUserAccount().getPassword())
                 .firstname(user.get().getFirstname())
                 .lastname(user.get().getLastname())
                 .birthdate(user.get().getBirthdate())

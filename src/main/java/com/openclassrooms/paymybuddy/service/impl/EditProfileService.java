@@ -40,7 +40,7 @@ public class EditProfileService implements IEditProfileService {
         }
         UserAccount userAccount = existingUserAccount.get();
         userAccount.setLastConnectionDate(LocalDateTime.now());
-        //userAccount.setPassword(passwordEncoder.encode(profileDTO.getPassword()));
+
         userAccountService.addUserAccount(userAccount);
 
         Long existingUserId = userService.getUserIdByEmail(profileDTO.getEmail());

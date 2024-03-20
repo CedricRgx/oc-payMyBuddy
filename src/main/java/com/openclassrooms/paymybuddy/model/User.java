@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -18,7 +16,8 @@ import java.util.List;
  * User can have associated account, friends, and financial transactions.
  * This class is annotated as a JPA entity and utilizes Lombok.
  */
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @Table(name="user")
@@ -79,7 +78,7 @@ public class User implements Serializable {
     /**
      * The list of friends associated with the user.
      */
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name="assoc_user_friend",
             joinColumns = @JoinColumn(name="user_id", nullable = false),
             inverseJoinColumns = @JoinColumn(name="friend_id", nullable = false))

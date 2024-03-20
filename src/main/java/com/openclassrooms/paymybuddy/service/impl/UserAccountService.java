@@ -1,5 +1,6 @@
 package com.openclassrooms.paymybuddy.service.impl;
 
+import com.openclassrooms.paymybuddy.exceptions.UpdateLastConnectionDateFailedException;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.model.UserAccount;
 import com.openclassrooms.paymybuddy.repository.UserAccountRepository;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Slf4j
@@ -79,6 +81,19 @@ public class UserAccountService implements IUserAccountService {
         String sql = "SELECT COUNT(*) FROM user_account ua WHERE ua.email = ?;";
         int count = jdbcTemplate.queryForObject(sql, new Object[]{email}, Integer.class);
         return count==0;
+    }
+
+    public void updateLastConnectionDate(Long userAccountId){
+        String sql = "UPDATE user_account " +
+                "SET last_connection_date = CURRENT_TIMESTAMP " +
+                "WHERE user_account_id = ?;";
+        int resultCount = jdbcTemplate.update(sql, userAccountId);
+        if (resultCount!=1) {
+            log.error("The update of the last connection date has succeed.");
+            throw new UpdateLastConnectionDateFailedException("The update of the last connection date has failed.");
+        }else{
+            log.info("The update of the last connection date has succeed.");
+        }
     }
 
 }

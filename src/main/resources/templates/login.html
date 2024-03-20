@@ -12,6 +12,14 @@
       <div class="card">
         <div class="card-header">PayMyBuddy</div>
         <div class="card-body">
+          <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}">
+            <!--Incorrect email or password.-->
+          </div>
+          <div th:if="${logoutMessage}" class="alert alert-success" th:text="${logoutMessage}">
+            <!--You have been successfully logged out.-->
+          </div>
+          <div th:if="${disabledMessage}" class="alert alert-warning" th:text="${disabledMessage}">
+          </div>
           <form method="post" th:action="@{/login}">
             <div class="mb-3 mt-3">
               <label for="email" class="form-label">Email :</label>
@@ -28,7 +36,7 @@
             <button type="submit" class="btn btn-primary">Login</button>
           </form>
           <div class="mb-3 mt-3">
-            Connectez vous ici, si vous n'êtes pas inscrit, vous pouvez le faire <a th:href="@{/registration}">ici</a>.
+            Log in here, if you are not registered, you can do so <a th:href="@{/registration}">here</a>.
           </div>
         </div>
       </div>

@@ -36,7 +36,7 @@ public class HomeController {
             String lastname = user.get().getLastname();
             model.addAttribute("firstname", firstname);
             model.addAttribute("lastname", lastname);
-            log.info(firstname + "--" + lastname);
+            log.info("User connected");
             return "home";
         }
         return null;

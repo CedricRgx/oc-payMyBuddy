@@ -95,4 +95,17 @@ public class UserService implements IUserService {
         return userId;
     }
 
+    /**
+     * Retrieve userId of an user from its email address
+     * @param firstname
+     * @param lastname
+     * @return userId
+     */
+    public Long getUserIdByFirstnameAndLastname(String firstname, String lastname){
+        String sql = "SELECT u.user_id FROM user u " +
+                "WHERE u.firstname = ? AND u.lastname = ?";
+        Long userId = jdbcTemplate.queryForObject(sql, new Object[]{firstname, lastname}, Long.class);
+        return userId;
+    }
+
 }
