@@ -1,5 +1,6 @@
 package com.openclassrooms.paymybuddy.service.impl;
 
+import com.openclassrooms.paymybuddy.model.DTO.UserDTO;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.model.UserAccount;
 import com.openclassrooms.paymybuddy.repository.UserAccountRepository;
@@ -11,6 +12,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -106,6 +110,28 @@ public class UserService implements IUserService {
                 "WHERE u.firstname = ? AND u.lastname = ?";
         Long userId = jdbcTemplate.queryForObject(sql, new Object[]{firstname, lastname}, Long.class);
         return userId;
+    }
+
+    public List<User> getActiveFriends(List<User> listOfFriends){
+        List<User> listOfActiveFriends = new ArrayList<User>();
+        for(User u : listOfFriends) {
+            if(u.getUserAccount().getIsActive() == true) {
+                listOfActiveFriends.add(u);
+            }
+        }
+        return listOfActiveFriends;
+    }
+
+    public UserDTO getUserDTOFromUser(String email){
+        Long userId = getUserIdByEmail(email);
+        User user = getUserById(userId).get();
+        UserDTO userDTO = UserDTO.builder()
+                .firstname(user.getFirstname())
+                .lastname(user.getLastname())
+                .phone(user.getPhone())
+                .address(user.getAddress())
+                .build();
+        return userDTO;
     }
 
 }

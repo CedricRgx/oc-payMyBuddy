@@ -1,5 +1,6 @@
 package com.openclassrooms.paymybuddy.controller;
 
+import com.openclassrooms.paymybuddy.model.DTO.UserDTO;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.model.UserAccount;
 import com.openclassrooms.paymybuddy.repository.UserAccountRepository;
@@ -29,17 +30,12 @@ public class HomeController {
     public String viewHomePage(Model model){
         log.info("home template");
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long userId = userService.getUserIdByEmail(email);
-        Optional<User> user = userService.getUserById(userId);
-        if(user!=null){
-            String firstname = user.get().getFirstname();
-            String lastname = user.get().getLastname();
-            model.addAttribute("firstname", firstname);
-            model.addAttribute("lastname", lastname);
-            log.info("User connected");
+        UserDTO userDTO = userService.getUserDTOFromUser(email);
+        if(userDTO!=null){
+            model.addAttribute("userDTO", userDTO);
             return "home";
         }
-        return null;
+        return "home";
     }
 
 }
