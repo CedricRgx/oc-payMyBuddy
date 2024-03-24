@@ -12,4 +12,14 @@ public interface IUserAccountService {
 
     public UserAccount addUserAccount(UserAccount userAccount);
 
+    public void deleteUserAccountById(Long id);
+
+    public Optional<UserAccount> findByEmail(String email);
+
+    public boolean isEmailUnique(String email);
+
+    public void updateLastConnectionDate(Long userAccountId);
+
+    public boolean savePassword(String password, String email);
+
 }

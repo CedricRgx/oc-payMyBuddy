@@ -1,10 +1,9 @@
 package com.openclassrooms.paymybuddy.controller;
 
-import com.openclassrooms.paymybuddy.exceptions.EmailAlreadyUsedException;
 import com.openclassrooms.paymybuddy.exceptions.UserNotFoundException;
-import com.openclassrooms.paymybuddy.model.DTO.DisplayTransfertsDTO;
+import com.openclassrooms.paymybuddy.model.DTO.ConnectionDTO;
+import com.openclassrooms.paymybuddy.model.DTO.TransfertDTO;
 import com.openclassrooms.paymybuddy.model.DTO.NewTransfertDTO;
-import com.openclassrooms.paymybuddy.model.DTO.RegisterDTO;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.service.impl.TransfertService;
 import com.openclassrooms.paymybuddy.service.impl.UserService;
@@ -38,9 +37,9 @@ public class TransfertController {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Long userId = userService.getUserIdByEmail(email);
         User userConnected = userService.getUserById(userId).get();
-        List<User> listOfConnections = userService.getActiveFriends(userConnected.getFriends());
+        List<ConnectionDTO> listOfConnections = userService.getActiveFriends(userConnected.getFriends());
 
-        List<DisplayTransfertsDTO> listTransfertsDTO = transfertService.getListOfTransferts(userId, page, size);
+        List<TransfertDTO> listTransfertsDTO = transfertService.getListOfTransferts(userId, page, size);
         int totalTransferts = transfertService.countTransferts(userId);
         int totalPages = (int) Math.ceil((double) totalTransferts / size);
 

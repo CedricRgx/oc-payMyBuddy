@@ -24,7 +24,7 @@ public class RegisterDTO {
     @Email(message = "{email.email}")
     private String email;
 
-    @NotNull(message = "{password.notnull")
+    @NotNull(message = "{password.notnull}")
     @NotEmpty(message = "{password.notempty}")
     @Size(min=4, max=50, message = "{password.size}")
     private String password;

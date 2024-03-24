@@ -66,11 +66,6 @@ public class UserAccountService implements IUserAccountService {
         return Optional.ofNullable(userAccountRepository.findByEmail(email));
     }
 
-    public UserAccount findIdByEmail(String email){
-        log.info("Found an user account by its email address");
-        return userAccountRepository.findByEmail(email);
-    }
-
     /**
      * Check if email is unique for registration
      * @param email

@@ -5,7 +5,10 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ConnectionDTO {
+public class ConnectionDTO{
+
+    private Long userId;
     private String firstname;
     private String lastname;
+
 }

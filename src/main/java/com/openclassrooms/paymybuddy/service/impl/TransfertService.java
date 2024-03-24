@@ -1,7 +1,6 @@
 package com.openclassrooms.paymybuddy.service.impl;
 
-import com.openclassrooms.paymybuddy.exceptions.UserNotFoundException;
-import com.openclassrooms.paymybuddy.model.DTO.DisplayTransfertsDTO;
+import com.openclassrooms.paymybuddy.model.DTO.TransfertDTO;
 import com.openclassrooms.paymybuddy.model.DTO.NewTransfertDTO;
 import com.openclassrooms.paymybuddy.model.Transfert;
 import com.openclassrooms.paymybuddy.model.User;
@@ -94,7 +93,7 @@ public class TransfertService implements ITransfertService {
      * @param userId, page for displaying transferts, size of display
      * @return a list of transferts
      */
-    public List<DisplayTransfertsDTO> getListOfTransferts(Long userId, int page, int size){
+    public List<TransfertDTO> getListOfTransferts(Long userId, int page, int size){
         int offset = page * size;
 
         String sql = "SELECT recipient.firstname AS recipient_firstname, recipient.lastname AS recipient_lastname, t.description, t.amount " +
@@ -106,9 +105,9 @@ public class TransfertService implements ITransfertService {
                 "LIMIT ? OFFSET ?";
 
         log.info("getListOfTransferts");
-        List<DisplayTransfertsDTO> listOfTransfertsDTO = new ArrayList<DisplayTransfertsDTO>();
+        List<TransfertDTO> listOfTransfertsDTO = new ArrayList<TransfertDTO>();
         listOfTransfertsDTO = jdbcTemplate.query(sql, new Object[]{userId, size, offset}, (rs, rowNum) ->
-                DisplayTransfertsDTO.builder()
+                TransfertDTO.builder()
                         .recipientFirstname(rs.getString("recipient_firstname"))
                         .recipientLastname(rs.getString("recipient_lastname"))
                         .description(rs.getString("description"))

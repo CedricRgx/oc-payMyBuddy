@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @Slf4j
 @Service
 public class RegisterService implements IRegisterService {
+
     @Autowired
     private UserAccountService userAccountService;
 
