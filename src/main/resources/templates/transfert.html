@@ -13,7 +13,11 @@
 <div class="container col-6">
 
   <div class="mb-5">
-    <h3>Send Money</h3>
+    <div class="mb-5 d-flex justify-content-between align-items-center">
+      <h3>Send Money</h3>
+      <a role="button" class="btn btn-primary" th:href="@{/listConnections}">Add Connection</a>
+    </div>
+
     <form th:action="@{/actionTransfert}" th:object="${newTransfertDTO}" method="post">
         <div class="row g-3 align-items-center bg-light">
 

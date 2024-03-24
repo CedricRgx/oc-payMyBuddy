@@ -38,7 +38,6 @@ public class TransfertController {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Long userId = userService.getUserIdByEmail(email);
         User userConnected = userService.getUserById(userId).get();
-        //List<User> listOfConnections = userConnected.getFriends();
         List<User> listOfConnections = userService.getActiveFriends(userConnected.getFriends());
 
         List<DisplayTransfertsDTO> listTransfertsDTO = transfertService.getListOfTransferts(userId, page, size);
