@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import java.util.List;
 
+/**
+ * Controller responsible for handling transfer-related operations in the PayMyBuddy application.
+ */
 @Controller
 @Slf4j
 public class TransfertController {
@@ -31,6 +33,15 @@ public class TransfertController {
     @Autowired
     private TransfertService transfertService;
 
+    /**
+     * Displays the transfer page, showing available connections for initiating transfers and
+     * a history of past transfers.
+     *
+     * @param model The model for passing attributes to the view.
+     * @param page The page number for pagination of the transfer history.
+     * @param size The number of transfer records to display per page.
+     * @return The name of the view template for the transfer page.
+     */
     @GetMapping("/transfert")
     public String viewTransfertPage(Model model, @RequestParam(name="page", defaultValue = "0") int page, @RequestParam(name="size", defaultValue = "3") int size) throws Exception {
         log.info("transfert template");
@@ -58,6 +69,15 @@ public class TransfertController {
         return "transfert";
     }
 
+    /**
+     * Processes the submission of a new transfer request.
+     *
+     * @param newTransfertDTO The DTO containing the data for the new transfer.
+     * @param result The result of the validation of the newTransfertDTO.
+     * @param model The model for passing attributes to the view, including potential error messages.
+     * @return Redirects back to the transfer page upon successful completion, or displays the transfer page
+     *         with error messages if validation fails or the transfer cannot be processed.
+     */
     @PostMapping("/actionTransfert")
     public String addTransfertPage(@Valid @ModelAttribute("newTransfertDTO") NewTransfertDTO newTransfertDTO, BindingResult result, Model model) throws Exception {
         log.info("Attempting to add transfert on transfert template");

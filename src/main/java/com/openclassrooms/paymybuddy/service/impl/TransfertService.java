@@ -12,12 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service implementation for handling money transfers between users in the PayMyBuddy application.
+ */
 @Service
 @Slf4j
 public class TransfertService implements ITransfertService {
@@ -116,6 +118,12 @@ public class TransfertService implements ITransfertService {
         return listOfTransfertsDTO;
     }
 
+    /**
+     * Counts the number of transfers made by a specific user.
+     *
+     * @param userId The ID of the user.
+     * @return The number of transfers made by the user.
+     */
     public int countTransferts(Long userId){
         String sql = "SELECT COUNT(*) " +
                 "FROM transfert t " +
@@ -125,6 +133,14 @@ public class TransfertService implements ITransfertService {
         return result;
     }
 
+    /**
+     * Processes a new transfer based on the provided transfer DTO.
+     *
+     * @param newTransfertDTO The DTO containing the new transfer details.
+     * @return The newly created Transfert object.
+     * @throws InvalidTransactionException if the transfer amount is not valid.
+     * @throws Exception if other errors occur during the transfer creation process.
+     */
     public Transfert addNewTransfert(NewTransfertDTO newTransfertDTO) throws Exception{
         log.info("addNewTransfert service");
         double fee = 0.05;

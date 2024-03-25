@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 /**
  * Represents an app account of an user in the PayMyBuddy application.
  * App account is associated with one user.
- * This class is annotated as a JPA entity and utilizes Lombok.
  */
 @Data
 @Entity

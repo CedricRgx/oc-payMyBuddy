@@ -10,9 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 
+/**
+ * Service implementation for user registration in the PayMyBuddy application.
+ */
 @Slf4j
 @Service
 public class RegisterService implements IRegisterService {
@@ -29,6 +31,15 @@ public class RegisterService implements IRegisterService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * Registers a new user based on the provided registration details.
+     * This process includes verifying the uniqueness of the email address, creating a new AppAccount,
+     * a new UserAccount with encrypted password, and finally creating the User entity with all associated details.
+     *
+     * @param registerDTO A DTO containing the registration details provided by the user.
+     * @return The newly created User entity.
+     * @throws EmailAlreadyUsedException if the provided email address is already in use.
+     */
     @Override
     public User addUser(RegisterDTO registerDTO) {
         log.info("Register of an user");

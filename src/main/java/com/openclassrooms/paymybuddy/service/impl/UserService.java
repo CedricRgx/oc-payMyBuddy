@@ -18,7 +18,6 @@ import java.util.Optional;
 
 /**
  * The UserService class provides business logic related to User entities.
- * It interacts with the UserRepository to perform CRUD operations on User objects.
  */
 @Service
 @Slf4j
@@ -84,6 +83,12 @@ public class UserService implements IUserService {
         return userId;
     }
 
+    /**
+     * Retrieves a list of active friends for a given list of user friends.
+     *
+     * @param listOfFriends The list of user friends.
+     * @return A list of ConnectionDTOs representing active friends.
+     */
     public List<ConnectionDTO> getActiveFriends(List<User> listOfFriends){
         List<ConnectionDTO> listOfActiveFriends = new ArrayList<ConnectionDTO>();
         for(User u : listOfFriends) {
@@ -99,6 +104,12 @@ public class UserService implements IUserService {
         return listOfActiveFriends;
     }
 
+    /**
+     * Converts a User entity into a UserDTO for the given user email.
+     *
+     * @param email The email address of the user to convert.
+     * @return A UserDTO representation of the User.
+     */
     public UserDTO getUserDTOFromUser(String email){
         Long userId = getUserIdByEmail(email);
         User user = getUserById(userId).get();

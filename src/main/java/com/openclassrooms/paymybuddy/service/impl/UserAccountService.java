@@ -7,11 +7,12 @@ import com.openclassrooms.paymybuddy.service.IUserAccountService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
+/**
+ * Service implementation for managing user accounts in the PayMyBuddy application.
+ */
 @Slf4j
 @Service
 public class UserAccountService implements IUserAccountService {
@@ -21,7 +22,6 @@ public class UserAccountService implements IUserAccountService {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
 
     /**
      * Retrieves all user accounts from the repository.
@@ -61,6 +61,12 @@ public class UserAccountService implements IUserAccountService {
         userAccountRepository.deleteById(id);
     }
 
+    /**
+     * Finds a user account by email.
+     *
+     * @param email The email address to search for.
+     * @return An Optional<UserAccount> containing the user account if found, otherwise an empty Optional.
+     */
     public Optional<UserAccount> findByEmail(String email){
         log.info("Found an user account by its email address");
         return Optional.ofNullable(userAccountRepository.findByEmail(email));
@@ -77,6 +83,12 @@ public class UserAccountService implements IUserAccountService {
         return count==0;
     }
 
+    /**
+     * Updates the last connection date of a user account.
+     *
+     * @param userAccountId The ID of the user account to update.
+     * @throws UpdateLastConnectionDateFailedException if the update operation fails.
+     */
     public void updateLastConnectionDate(Long userAccountId){
         String sql = "UPDATE user_account " +
                 "SET last_connection_date = CURRENT_TIMESTAMP " +
@@ -90,6 +102,13 @@ public class UserAccountService implements IUserAccountService {
         }
     }
 
+    /**
+     * Updates the password for a user account identified by email.
+     *
+     * @param password The new password to set, typically after being encrypted.
+     * @param email The email address of the user account to update.
+     * @return True if the password was successfully updated, False otherwise.
+     */
     public boolean savePassword(String password, String email){
         String sql = "UPDATE user_account " +
                 "SET password = ? " +

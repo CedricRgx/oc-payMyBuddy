@@ -10,7 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-
+/**
+ * Configuration class for Spring Security, enabling and customizing web security for the PayMyBuddy application.
+ */
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig {
@@ -18,6 +20,14 @@ public class SpringSecurityConfig {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
+    /**
+     * Configures the SecurityFilterChain to specify security settings like which paths are secured,
+     * the form login configuration, remember me functionality, and logout behavior.
+     *
+     * @param http HttpSecurity used to configure the security filter chain.
+     * @return the configured SecurityFilterChain object.
+     * @throws Exception if an error occurs during configuration.
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
        http.authorizeHttpRequests()
@@ -43,11 +53,25 @@ public class SpringSecurityConfig {
         return http.build();
     }
 
+    /**
+     * Defines the bean for password encoding using BCrypt hashing algorithm.
+     *
+     * @return a BCryptPasswordEncoder instance.
+     */
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Configures and returns an AuthenticationManager using the custom user details service
+     * and password encoder to support authentication processes.
+     *
+     * @param http the HttpSecurity object providing context for configuration.
+     * @param bCryptPasswordEncoder the BCryptPasswordEncoder for encoding passwords.
+     * @return the configured AuthenticationManager instance.
+     * @throws Exception if an error occurs during configuration.
+     */
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);

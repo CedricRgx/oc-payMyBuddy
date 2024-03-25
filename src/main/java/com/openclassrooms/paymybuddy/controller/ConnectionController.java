@@ -11,9 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import java.util.List;
 
+/**
+ * Controller for handling user connections in the PayMyBuddy application.
+ */
 @Controller
 @Slf4j
 public class ConnectionController {
@@ -24,6 +26,12 @@ public class ConnectionController {
     @Autowired
     private ConnectionService connectionService;
 
+    /**
+     * Displays the list of connections for the currently authenticated user.
+     *
+     * @param model The model for the view to add attributes to be rendered on the page.
+     * @return The name of the template to render the list of connections.
+     */
     @GetMapping("/listConnections")
     public String showConnectionList(Model model) {
         log.info("Get on listConnections");
@@ -40,6 +48,14 @@ public class ConnectionController {
         return "listConnections";
     }
 
+    /**
+     * Handles the search for connections based on a query string. Can return a filtered list of connections
+     * or all connections if the query is empty or null.
+     *
+     * @param model The model for the view where search results will be added.
+     * @param query The search query used to filter connections.
+     * @return The name of the template to render the search results.
+     */
     @GetMapping("/searchConnection")
     public String searchConnection(Model model, @RequestParam(value = "query", required = false) String query) {
         log.info("Get on searchConnection");
@@ -55,6 +71,12 @@ public class ConnectionController {
         return "searchConnection";
     }
 
+    /**
+     * Adds a new connection for the currently authenticated user based on the friendId provided.
+     *
+     * @param friendId The ID of the user to be added as a connection.
+     * @return Redirects to the listConnections page with a success or error parameter.
+     */
     @GetMapping("/addConnection")
     public String addConnection(@RequestParam("friendId") Long friendId) {
         log.info("Get on addConnection");
@@ -71,6 +93,12 @@ public class ConnectionController {
         }
     }
 
+    /**
+     * Removes a connection for the currently authenticated user based on the friendId provided.
+     *
+     * @param friendId The ID of the connection to be removed.
+     * @return Redirects to the listConnections page with a success or error parameter.
+     */
     @GetMapping("/removeConnection")
     public String removeConnection(@RequestParam("friendId") Long friendId){
         log.info("Get on removeConnection");

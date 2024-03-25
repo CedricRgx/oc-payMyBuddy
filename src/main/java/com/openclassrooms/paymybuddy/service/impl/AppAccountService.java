@@ -6,9 +6,11 @@ import com.openclassrooms.paymybuddy.service.IAppAccountService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
+/**
+ * Service class for managing application accounts in the PayMyBuddy application.
+ */
 @Service
 @Slf4j
 public class AppAccountService implements IAppAccountService {

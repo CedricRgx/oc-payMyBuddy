@@ -17,6 +17,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Custom implementation of the UserDetailsService for integration with the PayMyBuddy application's user account system.
+ */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
@@ -26,6 +29,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UserAccountService userAccountService;
 
+    /**
+     * Loads the user details required by Spring Security for authentication and authorization, based on the username provided.
+     *
+     * @param username the email address of the user trying to authenticate.
+     * @return a UserDetails object containing necessary information for authentication and authorization.
+     * @throws UsernameNotFoundException if no UserAccount is found with the provided email.
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserAccount userAccount = userAccountRepository.findByEmail(username);
@@ -41,6 +51,13 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new User(userAccount.getEmail(), userAccount.getPassword(), enabled, true, true, true, getGrantedAuthorities(userAccount.getRole()));
     }
 
+    /**
+     * Helper method to convert the user role into a Spring Security GrantedAuthority.
+     * Prepends "ROLE_" to the role name to fit Spring Security conventions.
+     *
+     * @param role the role name of the user.
+     * @return a list of GrantedAuthority based on the provided role.
+     */
     private List<GrantedAuthority> getGrantedAuthorities(String role) {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
