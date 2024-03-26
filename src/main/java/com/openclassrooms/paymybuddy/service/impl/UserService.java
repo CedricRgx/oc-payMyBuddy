@@ -3,15 +3,14 @@ package com.openclassrooms.paymybuddy.service.impl;
 import com.openclassrooms.paymybuddy.model.DTO.ConnectionDTO;
 import com.openclassrooms.paymybuddy.model.DTO.UserDTO;
 import com.openclassrooms.paymybuddy.model.User;
-import com.openclassrooms.paymybuddy.model.UserAccount;
 import com.openclassrooms.paymybuddy.repository.UserAccountRepository;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
 import com.openclassrooms.paymybuddy.service.IUserService;
+import com.openclassrooms.paymybuddy.util.Formatter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -113,11 +112,15 @@ public class UserService implements IUserService {
     public UserDTO getUserDTOFromUser(String email){
         Long userId = getUserIdByEmail(email);
         User user = getUserById(userId).get();
+        Formatter fd = new Formatter();
+        String balanceFormatted = fd.formatDoubleToString(user.getAppAccount().getBalance());
+        String balanceFormattedWithCurrency = fd.addCurrency(balanceFormatted);
         UserDTO userDTO = UserDTO.builder()
                 .firstname(user.getFirstname())
                 .lastname(user.getLastname())
                 .phone(user.getPhone())
                 .address(user.getAddress())
+                .balance(balanceFormattedWithCurrency)
                 .build();
         return userDTO;
     }

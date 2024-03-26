@@ -5,50 +5,11 @@
 <head>
   <meta charset="UTF-8">
   <title>Contact</title>
-  <link rel="stylesheet" href="/webjars/bootstrap/5.3.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/webjars/bootstrap-icons/1.11.3/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
 </head>
 <body>
 <div layout:fragment="content">
-  <!--
-  <div class="p-3">
-    <form th:action="@{/profile}" th:object="${profileDTO}" method="get">
-      <div class="col-md-6 offset-md-3">
-        <div class="card">
-          <div class="card-header">Your profile</div>
-          <div class="card-body">
-            <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input type="text" id="email" name="email" class="form-control-plaintext" th:value="${profileDTO.email}" readonly>
-            </div>
-            <div class="mb-3">
-              <label for="firstname" class="form-label">Firstname</label>
-              <input type="text" id="firstname" name="firstname" class="form-control-plaintext" th:value="${profileDTO.firstname}" readonly>
-            </div>
-            <div class="mb-3">
-              <label for="lastname" class="form-label">Lastname</label>
-              <input type="text" id="lastname" name="lastname" class="form-control-plaintext" th:value="${profileDTO.lastname}" readonly>
-            </div>
-            <div class="mb-3">
-              <label for="birthdate" class="form-label">Birthdate</label>
-              <input type="date" id="birthdate" name="birthdate" class="form-control-plaintext" th:value="${profileDTO.birthdate}" readonly>
-            </div>
-            <div class="mb-3">
-              <label for="address" class="form-label">Address</label>
-              <input type="text" id="address" name="address" class="form-control-plaintext" th:value="${profileDTO.address}" readonly>
-            </div>
-            <div class="mb-3">
-              <label for="phone" class="form-label">Phone</label>
-              <input type="tel" id="phone" name="phone" class="form-control-plaintext" th:value="${profileDTO.phone}" readonly>
-            </div>
-            <a th:href="@{/editProfile}" class="btn btn-primary">Update your profile</a>
-            Click <a th:href="passwordUpdateForm">here</a> to change your password.
-          </div>
-        </div>
-      </div>
-    </form>
-  </div>
-  -->
+
   <div class="p-3">
     <form th:action="@{/profile}" th:object="${profileDTO}" method="get">
       <div class="col-md-6 offset-md-3">

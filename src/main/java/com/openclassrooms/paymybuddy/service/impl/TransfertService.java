@@ -6,6 +6,7 @@ import com.openclassrooms.paymybuddy.model.Transfert;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.repository.TransfertRepository;
 import com.openclassrooms.paymybuddy.service.ITransfertService;
+import com.openclassrooms.paymybuddy.util.Formatter;
 import jakarta.transaction.InvalidTransactionException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,13 +108,14 @@ public class TransfertService implements ITransfertService {
                 "LIMIT ? OFFSET ?";
 
         log.info("getListOfTransferts");
+        Formatter formatDouble = new Formatter();
         List<TransfertDTO> listOfTransfertsDTO = new ArrayList<TransfertDTO>();
         listOfTransfertsDTO = jdbcTemplate.query(sql, new Object[]{userId, size, offset}, (rs, rowNum) ->
                 TransfertDTO.builder()
                         .recipientFirstname(rs.getString("recipient_firstname"))
                         .recipientLastname(rs.getString("recipient_lastname"))
                         .description(rs.getString("description"))
-                        .amount((int)rs.getDouble("amount"))
+                        .amount(formatDouble.formatDoubleToString(rs.getDouble("amount")))
                         .build());
         return listOfTransfertsDTO;
     }

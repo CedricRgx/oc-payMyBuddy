@@ -29,6 +29,6 @@ public class TransfertDTO {
     /**
      * The amount of money to be transferred.
      */
-    private int amount;
+    private String amount;
 
 }

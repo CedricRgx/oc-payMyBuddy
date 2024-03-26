@@ -21,13 +21,18 @@ public class UserDTO {
     private String lastname;
 
     /**
-     * The address of the user. This could be used for mailing or identification purposes within the application.
+     * The address of the user.
      */
     private String address;
 
     /**
-     * The phone number of the user. Ensures contact can be made outside of the application if necessary.
+     * The phone number of the user.
      */
     private String phone;
+
+    /**
+     * The balance of the app account of the user.
+     */
+    private String balance;
 
 }

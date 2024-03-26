@@ -5,13 +5,12 @@
 <head>
   <meta charset="UTF-8">
   <title>User home</title>
-  <link rel="stylesheet" href="/webjars/bootstrap/5.3.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/webjars/bootstrap-icons/1.11.3/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
 </head>
 <body>
 <div layout:fragment="content">
   <div class="text-center">
-    <h1>Bienvenue <div th:text="${#strings.concat(userDTO.firstname, ' ', userDTO.lastname, '!')}"/></h1>
+    <h3>Welcome <span th:text="${#strings.concat(userDTO.firstname, ' ', userDTO.lastname)}"></span>, there are <span th:text="${userDTO.balance}"></span> on your account.</h3>
     <img th:src="@{/images/payMyBuddy.jpeg}" class="rounded" alt="Image of PayMyBuddy">
   </div>
 </div>

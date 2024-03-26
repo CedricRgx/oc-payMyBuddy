@@ -1,6 +1,7 @@
 package com.openclassrooms.paymybuddy.controller;
 
 import com.openclassrooms.paymybuddy.model.DTO.UserDTO;
+import com.openclassrooms.paymybuddy.service.impl.AppAccountService;
 import com.openclassrooms.paymybuddy.service.impl.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

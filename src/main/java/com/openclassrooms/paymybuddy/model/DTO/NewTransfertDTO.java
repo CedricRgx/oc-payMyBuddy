@@ -34,5 +34,5 @@ public class NewTransfertDTO {
      */
     @NotNull(message = "{amount.notnull}")
     @Min(value = 1, message = "{amount.min}")
-    private int amount;
+    private double amount;
 }
