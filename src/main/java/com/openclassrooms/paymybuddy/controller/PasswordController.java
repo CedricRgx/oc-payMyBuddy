@@ -2,6 +2,7 @@ package com.openclassrooms.paymybuddy.controller;
 
 import com.openclassrooms.paymybuddy.model.DTO.PasswordUpdateDTO;
 import com.openclassrooms.paymybuddy.service.impl.UserAccountService;
+import jakarta.servlet.http.*;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import static java.util.regex.Pattern.matches;
 
 /**
  * Controller responsible for managing password updates for users of the PayMyBuddy application.
@@ -49,21 +52,20 @@ public class PasswordController {
      *
      * @param passwordUpdateDTO The DTO containing the password update form inputs.
      * @param result Contains binding result errors related to form validation.
-     * @param model The model to which attributes can be added.
-     * @return Redirects to the password update form with a success message if the update is successful,
+     * @param request The request of HttpServletRequest.
+     * @return Redirects to the login view if the update is successful,
      *         otherwise returns to the form displaying validation errors.
      */
     @PostMapping("/passwordUpdateForm")
-    public String changePassword(@Valid @ModelAttribute("passwordChange") PasswordUpdateDTO passwordUpdateDTO, BindingResult result, Model model) {
+    public String changePassword(@Valid @ModelAttribute("passwordChange") PasswordUpdateDTO passwordUpdateDTO, BindingResult result, HttpServletRequest request) {
         log.info("passwordUpdateForm template for update");
-        if (result.hasErrors()) {
-            return "passwordUpdateForm";
-        }
+
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         String currentPasswordsaved = userAccountService.findByEmail(email).get().getPassword();
 
         if(!passwordEncoder.matches(passwordUpdateDTO.getCurrentPassword(), currentPasswordsaved)){
-            result.rejectValue("currentPassword", "error.passwordChange", "The current password is incorrect.");
+            result.rejectValue("currentPassword", "error.currentPassword", "The current password is incorrect.");
+            log.info("The current password is incorrect.");
             return "passwordUpdateForm";
         }
         if(!passwordUpdateDTO.getNewPassword().equals(passwordUpdateDTO.getConfirmPassword())){
@@ -72,7 +74,14 @@ public class PasswordController {
         }
 
         userAccountService.savePassword(passwordEncoder.encode(passwordUpdateDTO.getNewPassword()), email);
-        return "redirect:/passwordUpdateForm?success";
+
+        // Log out the user
+        SecurityContextHolder.clearContext();
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        return "redirect:/login?logout";
     }
 
 }
