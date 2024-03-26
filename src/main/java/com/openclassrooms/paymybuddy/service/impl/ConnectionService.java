@@ -1,13 +1,16 @@
 package com.openclassrooms.paymybuddy.service.impl;
 
+import com.openclassrooms.paymybuddy.model.DTO.ConnectionDTO;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.service.IConnectionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,17 +18,25 @@ import java.util.List;
  */
 @Service
 @Slf4j
-public class ConnectionService implements IConnectionService {
+public class ConnectionService implements IConnectionService{
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     /**
-     * Finds and returns all connections for a given user.
-     * @return A list of users representing all the user's connections.
+     * Finds and returns all connections for a given user that are not already friends.
+     * @param userId The ID of the user whose friends should be excluded.
+     * @return A list of users representing all the user's connections excluding existing friends.
      */
-    public List<User> findAllConnections(){
-        return jdbcTemplate.query("SELECT * FROM user",
+    public List<User> findAllConnections(Long userId){
+        String sql = "SELECT * FROM user u WHERE u.user_id <> ? AND NOT EXISTS (" +
+                "     SELECT 1 FROM assoc_user_friend auf WHERE (auf.friend_id = u.user_id AND auf.user_id = ?) " +
+                "     OR (auf.user_id = u.user_id AND auf.friend_id = ?)" +
+                ")";
+        return jdbcTemplate.query(sql, new Object[]{userId, userId, userId},
                 (rs, rowNum) -> {
                     User user = new User();
                     user.setUserId(rs.getLong("user_id"));
@@ -40,9 +51,12 @@ public class ConnectionService implements IConnectionService {
      * @param query The search query to match against user's firstname or lastname.
      * @return A list of users representing the matched connections.
      */
-    public List<User> searchConnections(String query){
-        String sql = "SELECT * FROM user WHERE LOWER(firstname) LIKE LOWER(?) OR LOWER(lastname) LIKE LOWER(?)";
-        return jdbcTemplate.query(sql, new Object[]{"%" + query + "%", "%" + query + "%"},
+    public List<User> searchConnections(String query, Long userId){
+        String sql = "SELECT * FROM user u WHERE (LOWER(u.firstname) LIKE LOWER(?) OR LOWER(u.lastname) LIKE LOWER(?))" +
+                " AND u.user_id <> ?" +
+                " AND NOT EXISTS (" +
+                "SELECT 1 FROM assoc_user_friend auf WHERE auf.friend_id = u.user_id AND auf.user_id = ?)";
+        return jdbcTemplate.query(sql, new Object[]{"%" + query + "%", "%" + query + "%", userId, userId},
                 (rs, rowNum) -> {
                     User user = new User();
                     user.setUserId(rs.getLong("user_id"));

@@ -59,13 +59,16 @@ public class ConnectionController {
     @GetMapping("/searchConnection")
     public String searchConnection(Model model, @RequestParam(value = "query", required = false) String query) {
         log.info("Get on searchConnection");
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long userId = userService.getUserIdByEmail(email);
+
         List<User> searchResults;
         if (query != null && !query.isEmpty()) {
             log.info("Return the result of search");
-            searchResults = connectionService.searchConnections(query);
+            searchResults = connectionService.searchConnections(query, userId);
         } else {
             log.info("Query null or empty, return all connections");
-            searchResults = connectionService.findAllConnections();
+            searchResults = connectionService.findAllConnections(userId);
         }
         model.addAttribute("listOfConnections", searchResults);
         return "searchConnection";

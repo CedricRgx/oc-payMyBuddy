@@ -13,15 +13,16 @@ public interface IConnectionService {
      *
      * @return A List<User> containing all the connections.
      */
-    public List<User> findAllConnections();
+    public List<User> findAllConnections(Long userId);
 
     /**
      * Searches for connections based on a query.
      *
      * @param query The search query.
+     * @param userId The id of the user.
      * @return A List<User> containing the search results.
      */
-    public List<User> searchConnections(String query);
+    public List<User> searchConnections(String query, Long userId);
 
     /**
      * Adds a new connection between users.
