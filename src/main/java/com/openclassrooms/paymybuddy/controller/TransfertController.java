@@ -1,12 +1,12 @@
 package com.openclassrooms.paymybuddy.controller;
 
-import com.openclassrooms.paymybuddy.exceptions.UserNotFoundException;
 import com.openclassrooms.paymybuddy.model.DTO.ConnectionDTO;
 import com.openclassrooms.paymybuddy.model.DTO.TransfertDTO;
 import com.openclassrooms.paymybuddy.model.DTO.NewTransfertDTO;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.service.impl.TransfertService;
 import com.openclassrooms.paymybuddy.service.impl.UserService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class TransfertController {
      * @return The name of the view template for the transfer page.
      */
     @GetMapping("/transfert")
-    public String viewTransfertPage(Model model, @RequestParam(name="page", defaultValue = "0") int page, @RequestParam(name="size", defaultValue = "3") int size) throws Exception {
+    public String viewTransfertPage(Model model, HttpSession session, @RequestParam(name="page", defaultValue = "0") int page, @RequestParam(name="size", defaultValue = "3") int size) throws Exception {
         log.info("transfert template");
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Long userId = userService.getUserIdByEmail(email);
@@ -66,34 +66,54 @@ public class TransfertController {
             model.addAttribute("currentPage", page);
             model.addAttribute("pageSize", size);
         }
+
+        String errorMessage = (String) session.getAttribute("errorMessage");
+        String successMessage = (String) session.getAttribute("successMessage");
+
+        if (errorMessage != null) {
+            model.addAttribute("errorMessage", errorMessage);
+            session.removeAttribute("errorMessage");
+        }
+        if (successMessage != null) {
+            model.addAttribute("successMessage", successMessage);
+            session.removeAttribute("successMessage");
+        }
+
         return "transfert";
     }
 
     /**
-     * Processes the submission of a new transfer request.
+     * Adds a new transfer based on the provided transfer DTO, after validating the transfer details.
      *
-     * @param newTransfertDTO The DTO containing the data for the new transfer.
-     * @param result The result of the validation of the newTransfertDTO.
-     * @param model The model for passing attributes to the view, including potential error messages.
-     * @return Redirects back to the transfer page upon successful completion, or displays the transfer page
-     *         with error messages if validation fails or the transfer cannot be processed.
+     * @param newTransfertDTO The DTO containing the details of the new transfer.
+     * @param result          The BindingResult object that holds the result of the validation.
+     * @param model           The Model object for adding attributes to the view.
+     * @param session         The HttpSession object for managing session attributes.
+     * @return The name of the view template to redirect to (in this case, "transfert").
+     * @throws Exception if an unexpected error occurs during the transfer addition process.
      */
     @PostMapping("/actionTransfert")
-    public String addTransfertPage(@Valid @ModelAttribute("newTransfertDTO") NewTransfertDTO newTransfertDTO, BindingResult result, Model model) throws Exception {
+    public String addTransfertPage(@Valid @ModelAttribute("newTransfertDTO") NewTransfertDTO newTransfertDTO, BindingResult result, Model model, HttpSession session) throws Exception {
         log.info("Attempting to add transfert on transfert template");
         if(result.hasErrors()){
             model.addAttribute("errorMessage", "Please correct any errors in the form.");
             return "transfert";
         }
-        try{
-            transfertService.addNewTransfert(newTransfertDTO);
-            model.addAttribute("successMessage", "Transfer completed successfully!");
-        }catch(UserNotFoundException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            return "transfert";
-        }catch(Exception e) {
+        boolean transferSuccess = false;
+        try {
+            transferSuccess = transfertService.addNewTransfert(newTransfertDTO);
+        } catch (Exception e) {
+            log.info("An unexpected error occurred");
             model.addAttribute("errorMessage", "An unexpected error occurred.");
             return "transfert";
+        }
+
+        if (transferSuccess) {
+            log.info("Transfer completed successfully!");
+            session.setAttribute("successMessage", "Transfer completed successfully!");
+        } else {
+            log.info("Insufficient balance to make the transfer");
+            session.setAttribute("errorMessage", "Insufficient balance to make the transfer");
         }
         return "redirect:/transfert";
     }

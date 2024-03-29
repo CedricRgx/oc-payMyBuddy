@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
@@ -101,8 +103,8 @@ public class ConnectionController {
      *
      * @param friendId The ID of the connection to be removed.
      * @return Redirects to the listConnections page with a success or error parameter.
-     */
-    @GetMapping("/removeConnection")
+     *//*
+    @DeleteMapping("/removeConnection")
     public String removeConnection(@RequestParam("friendId") Long friendId){
         log.info("Get on removeConnection");
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -115,6 +117,26 @@ public class ConnectionController {
         } else {
             log.error("Error to remove connection");
             return "redirect:/listConnections?error=true&action=remove";
+        }
+    } */
+    @PostMapping("/removeConnection")
+    public String removeConnection(@RequestParam("friendId") Long friendId, Model model) {
+        log.info("DELETE on removeConnection");
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long userId = userService.getUserIdByEmail(email);
+
+        boolean resultRemoveConnection = connectionService.removeConnection(userId, friendId);
+
+        if (resultRemoveConnection) {
+            log.info("Success to remove connection");
+            // Add success message to model
+            model.addAttribute("successMessage", "Connexion supprimée avec succès");
+            return "listConnections"; // Redirect to list view on success
+        } else {
+            log.error("Error to remove connection");
+            // Add error message to model
+            model.addAttribute("errorMessage", "Échec de la suppression de la connexion");
+            return "listConnections"; // Redirect to list view with error message
         }
     }
 }

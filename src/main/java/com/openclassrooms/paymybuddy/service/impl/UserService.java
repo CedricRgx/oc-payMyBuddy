@@ -1,14 +1,17 @@
 package com.openclassrooms.paymybuddy.service.impl;
 
+import com.openclassrooms.paymybuddy.model.AppAccount;
 import com.openclassrooms.paymybuddy.model.DTO.ConnectionDTO;
 import com.openclassrooms.paymybuddy.model.DTO.UserDTO;
 import com.openclassrooms.paymybuddy.model.User;
+import com.openclassrooms.paymybuddy.repository.AppAccountRepository;
 import com.openclassrooms.paymybuddy.repository.UserAccountRepository;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
 import com.openclassrooms.paymybuddy.service.IUserService;
 import com.openclassrooms.paymybuddy.util.Formatter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -26,7 +29,7 @@ public class UserService implements IUserService {
     private UserRepository userRepository;
 
     @Autowired
-    private UserAccountRepository userAccountRepository;
+    private AppAccountRepository appAccountRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -75,6 +78,7 @@ public class UserService implements IUserService {
      * @return userId
      */
     public Long getUserIdByEmail(String email){
+        log.info("getUserIdByEmail in UserService");
         String sql = "SELECT u.user_id FROM user u " +
                 "JOIN user_account ua ON u.user_account_id = ua.user_account_id " +
                 "WHERE ua.email = ?";
@@ -89,6 +93,7 @@ public class UserService implements IUserService {
      * @return A list of ConnectionDTOs representing active friends.
      */
     public List<ConnectionDTO> getActiveFriends(List<User> listOfFriends){
+        log.info("getActiveFriends in UserService");
         List<ConnectionDTO> listOfActiveFriends = new ArrayList<ConnectionDTO>();
         for(User u : listOfFriends) {
             if(u.getUserAccount().getIsActive() == true) {
@@ -110,6 +115,7 @@ public class UserService implements IUserService {
      * @return A UserDTO representation of the User.
      */
     public UserDTO getUserDTOFromUser(String email){
+        log.info("getUserDTOFromUser in UserService");
         Long userId = getUserIdByEmail(email);
         User user = getUserById(userId).get();
         Formatter fd = new Formatter();
@@ -123,6 +129,43 @@ public class UserService implements IUserService {
                 .balance(balanceFormattedWithCurrency)
                 .build();
         return userDTO;
+    }
+
+    /**
+     * Retrieve the balance of the user's account.
+     *
+     * @param userId the ID of the user
+     * @return the balance of the user's account, or null if no balance is found
+     */
+    public Double getUserBalance(Long userId){
+        log.info("getUserBalance in UserService");
+        String sql = "SELECT appa.balance FROM app_account appa " +
+                "INNER JOIN user u ON appa.app_account_id = u.app_account_id " +
+                "WHERE u.user_id = ?";
+        try{
+            return jdbcTemplate.queryForObject(sql, new Object[]{userId}, Double.class);
+        }catch(EmptyResultDataAccessException e){
+            return null;
+        }
+    }
+
+    /**
+     * Updates the user's balance in the app_account table.
+     *
+     * @param userId     the ID of the user whose balance needs to be updated
+     * @param newBalance the new balance to be assigned to the user
+     * @return true if the balance update was successful, false otherwise
+     */
+    public boolean updateUserBalance(Long userId, Double newBalance) {
+        User user = userRepository.findById(userId).get();
+        AppAccount appAccount = user.getAppAccount();
+        if (appAccount != null) {
+            appAccount.setBalance(newBalance);
+            appAccountRepository.save(appAccount);
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

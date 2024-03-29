@@ -74,6 +74,6 @@ public interface ITransfertService {
      * @return The added transfer.
      * @throws Exception If an error occurs while adding the transfer.
      */
-    public Transfert addNewTransfert(NewTransfertDTO newTransfertDTO) throws Exception;
+    public boolean addNewTransfert(NewTransfertDTO newTransfertDTO) throws Exception;
 
 }

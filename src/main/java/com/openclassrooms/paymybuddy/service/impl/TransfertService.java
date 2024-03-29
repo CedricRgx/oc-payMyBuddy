@@ -7,7 +7,6 @@ import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.repository.TransfertRepository;
 import com.openclassrooms.paymybuddy.service.ITransfertService;
 import com.openclassrooms.paymybuddy.util.Formatter;
-import jakarta.transaction.InvalidTransactionException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -136,27 +135,34 @@ public class TransfertService implements ITransfertService {
     }
 
     /**
-     * Processes a new transfer based on the provided transfer DTO.
+     * Adds a new transfer based on the provided transfer DTO.
      *
-     * @param newTransfertDTO The DTO containing the new transfer details.
-     * @return The newly created Transfert object.
-     * @throws InvalidTransactionException if the transfer amount is not valid.
-     * @throws Exception if other errors occur during the transfer creation process.
+     * @param newTransfertDTO The DTO containing the details of the new transfer.
+     * @return true if the transfer is successfully added, false otherwise.
      */
-    public Transfert addNewTransfert(NewTransfertDTO newTransfertDTO) throws Exception{
+    public boolean addNewTransfert(NewTransfertDTO newTransfertDTO){
         log.info("addNewTransfert service");
         double fee = 0.05;
         String emailAuthor = SecurityContextHolder.getContext().getAuthentication().getName();
         Long userAuthorId = userService.getUserIdByEmail(emailAuthor);
         User userAuthor = userService.getUserById(userAuthorId).get();
 
+        Double balance = userService.getUserBalance(userAuthorId);
         User userRecipient = userService.getUserById(newTransfertDTO.getRecipientId()).get();
         if (newTransfertDTO.getAmount() <= 0) {
-            throw new InvalidTransactionException("Amount of the transfert not valid");
+            log.info("Amount of the transfert not valid");
+            return false;
+        } else if (balance == null || balance < newTransfertDTO.getAmount()) {
+            log.info("Insufficient balance to make the transfer");
+            return false;
         }
 
-        double feeTransfert = newTransfertDTO.getAmount() * fee;
-        double amountTransfert = newTransfertDTO.getAmount() - feeTransfert;
+        double amountToTransfert = newTransfertDTO.getAmount();
+        double feeTransfert = amountToTransfert * fee;
+        double amountTransfert = amountToTransfert - feeTransfert;
+
+        double newBalance = balance - newTransfertDTO.getAmount();
+        userService.updateUserBalance(userAuthorId, newBalance);
 
         Transfert transfert = Transfert.builder()
                 .author(userAuthor)
@@ -167,7 +173,8 @@ public class TransfertService implements ITransfertService {
                 .transactionDate(LocalDateTime.now())
                 .build();
 
-        return addTransfert(transfert);
+        addTransfert(transfert);
+        return true;
     }
 
 }
