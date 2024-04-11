@@ -9,8 +9,29 @@
 </head>
 <body>
 <div layout:fragment="content">
-  <div class="text-center">
-    <h3>Welcome <span th:text="${#strings.concat(userDTO.firstname, ' ', userDTO.lastname)}"></span>, there are <span th:text="${userDTO.balance}"></span> on your account.</h3>
+  <div class="container col-6 d-flex flex-column align-items-center justify-content-center">
+    <div class="mb-5 text-center">
+      <h3>Welcome <span th:text="${#strings.concat(userDTO.firstname, ' ', userDTO.lastname)}"></span>, there are <span th:text="${userDTO.balance}"></span> on your account.</h3>
+    </div>
+
+    <form th:action="@{/creditBalance}" method="post" class="mb-3">
+      <div class="row g-3 align-items-center bg-light">
+        <div class="col">
+          <label for="amount">Enter amount to credit:</label>
+        </div>
+        <div class="col">
+          <input type="number" id="amount" name="amount" class="form-control" placeholder="0€" required>
+        </div>
+        <div class="col">
+          <button type="submit" class="btn btn-primary">Credit</button>
+        </div>
+      </div>
+    </form>
+
+    <div th:if="${successMessage}" class="alert alert-success" role="alert">
+      <p th:text="${successMessage}"></p>
+    </div>
+
     <img th:src="@{/images/payMyBuddy.jpeg}" class="rounded" alt="Image of PayMyBuddy">
   </div>
 </div>

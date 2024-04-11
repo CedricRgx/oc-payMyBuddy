@@ -40,13 +40,7 @@ public class ConnectionController {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Long userId = userService.getUserIdByEmail(email);
         User userConnected = userService.getUserById(userId).get();
-        List<ConnectionDTO> listOfConnections = userService.getActiveFriends(userConnected.getFriends());
-        if(listOfConnections == null) {
-            log.error("Error when displaying the list of connections on listConnections template");
-        } else {
-            log.info("Success when displaying the list of connections on listConnections template");
-            model.addAttribute("listOfConnections", listOfConnections);
-        }
+        setAttributeListOfConnections(model, userId);
         return "listConnections";
     }
 
@@ -80,45 +74,34 @@ public class ConnectionController {
      * Adds a new connection for the currently authenticated user based on the friendId provided.
      *
      * @param friendId The ID of the user to be added as a connection.
+     * @param model    The Model object used for adding attributes to be rendered on the view.
      * @return Redirects to the listConnections page with a success or error parameter.
      */
     @GetMapping("/addConnection")
-    public String addConnection(@RequestParam("friendId") Long friendId) {
+    public String addConnection(@RequestParam("friendId") Long friendId, Model model) {
         log.info("Get on addConnection");
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Long userId = userService.getUserIdByEmail(email);
         boolean resultAddConnection = connectionService.addConnection(userId, friendId);
 
-        if(resultAddConnection){
+        if(resultAddConnection) {
             log.info("Success to add connection");
-            return "redirect:/listConnections?success=true&action=add";
+            model.addAttribute("successAddMessage", "Successfully added the connection");
+            return "listConnections";
         } else {
             log.error("Error to add connection");
-            return "redirect:/listConnections?error=true&action=add";
+            model.addAttribute("errorAddMessage", "Failed to delete the connection");
+            return "listConnections";
         }
     }
 
     /**
-     * Removes a connection for the currently authenticated user based on the friendId provided.
+     * Handles the removal of a connection between the current user and another user.
      *
-     * @param friendId The ID of the connection to be removed.
-     * @return Redirects to the listConnections page with a success or error parameter.
-     *//*
-    @DeleteMapping("/removeConnection")
-    public String removeConnection(@RequestParam("friendId") Long friendId){
-        log.info("Get on removeConnection");
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long userId = userService.getUserIdByEmail(email);
-        boolean resultRemoveConnection = connectionService.removeConnection(userId, friendId);
-
-        if(resultRemoveConnection) {
-            log.info("Success to remove connection");
-            return "redirect:/listConnections?success=true&action=remove";
-        } else {
-            log.error("Error to remove connection");
-            return "redirect:/listConnections?error=true&action=remove";
-        }
-    } */
+     * @param friendId The ID of the friend (connection) to be removed.
+     * @param model    The Model object used for adding attributes to be rendered on the view.
+     * @return The view name to be rendered after processing the removal of the connection.
+     */
     @PostMapping("/removeConnection")
     public String removeConnection(@RequestParam("friendId") Long friendId, Model model) {
         log.info("DELETE on removeConnection");
@@ -127,16 +110,36 @@ public class ConnectionController {
 
         boolean resultRemoveConnection = connectionService.removeConnection(userId, friendId);
 
+        setAttributeListOfConnections(model, userId);
+
         if (resultRemoveConnection) {
             log.info("Success to remove connection");
-            // Add success message to model
-            model.addAttribute("successMessage", "Connexion supprimée avec succès");
-            return "listConnections"; // Redirect to list view on success
+            model.addAttribute("successRemoveMessage", "Successful connection deletion");
+            return "listConnections";
         } else {
             log.error("Error to remove connection");
-            // Add error message to model
-            model.addAttribute("errorMessage", "Échec de la suppression de la connexion");
-            return "listConnections"; // Redirect to list view with error message
+            model.addAttribute("errorRemoveMessage", "Connection deletion failed");
+            return "listConnections";
         }
     }
+
+    /**
+     * Retrieves the list of active connections for the specified user and adds it to the Model.
+     *
+     * @param model   The Model object to which the list of connections will be added.
+     * @param userId  The ID of the user for whom the list of connections needs to be retrieved.
+     * @return The updated Model object with the list of connections added, or the original Model object if the retrieval fails.
+     */
+    public Model setAttributeListOfConnections(Model model, Long userId){
+        User userConnected = userService.getUserById(userId).get();
+        List<ConnectionDTO> listOfConnections = userService.getActiveFriends(userConnected.getFriends());
+        if(listOfConnections == null) {
+            log.error("Error when displaying the list of connections on listConnections template");
+        } else {
+            log.info("Success when displaying the list of connections on listConnections template");
+             model.addAttribute("listOfConnections", listOfConnections);
+        }
+        return model;
+    }
+
 }
