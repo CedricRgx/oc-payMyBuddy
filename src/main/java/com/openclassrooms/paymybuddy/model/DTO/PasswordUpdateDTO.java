@@ -19,7 +19,6 @@ public class PasswordUpdateDTO {
      */
     @NotNull(message = "{password.notnull")
     @NotEmpty(message = "{password.notempty}")
-    @Size(min=4, max=50, message = "{password.size}")
     private String currentPassword;
 
     /**
