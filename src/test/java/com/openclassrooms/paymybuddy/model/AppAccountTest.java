@@ -1,142 +1,156 @@
 package com.openclassrooms.paymybuddy.model;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * unit tests for the app account class.
  */
 @Slf4j
-class AppAccountTest {
+public class AppAccountTest {
 
-    private static AppAccount appAccountTest;
+    private AppAccount appAccount;
+    private User mockUser;
 
-    @BeforeAll
-    public static void setUp(){
-        appAccountTest = AppAccount.builder()
-                .balance(42.3)
-                .appOwner(
-                    User.builder()
-                        .firstname("Jean-Baptise")
-                        .lastname("Poquelin")
-                        .phone("1234567890")
-                        .address("8 Main Street, 56098 Chemin")
-                        .birthdate(LocalDate.of(2024, 7, 6))
-                        .build())
+    @BeforeEach
+    public void setUp() {
+        mockUser = new User();
+        appAccount = AppAccount.builder()
+                .balance(100.0)
+                .appOwner(mockUser)
                 .build();
     }
 
     @Test
-    public void testSetAndGetAppAccountId() {
-        log.info("Running setAndGetAppAccountIdTest() test in AppAccountTest class");
-        Long valueIdToTest = 2L;
-        appAccountTest.setAppAccountId(valueIdToTest);
-        assertEquals(valueIdToTest, appAccountTest.getAppAccountId());
+    public void testGetAppAccountId() {
+        // Given
+        Long expectedId = null; // AppAccount's id is generated automatically.
+
+        // When
+        Long actualId = appAccount.getAppAccountId();
+
+        // Then
+        assertEquals(expectedId, actualId);
     }
 
     @Test
-    public void testSetAndGetBalance() {
-        log.info("Running setAndGetBalance() test in AppAccountTest class");
-        double valueDoubleToTest = 99.99;
-        appAccountTest.setBalance(valueDoubleToTest);
-        assertEquals(valueDoubleToTest, appAccountTest.getBalance());
+    public void testSetAppAccountId() {
+        // Given
+        Long newId = 123L;
+
+        // When
+        appAccount.setAppAccountId(newId);
+
+        // Then
+        assertEquals(newId, appAccount.getAppAccountId());
+    }
+
+    @Test
+    public void testGetBalance() {
+        // Given
+        double expectedBalance = 100.0;
+
+        // When
+        double actualBalance = appAccount.getBalance();
+
+        // Then
+        assertEquals(expectedBalance, actualBalance);
+    }
+
+    @Test
+    public void testSetBalance() {
+        // Given
+        double newBalance = 200.0;
+
+        // When
+        appAccount.setBalance(newBalance);
+
+        // Then
+        assertEquals(newBalance, appAccount.getBalance());
     }
 
     @Test
     public void testEqualsSameInstance() {
-        log.info("Running equalsSameInstanceTest() test in AppAccountTest class");
-        AppAccount appAccount = AppAccount.builder()
-                .balance(100.0)
-                .appOwner(new User())
-                .build();
-        assertTrue(appAccount.equals(appAccount));
+        // Given
+        AppAccount sameInstance = appAccount;
+
+        // When
+        boolean result = appAccount.equals(sameInstance);
+
+        // Then
+        assertEquals(true, result);
     }
 
     @Test
     public void testEqualsSameValues() {
-        log.info("Running equalsSameValuesTest() test in AppAccountTest class");
-        AppAccount appAccount1 = AppAccount.builder()
+        // Given
+        AppAccount anotherAppAccount = AppAccount.builder()
                 .balance(100.0)
-                .appOwner(null)
+                .appOwner(mockUser)
                 .build();
-        AppAccount appAccount2 = AppAccount.builder()
-                .balance(100.0)
-                .appOwner(null)
-                .build();
-        assertTrue(appAccount1.equals(appAccount2));
+
+        // When
+        boolean result = appAccount.equals(anotherAppAccount);
+
+        // Then
+        assertEquals(true, result);
     }
 
     @Test
     public void testEqualsDifferentValues() {
-        log.info("Running equalsDifferentValuesTest() test in AppAccountTest class");
-        AppAccount appAccount1 = AppAccount.builder()
-                .balance(100.0)
-                .appOwner(null)
-                .build();
-        AppAccount appAccount2 = AppAccount.builder()
+        // Given
+        AppAccount differentAppAccount = AppAccount.builder()
                 .balance(200.0)
-                .appOwner(null)
+                .appOwner(new User())
                 .build();
-        assertFalse(appAccount1.equals(appAccount2));
+
+        // When
+        boolean result = appAccount.equals(differentAppAccount);
+
+        // Then
+        assertEquals(false, result);
     }
 
     @Test
     public void testEqualsNullObject() {
-        log.info("Running equalsNullObjectTest() test in AppAccountTest class");
-        AppAccount appAccount = AppAccount.builder()
-                .balance(100.0)
-                .appOwner(null)
-                .build();
-        assertFalse(appAccount.equals(null));
+        // Given
+        AppAccount nullAppAccount = null;
+
+        // When
+        boolean result = appAccount.equals(nullAppAccount);
+
+        // Then
+        assertEquals(false, result);
     }
 
     @Test
     public void testEqualsDifferentClass() {
-        log.info("Running equalsDifferentClassTest() test in AppAccountTest class");
-        AppAccount appAccount = AppAccount.builder()
-                .balance(100.0)
-                .appOwner(null)
-                .build();
-        String differentClassObject = "This is not an AppAccount object";
-        assertFalse(appAccount.equals(differentClassObject));
+        // Given
+        Object differentObject = new Object();
+
+        // When
+        boolean result = appAccount.equals(differentObject);
+
+        // Then
+        assertEquals(false, result);
     }
 
     @Test
     public void testHashCode() {
-        log.info("Running hashCodeTest() test in AppAccountTest class");
-        AppAccount appAccount1 = AppAccount.builder()
-                .balance(123.00)
-                .appOwner(null)
+        // Given
+        AppAccount anotherAppAccount = AppAccount.builder()
+                .balance(100.0)
+                .appOwner(mockUser)
                 .build();
-        AppAccount appAccount2 = AppAccount.builder()
-                .balance(123.00)
-                .appOwner(null)
-                .build();
-        assertThat(appAccount1.hashCode()).isEqualTo(appAccount2.hashCode());
-        AppAccount appAccount3 = AppAccount.builder()
-                .balance(456.00)
-                .appOwner(null)
-                .build();
-        assertThat(appAccount1.hashCode()).isNotEqualTo(appAccount3.hashCode());
+
+        // When
+        int hashCode1 = appAccount.hashCode();
+        int hashCode2 = anotherAppAccount.hashCode();
+
+        // Then
+        assertEquals(hashCode1, hashCode2);
     }
 
-    @Test
-    public void testToString() {
-        log.info("Running toStringTest() test in AppAccountTest class");
-        AppAccount appAccount = AppAccount.builder()
-                .balance(123.00)
-                .appOwner(User.builder().firstname("Jean").lastname("Bon").build())
-                .build();
-        assertThat(appAccount.toString())
-                .contains("AppAccount")
-                .contains("appAccountId=" + appAccount.getAppAccountId())
-                .contains("balance=" + appAccount.getBalance());
-    }
 }

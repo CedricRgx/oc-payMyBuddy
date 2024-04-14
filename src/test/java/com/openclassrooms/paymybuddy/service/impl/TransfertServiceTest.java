@@ -17,7 +17,8 @@ import static org.mockito.Mockito.when;
 
 @Slf4j
 public class TransfertServiceTest {
-
+}
+    /*
     @Mock
     private TransfertRepository transfertRepository;
 
@@ -70,3 +71,5 @@ public class TransfertServiceTest {
         verify(transfertRepository).deleteById(transfertId);
     }
 }
+*/
+

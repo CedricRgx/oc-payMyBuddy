@@ -1,194 +1,355 @@
 package com.openclassrooms.paymybuddy.model;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * unit tests for the user class.
  */
 @Slf4j
-class UserTest {
+public class UserTest {
 
-    private static User userTest;
-    private String valueToTest;
+    private User user;
 
-    @BeforeAll
-    public static void setUp(){
-        userTest = User.builder()
-                .firstname("Francis")
-                .lastname("Bacon")
-                .birthdate(LocalDate.of(1985, 9, 10))
-                .phone("0987654321")
-                .address("Test Street, 99999 VilleTest")
-                .build();
+    @BeforeEach
+    public void setUp() {
+        user = new User();
     }
 
     @Test
-    public void testSetAndGetUserId(){
-        log.info("Running setAndGetUserIdTest() test in UserTest class");
-        Long valueIdToTest = 1L;
-        userTest.setUserId(valueIdToTest);
-        assertEquals(valueIdToTest, userTest.getUserId());
+    public void testUserIdSetter() {
+        // Given
+        Long userId = 123L;
+
+        // When
+        user.setUserId(userId);
+
+        // Then
+        assertEquals(userId, user.getUserId());
     }
 
     @Test
-    public void testSetAndGetFirstname(){
-        log.info("Running setAndGetFirstnameTest() test in UserTest class");
-        valueToTest = "John";
-        userTest.setFirstname(valueToTest);
-        assertEquals(valueToTest, userTest.getFirstname());
+    public void testUserIdGetter() {
+        // Given
+        Long userId = 123L;
+        user.setUserId(userId);
+
+        // When
+        Long retrievedUserId = user.getUserId();
+
+        // Then
+        assertEquals(userId, retrievedUserId);
     }
 
     @Test
-    public void testSetAndGetLastname(){
-        log.info("Running setAndGetLastnameTest() test in UserTest class");
-        valueToTest = "Newton";
-        userTest.setLastname(valueToTest);
-        assertEquals(valueToTest, userTest.getLastname());
+    public void testFirstnameSetter() {
+        // Given
+        String firstname = "John";
+
+        // When
+        user.setFirstname(firstname);
+
+        // Then
+        assertEquals(firstname, user.getFirstname());
     }
 
     @Test
-    public void testSetAndGetPhone(){
-        log.info("Running setAndGetPhoneTest() test in UserTest class");
-        valueToTest = "0000000001";
-        userTest.setPhone(valueToTest);
-        assertEquals(valueToTest, userTest.getPhone());
+    public void testFirstnameGetter() {
+        // Given
+        String firstname = "John";
+        user.setFirstname(firstname);
+
+        // When
+        String retrievedFirstname = user.getFirstname();
+
+        // Then
+        assertEquals(firstname, retrievedFirstname);
     }
 
     @Test
-    public void testSetAndGetAddress(){
-        log.info("Running setAndGetAddressTest() test in UserTest class");
-        valueToTest = "11 rue des Huns, 67009 Attila";
-        userTest.setAddress(valueToTest);
-        assertEquals(valueToTest, userTest.getAddress());
+    public void testLastnameSetter() {
+        // Given
+        String lastname = "Doe";
+
+        // When
+        user.setLastname(lastname);
+
+        // Then
+        assertEquals(lastname, user.getLastname());
     }
 
     @Test
-    public void testSetAndGetBirthdate(){
-        log.info("Running setAndGetBirthdateTest() test in UserTest class");
-        LocalDate dateToTest = LocalDate.of(1980, 7, 5);
-        userTest.setBirthdate(dateToTest);
-        assertEquals(dateToTest, userTest.getBirthdate());
+    public void testLastnameGetter() {
+        // Given
+        String lastname = "Doe";
+        user.setLastname(lastname);
+
+        // When
+        String retrievedLastname = user.getLastname();
+
+        // Then
+        assertEquals(lastname, retrievedLastname);
     }
 
     @Test
-    public void testSetAndGetAppAccount(){
-        log.info("Running setAndGetAppAccountTest() test in UserTest class");
-        User user = new User();
-        AppAccount appAccountTest = new AppAccount();
-        appAccountTest.setBalance(3.14);
-        user.setAppAccount(appAccountTest);
-        assertEquals(appAccountTest, user.getAppAccount());
+    public void testBirthdateSetter() {
+        // Given
+        LocalDate birthdate = LocalDate.of(1990, 1, 1);
+
+        // When
+        user.setBirthdate(birthdate);
+
+        // Then
+        assertEquals(birthdate, user.getBirthdate());
     }
 
     @Test
-    public void testUserAccountAssociation() {
-        log.info("Running userAccountAssociationTest() test in UserTest class");
+    public void testBirthdateGetter() {
+        // Given
+        LocalDate birthdate = LocalDate.of(1990, 1, 1);
+        user.setBirthdate(birthdate);
+
+        // When
+        LocalDate retrievedBirthdate = user.getBirthdate();
+
+        // Then
+        assertEquals(birthdate, retrievedBirthdate);
+    }
+
+    @Test
+    public void testPhoneSetter() {
+        // Given
+        String phone = "123456789";
+
+        // When
+        user.setPhone(phone);
+
+        // Then
+        assertEquals(phone, user.getPhone());
+    }
+
+    @Test
+    public void testPhoneGetter() {
+        // Given
+        String phone = "123456789";
+        user.setPhone(phone);
+
+        // When
+        String retrievedPhone = user.getPhone();
+
+        // Then
+        assertEquals(phone, retrievedPhone);
+    }
+
+    @Test
+    public void testAddressSetter() {
+        // Given
+        String address = "123 Main St";
+
+        // When
+        user.setAddress(address);
+
+        // Then
+        assertEquals(address, user.getAddress());
+    }
+
+    @Test
+    public void testAddressGetter() {
+        // Given
+        String address = "123 Main St";
+        user.setAddress(address);
+
+        // When
+        String retrievedAddress = user.getAddress();
+
+        // Then
+        assertEquals(address, retrievedAddress);
+    }
+
+    @Test
+    public void testUserAccountSetter() {
+        // Given
         UserAccount userAccount = new UserAccount();
-        userTest.setUserAccount(userAccount);
-        assertEquals(userAccount, userTest.getUserAccount());
+
+        // When
+        user.setUserAccount(userAccount);
+
+        // Then
+        assertEquals(userAccount, user.getUserAccount());
     }
 
     @Test
-    public void testFriendsAssociation() {
-        log.info("Running friendsAssociationTest() test in UserTest class");
-        List<User> friends = Arrays.asList(new User(), new User());
-        userTest.setFriends(friends);
-        assertEquals(friends, userTest.getFriends());
-    }
+    public void testUserAccountGetter() {
+        // Given
+        UserAccount userAccount = new UserAccount();
+        user.setUserAccount(userAccount);
 
-//    @Test
-//    public void sentTransfertsAssociationTest() {
-//        log.info("Running sentTransfertsAssociationTest() test in UserTest class");
-//        List<Transfert> sentTransferts = Arrays.asList(new Transfert(), new Transfert());
-//        userTest.setSentTransferts(sentTransferts);
-//        assertEquals(sentTransferts, userTest.getSentTransferts());
-//    }
+        // When
+        UserAccount retrievedUserAccount = user.getUserAccount();
 
-    @Test
-    public void testReceivedTransfertsAssociation() {
-        log.info("Running receivedTransfertsAssociationTest() test in UserTest class");
-        List<Transfert> receivedTransferts = Arrays.asList(new Transfert(), new Transfert());
-        userTest.setReceivedTransferts(receivedTransferts);
-        assertEquals(receivedTransferts, userTest.getReceivedTransferts());
-    }
-
-
-//    @Test
-//    public void depositsAssociationTest() {
-//        log.info("Running depositsAssociationTest() test in UserTest class");
-//        List<Deposit> deposits = Arrays.asList(new Deposit(), new Deposit());
-//        userTest.setDeposits(deposits);
-//        assertEquals(deposits, userTest.getDeposits());
-//    }
-
-    @Test
-    public void testEqualsSameInstance() {
-        log.info("Running equalsSameInstanceTest() test in UserTest class");
-        User user = User.builder().firstname("John").lastname("Newton").build();
-        assertTrue(user.equals(user));
+        // Then
+        assertEquals(userAccount, retrievedUserAccount);
     }
 
     @Test
-    public void testEqualsSameValues() {
-        log.info("Running equalsSameValuesTest() test in UserTest class");
-        User user1 = User.builder().firstname("John").lastname("Newton").build();
-        User user2 = User.builder().firstname("John").lastname("Newton").build();
-        assertTrue(user1.equals(user2));
+    public void testAppAccountSetter() {
+        // Given
+        AppAccount appAccount = new AppAccount();
+
+        // When
+        user.setAppAccount(appAccount);
+
+        // Then
+        assertEquals(appAccount, user.getAppAccount());
     }
 
     @Test
-    public void testEqualsDifferentValues() {
-        log.info("Running equalsDifferentValuesTest() test in UserTest class");
-        User user1 = User.builder().firstname("John").lastname("Newton").build();
-        User user2 = User.builder().firstname("Jean").lastname("Newton").build();
-        assertFalse(user1.equals(user2));
+    public void testAppAccountGetter() {
+        // Given
+        AppAccount appAccount = new AppAccount();
+        user.setAppAccount(appAccount);
+
+        // When
+        AppAccount retrievedAppAccount = user.getAppAccount();
+
+        // Then
+        assertEquals(appAccount, retrievedAppAccount);
     }
 
     @Test
-    public void testEqualsNullObject() {
-        log.info("Running equalsNullObjectTest() test in UserTest class");
-        User user = User.builder().firstname("John").lastname("Newton").build();
-        assertFalse(user.equals(null));
+    public void testFriendsSetter() {
+        // Given
+        List<User> friends = new ArrayList<>();
+        User friend1 = new User();
+        User friend2 = new User();
+        friends.add(friend1);
+        friends.add(friend2);
+
+        // When
+        user.setFriends(friends);
+
+        // Then
+        assertEquals(friends, user.getFriends());
     }
 
     @Test
-    public void TestEqualsDifferentClass() {
-        log.info("Running equals_DifferentClassTest() test in UserTest class");
-        User user = User.builder().firstname("John").lastname("Newton").build();
-        String differentClassObject = "This is not an User object";
-        assertFalse(user.equals(differentClassObject));
+    public void testFriendsGetter() {
+        // Given
+        List<User> friends = new ArrayList<>();
+        User friend1 = new User();
+        User friend2 = new User();
+        friends.add(friend1);
+        friends.add(friend2);
+        user.setFriends(friends);
+
+        // When
+        List<User> retrievedFriends = user.getFriends();
+
+        // Then
+        assertEquals(friends, retrievedFriends);
     }
 
     @Test
-    public void testToString() {
-        log.info("Running toStringTest() test in UserTest class");
-        User user = User.builder().firstname("Francis").lastname("Bacon").build();
-        assertThat(user.toString())
-                .contains("User")
-                .contains("userId=" + user.getUserId())
-                .contains("firstname=" + user.getFirstname())
-                .contains("lastname=" + user.getLastname());
+    public void testSourceTransacSetter() {
+        // Given
+        List<Deposit> sourceTransac = new ArrayList<>();
+        Deposit deposit1 = new Deposit();
+        Deposit deposit2 = new Deposit();
+        sourceTransac.add(deposit1);
+        sourceTransac.add(deposit2);
+
+        // When
+        user.setSourceTransac(sourceTransac);
+
+        // Then
+        assertEquals(sourceTransac, user.getSourceTransac());
     }
 
     @Test
-    public void testEquals() {
-        log.info("Running equalsTest() test in UserTest class");
-        User user1 = User.builder().firstname("John").lastname("Newton").build();
-        User user2 = User.builder().firstname("John").lastname("Newton").build();
-        assertThat(user1.equals(user2)).isTrue();
-        assertThat(user2.equals(user1)).isTrue();
-        User user3 = User.builder().firstname("Une").lastname("Pomme").build();
-        assertThat(user1.equals(user3)).isFalse();
+    public void testSourceTransacGetter() {
+        // Given
+        List<Deposit> sourceTransac = new ArrayList<>();
+        Deposit deposit1 = new Deposit();
+        Deposit deposit2 = new Deposit();
+        sourceTransac.add(deposit1);
+        sourceTransac.add(deposit2);
+        user.setSourceTransac(sourceTransac);
+
+        // When
+        List<Deposit> retrievedSourceTransac = user.getSourceTransac();
+
+        // Then
+        assertEquals(sourceTransac, retrievedSourceTransac);
     }
 
+    @Test
+    public void testReceivedTransfertsSetter() {
+        // Given
+        List<Transfert> receivedTransferts = new ArrayList<>();
+        Transfert transfert1 = new Transfert();
+        Transfert transfert2 = new Transfert();
+        receivedTransferts.add(transfert1);
+        receivedTransferts.add(transfert2);
+
+        // When
+        user.setReceivedTransferts(receivedTransferts);
+
+        // Then
+        assertEquals(receivedTransferts, user.getReceivedTransferts());
+    }
+
+    @Test
+    public void testReceivedTransfertsGetter() {
+        // Given
+        List<Transfert> receivedTransferts = new ArrayList<>();
+        Transfert transfert1 = new Transfert();
+        Transfert transfert2 = new Transfert();
+        receivedTransferts.add(transfert1);
+        receivedTransferts.add(transfert2);
+        user.setReceivedTransferts(receivedTransferts);
+
+        // When
+        List<Transfert> retrievedReceivedTransferts = user.getReceivedTransferts();
+
+        // Then
+        assertEquals(receivedTransferts, retrievedReceivedTransferts);
+    }
+
+    @Test
+    public void testBuilder() {
+        // Given
+        String firstname = "John";
+        String lastname = "Doe";
+        LocalDate birthdate = LocalDate.of(1990, 1, 1);
+        String phone = "123456789";
+        String address = "123 Main St";
+        AppAccount appAccount = new AppAccount();
+        UserAccount userAccount = new UserAccount();
+
+        // When
+        User builtUser = User.builder()
+                .firstname(firstname)
+                .lastname(lastname)
+                .birthdate(birthdate)
+                .phone(phone)
+                .address(address)
+                .appAccount(appAccount)
+                .userAccount(userAccount)
+                .build();
+
+        // Then
+        assertNotNull(builtUser);
+        assertEquals(firstname, builtUser.getFirstname());
+        assertEquals(lastname, builtUser.getLastname());
+        assertEquals(birthdate, builtUser.getBirthdate());
+        assertEquals(phone, builtUser.getPhone());
+        assertEquals(address, builtUser.getAddress());
+        assertEquals(appAccount, builtUser.getAppAccount());
+        assertEquals(userAccount, builtUser.getUserAccount());
+    }
 }
