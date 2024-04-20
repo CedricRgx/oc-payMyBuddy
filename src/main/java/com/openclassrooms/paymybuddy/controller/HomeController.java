@@ -60,7 +60,6 @@ public class HomeController {
         model.addAttribute("successMessage", "Balance credited successfully.");
 
         return "home";
-        //return "redirect:/home";
     }
 
     /**

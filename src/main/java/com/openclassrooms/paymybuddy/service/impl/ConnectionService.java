@@ -47,16 +47,17 @@ public class ConnectionService implements IConnectionService{
     }
 
     /**
-     * Searches and returns connections based on a query that matches either first name or last name.
-     * @param query The search query to match against user's firstname or lastname.
+     * Searches and returns connections based on an email query.
+     * @param email The email search query to match against user's email.
      * @return A list of users representing the matched connections.
      */
-    public List<User> searchConnections(String query, Long userId){
-        String sql = "SELECT * FROM user u WHERE (LOWER(u.firstname) LIKE LOWER(?) OR LOWER(u.lastname) LIKE LOWER(?))" +
+    public List<User> searchConnections(String email, Long userId){
+        String sql = "SELECT u.* FROM user u JOIN user_account ua ON u.user_account_id = ua.user_account_id" +
+                " WHERE LOWER(ua.email) LIKE LOWER(?)" +
                 " AND u.user_id <> ?" +
                 " AND NOT EXISTS (" +
                 "SELECT 1 FROM assoc_user_friend auf WHERE auf.friend_id = u.user_id AND auf.user_id = ?)";
-        return jdbcTemplate.query(sql, new Object[]{"%" + query + "%", "%" + query + "%", userId, userId},
+        return jdbcTemplate.query(sql, new Object[]{"%" + email + "%", userId, userId},
                 (rs, rowNum) -> {
                     User user = new User();
                     user.setUserId(rs.getLong("user_id"));

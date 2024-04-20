@@ -111,7 +111,7 @@ public class User implements Serializable {
      * @param userAccount The userAccount of the user
      */
     @Builder
-    public User(String firstname, String lastname, LocalDate birthdate, String phone, String address, AppAccount appAccount, UserAccount userAccount){
+    public User(String firstname, String lastname, LocalDate birthdate, String phone, String address, AppAccount appAccount, UserAccount userAccount, List<User> friends){
         this.firstname = firstname;
         this.lastname = lastname;
         this.birthdate = birthdate;
@@ -119,6 +119,7 @@ public class User implements Serializable {
         this.address = address;
         this.appAccount = appAccount;
         this.userAccount = userAccount;
+        this.friends = friends;
     }
 
 }

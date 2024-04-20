@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.List;
 
 /**
@@ -39,7 +41,6 @@ public class ConnectionController {
         log.info("Get on listConnections");
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Long userId = userService.getUserIdByEmail(email);
-        User userConnected = userService.getUserById(userId).get();
         setAttributeListOfConnections(model, userId);
         return "listConnections";
     }
@@ -71,28 +72,28 @@ public class ConnectionController {
     }
 
     /**
-     * Adds a new connection for the currently authenticated user based on the friendId provided.
+     * Handles the GET request to add a new connection for the currently authenticated user.
      *
      * @param friendId The ID of the user to be added as a connection.
-     * @param model    The Model object used for adding attributes to be rendered on the view.
-     * @return Redirects to the listConnections page with a success or error parameter.
+     * @param redirectAttributes Used to add attributes that will be available in the model after the redirect.
+     * @return A redirection URL to the 'listConnections' page which displays the current user's connections.
      */
     @GetMapping("/addConnection")
-    public String addConnection(@RequestParam("friendId") Long friendId, Model model) {
+    public String addConnection(@RequestParam("friendId") Long friendId, RedirectAttributes redirectAttributes) {
         log.info("Get on addConnection");
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Long userId = userService.getUserIdByEmail(email);
         boolean resultAddConnection = connectionService.addConnection(userId, friendId);
 
-        if(resultAddConnection) {
+        if (resultAddConnection) {
             log.info("Success to add connection");
-            model.addAttribute("successAddMessage", "Successfully added the connection");
-            return "listConnections";
+            redirectAttributes.addFlashAttribute("successAddMessage", "Successfully added the connection");
         } else {
             log.error("Error to add connection");
-            model.addAttribute("errorAddMessage", "Failed to delete the connection");
-            return "listConnections";
+            redirectAttributes.addFlashAttribute("errorAddMessage", "Failed to add the connection");
         }
+
+        return "redirect:/listConnections";
     }
 
     /**
