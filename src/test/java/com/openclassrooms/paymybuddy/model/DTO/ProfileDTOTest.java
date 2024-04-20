@@ -10,8 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * unit tests for the ProfileDTO class.
@@ -253,6 +252,180 @@ public class ProfileDTOTest {
 
         // Then
         assertTrue(violations.stream().anyMatch(v -> "phone".equals(v.getPropertyPath().toString())));
+    }
+
+    @Test
+    public void hashCode_shouldReturnSameHashCodeForSameObject() {
+        // Given
+        ProfileDTO dto = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        // When
+        int hashCode1 = dto.hashCode();
+        int hashCode2 = dto.hashCode();
+
+        // Then
+        assertEquals(hashCode1, hashCode2);
+    }
+
+    @Test
+    public void hashCode_shouldReturnSameValueForEqualObjects() {
+        // Given
+        ProfileDTO dto1 = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        ProfileDTO dto2 = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        // When
+        int hashCode1 = dto1.hashCode();
+        int hashCode2 = dto2.hashCode();
+
+        // Then
+        assertEquals(hashCode1, hashCode2);
+    }
+
+    @Test
+    public void hashCode_shouldReturnDifferentValueForDifferentObjects() {
+        // Given
+        ProfileDTO dto1 = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        ProfileDTO dto2 = ProfileDTO.builder()
+                .email("jane.doe@example.com")
+                .firstname("Jane")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1995, 2, 2))
+                .address("456 Second St")
+                .phone("0987654321")
+                .build();
+
+        // When
+        int hashCode1 = dto1.hashCode();
+        int hashCode2 = dto2.hashCode();
+
+        // Then
+        assertNotEquals(hashCode1, hashCode2);
+    }
+
+    @Test
+    public void toString_shouldReturnExpectedString() {
+        // Given
+        ProfileDTO dto = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        String expected = "ProfileDTO(email=john.doe@example.com, firstname=John, lastname=Doe, birthdate=1990-01-01, address=123 Main St, phone=1234567890)";
+
+        // When
+        String actual = dto.toString();
+
+        // Then
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void equals_withEqualObjects_shouldReturnTrue() {
+        // Given
+        ProfileDTO dto1 = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        ProfileDTO dto2 = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        // When
+        boolean result = dto1.equals(dto2);
+
+        // Then
+        assertTrue(result);
+    }
+
+    @Test
+    public void equals_withDifferentObjects_shouldReturnFalse() {
+        // Given
+        ProfileDTO dto1 = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        ProfileDTO dto2 = ProfileDTO.builder()
+                .email("jane.doe@example.com")
+                .firstname("Jane")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        // When
+        boolean result = dto1.equals(dto2);
+
+        // Then
+        assertFalse(result);
+    }
+
+    @Test
+    public void equals_withNullObject_shouldReturnFalse() {
+        // Given
+        ProfileDTO dto = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        // When
+        boolean result = dto.equals(null);
+
+        // Then
+        assertFalse(result);
     }
 
 }

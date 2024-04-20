@@ -3,7 +3,7 @@ package com.openclassrooms.paymybuddy.model.DTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * unit tests for the UserDTO class.
@@ -136,5 +136,166 @@ public class UserDTOTest {
 
         // Then
         assertEquals(balance, dto.getBalance());
+    }
+
+    @Test
+    public void hashCode_withEqualObjects_shouldReturnEqualHashCodes() {
+        // Given
+        UserDTO dto1 = UserDTO.builder()
+                .firstname("John")
+                .lastname("Doe")
+                .address("123 Main St")
+                .phone("1234567890")
+                .balance("100.00")
+                .build();
+
+        UserDTO dto2 = UserDTO.builder()
+                .firstname("John")
+                .lastname("Doe")
+                .address("123 Main St")
+                .phone("1234567890")
+                .balance("100.00")
+                .build();
+
+        // When
+        int hashCode1 = dto1.hashCode();
+        int hashCode2 = dto2.hashCode();
+
+        // Then
+        assertEquals(hashCode1, hashCode2);
+    }
+
+    @Test
+    public void hashCode_withDifferentObjects_shouldReturnDifferentHashCodes() {
+        // Given
+        UserDTO dto1 = UserDTO.builder()
+                .firstname("John")
+                .lastname("Doe")
+                .address("123 Main St")
+                .phone("1234567890")
+                .balance("100.00")
+                .build();
+
+        UserDTO dto2 = UserDTO.builder()
+                .firstname("Jane")
+                .lastname("Doe")
+                .address("123 Main St")
+                .phone("1234567890")
+                .balance("100.00")
+                .build();
+
+        // When
+        int hashCode1 = dto1.hashCode();
+        int hashCode2 = dto2.hashCode();
+
+        // Then
+        assertNotEquals(hashCode1, hashCode2);
+    }
+
+    @Test
+    public void toString_shouldReturnCorrectStringRepresentation() {
+        // Given
+        UserDTO dto = UserDTO.builder()
+                .firstname("John")
+                .lastname("Doe")
+                .address("123 Main St")
+                .phone("1234567890")
+                .balance("100.00")
+                .build();
+
+        // When
+        String result = dto.toString();
+
+        // Then
+        String expected = "UserDTO(firstname=John, lastname=Doe, address=123 Main St, phone=1234567890, balance=100.00)";
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void equals_shouldReturnTrueForSameObject() {
+        // Given
+        UserDTO dto1 = UserDTO.builder()
+                .firstname("John")
+                .lastname("Doe")
+                .address("123 Main St")
+                .phone("1234567890")
+                .balance("100.00")
+                .build();
+
+        // When
+        boolean result = dto1.equals(dto1);
+
+        // Then
+        assertTrue(result);
+    }
+
+    @Test
+    public void equals_shouldReturnTrueForEqualObjects() {
+        // Given
+        UserDTO dto1 = UserDTO.builder()
+                .firstname("John")
+                .lastname("Doe")
+                .address("123 Main St")
+                .phone("1234567890")
+                .balance("100.00")
+                .build();
+
+        UserDTO dto2 = UserDTO.builder()
+                .firstname("John")
+                .lastname("Doe")
+                .address("123 Main St")
+                .phone("1234567890")
+                .balance("100.00")
+                .build();
+
+        // When
+        boolean result = dto1.equals(dto2);
+
+        // Then
+        assertTrue(result);
+    }
+
+    @Test
+    public void equals_shouldReturnFalseForDifferentObjects() {
+        // Given
+        UserDTO dto1 = UserDTO.builder()
+                .firstname("John")
+                .lastname("Doe")
+                .address("123 Main St")
+                .phone("1234567890")
+                .balance("100.00")
+                .build();
+
+        UserDTO dto2 = UserDTO.builder()
+                .firstname("Jane")
+                .lastname("Doe")
+                .address("123 Main St")
+                .phone("1234567890")
+                .balance("100.00")
+                .build();
+
+        // When
+        boolean result = dto1.equals(dto2);
+
+        // Then
+        assertFalse(result);
+    }
+
+    @Test
+    public void equals_shouldReturnFalseForNullObject() {
+        // Given
+        UserDTO dto = UserDTO.builder()
+                .firstname("John")
+                .lastname("Doe")
+                .address("123 Main St")
+                .phone("1234567890")
+                .balance("100.00")
+                .build();
+
+        // When
+        boolean result = dto.equals(null);
+
+        // Then
+        assertFalse(result);
     }
 }

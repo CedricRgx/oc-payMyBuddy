@@ -6,8 +6,8 @@ import jakarta.validation.ValidatorFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * unit tests for the NewTransfertDTO class.
@@ -192,5 +192,132 @@ public class NewTransfertDTOTest {
 
         // Then
         assertTrue(violations.stream().anyMatch(v -> "amount".equals(v.getPropertyPath().toString())));
+    }
+
+    @Test
+    public void hashCode_shouldReturnSameValueForEqualObjects() {
+        // Given
+        NewTransfertDTO dto1 = NewTransfertDTO.builder()
+                .recipientId(1L)
+                .description("Transfer description")
+                .amount(100.0)
+                .build();
+        NewTransfertDTO dto2 = NewTransfertDTO.builder()
+                .recipientId(1L)
+                .description("Transfer description")
+                .amount(100.0)
+                .build();
+
+        // When/Then
+        assertEquals(dto1.hashCode(), dto2.hashCode());
+    }
+
+    @Test
+    public void hashCode_shouldReturnDifferentValueForDifferentObjects() {
+        // Given
+        NewTransfertDTO dto1 = NewTransfertDTO.builder()
+                .recipientId(1L)
+                .description("Transfer description")
+                .amount(100.0)
+                .build();
+        NewTransfertDTO dto2 = NewTransfertDTO.builder()
+                .recipientId(2L)
+                .description("Another description")
+                .amount(200.0)
+                .build();
+
+        // When/Then
+        assertNotEquals(dto1.hashCode(), dto2.hashCode());
+    }
+
+    @Test
+    public void toString_shouldReturnCorrectStringRepresentation() {
+        // Given
+        NewTransfertDTO dto = NewTransfertDTO.builder()
+                .recipientId(1L)
+                .description("Transfer description")
+                .amount(100.0)
+                .build();
+
+        // When
+        String result = dto.toString();
+
+        // Then
+        String expected = "NewTransfertDTO(recipientId=1, description=Transfer description, amount=100.0)";
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void equals_shouldReturnTrueWhenComparingWithSameInstance() {
+        // Given
+        NewTransfertDTO dto = NewTransfertDTO.builder()
+                .recipientId(1L)
+                .description("Transfer description")
+                .amount(100.0)
+                .build();
+
+        // When
+        boolean result = dto.equals(dto);
+
+        // Then
+        assertTrue(result);
+    }
+
+    @Test
+    public void equals_shouldReturnTrueWhenComparingWithEqualInstance() {
+        // Given
+        NewTransfertDTO dto1 = NewTransfertDTO.builder()
+                .recipientId(1L)
+                .description("Transfer description")
+                .amount(100.0)
+                .build();
+        NewTransfertDTO dto2 = NewTransfertDTO.builder()
+                .recipientId(1L)
+                .description("Transfer description")
+                .amount(100.0)
+                .build();
+
+        // When
+        boolean result = dto1.equals(dto2);
+
+        // Then
+        assertTrue(result);
+    }
+
+    @Test
+    public void equals_shouldReturnFalseWhenComparingWithDifferentInstance() {
+        // Given
+        NewTransfertDTO dto1 = NewTransfertDTO.builder()
+                .recipientId(1L)
+                .description("Transfer description")
+                .amount(100.0)
+                .build();
+        NewTransfertDTO dto2 = NewTransfertDTO.builder()
+                .recipientId(2L)
+                .description("Another description")
+                .amount(200.0)
+                .build();
+
+        // When
+        boolean result = dto1.equals(dto2);
+
+        // Then
+        assertFalse(result);
+    }
+
+    @Test
+    public void equals_shouldReturnFalseWhenComparingWithNull() {
+        // Given
+        NewTransfertDTO dto = NewTransfertDTO.builder()
+                .recipientId(1L)
+                .description("Transfer description")
+                .amount(100.0)
+                .build();
+
+        // When
+        boolean result = dto.equals(null);
+
+        // Then
+        assertFalse(result);
     }
 }

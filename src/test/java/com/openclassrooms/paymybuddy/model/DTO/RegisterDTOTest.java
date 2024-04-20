@@ -376,5 +376,149 @@ public class RegisterDTOTest {
         assertEquals("phone", violations.iterator().next().getPropertyPath().toString());
     }
 
+    @Test
+    public void hashCode_shouldReturnEqualValuesForEqualObjects() {
+        // Given
+        RegisterDTO dto1 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        RegisterDTO dto2 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        // When
+        int hashCode1 = dto1.hashCode();
+        int hashCode2 = dto2.hashCode();
+
+        // Then
+        assertEquals(hashCode1, hashCode2);
+    }
+
+    @Test
+    public void hashCode_shouldReturnDifferentValuesForDifferentObjects() {
+        // Given
+        RegisterDTO dto1 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        RegisterDTO dto2 = RegisterDTO.builder()
+                .email("jane.smith@example.com")
+                .password("password456")
+                .firstname("Jane")
+                .lastname("Smith")
+                .birthdate(LocalDate.of(1995, 5, 5))
+                .address("456 Elm St")
+                .phone("9876543210")
+                .build();
+
+        // When
+        int hashCode1 = dto1.hashCode();
+        int hashCode2 = dto2.hashCode();
+
+        // Then
+        assertNotEquals(hashCode1, hashCode2);
+    }
+
+    @Test
+    public void toString_shouldReturnCorrectStringRepresentation() {
+        // Given
+        RegisterDTO dto = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        String expectedString = "RegisterDTO(email=john.doe@example.com, password=password123, " +
+                "firstname=John, lastname=Doe, birthdate=1990-01-01, address=123 Main St, phone=1234567890)";
+
+        // When
+        String actualString = dto.toString();
+
+        // Then
+        assertEquals(expectedString, actualString);
+    }
+
+    @Test
+    public void equals_shouldReturnTrueWhenObjectsAreEqual() {
+        // Given
+        RegisterDTO dto1 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        RegisterDTO dto2 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        // When
+        boolean result = dto1.equals(dto2);
+
+        // Then
+        assertTrue(result);
+    }
+
+    @Test
+    public void equals_shouldReturnFalseWhenObjectsAreNotEqual() {
+        // Given
+        RegisterDTO dto1 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        RegisterDTO dto2 = RegisterDTO.builder()
+                .email("jane.doe@example.com")
+                .password("password123")
+                .firstname("Jane")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1995, 2, 2))
+                .address("456 Second St")
+                .phone("0987654321")
+                .build();
+
+        // When
+        boolean result = dto1.equals(dto2);
+
+        // Then
+        assertFalse(result);
+    }
 
 }

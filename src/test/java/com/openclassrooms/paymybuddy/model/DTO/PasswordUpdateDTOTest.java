@@ -6,8 +6,8 @@ import jakarta.validation.ValidatorFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * unit tests for the PasswordUpdateDTO class.
@@ -150,6 +150,144 @@ public class PasswordUpdateDTOTest {
 
         // Then
         assertTrue(violations.isEmpty());
+    }
+
+    @Test
+    public void hashCode_shouldReturnEqualHashCodeForEqualObjects() {
+        // Given
+        PasswordUpdateDTO dto1 = PasswordUpdateDTO.builder()
+                .currentPassword("password123")
+                .newPassword("newPassword123")
+                .confirmPassword("newPassword123")
+                .build();
+
+        PasswordUpdateDTO dto2 = PasswordUpdateDTO.builder()
+                .currentPassword("password123")
+                .newPassword("newPassword123")
+                .confirmPassword("newPassword123")
+                .build();
+
+        // When
+        int hashCode1 = dto1.hashCode();
+        int hashCode2 = dto2.hashCode();
+
+        // Then
+        assertEquals(hashCode1, hashCode2);
+    }
+
+    @Test
+    public void hashCode_shouldReturnDifferentHashCodeForDifferentObjects() {
+        // Given
+        PasswordUpdateDTO dto1 = PasswordUpdateDTO.builder()
+                .currentPassword("password123")
+                .newPassword("newPassword123")
+                .confirmPassword("newPassword123")
+                .build();
+
+        PasswordUpdateDTO dto2 = PasswordUpdateDTO.builder()
+                .currentPassword("password456")
+                .newPassword("newPassword456")
+                .confirmPassword("newPassword456")
+                .build();
+
+        // When
+        int hashCode1 = dto1.hashCode();
+        int hashCode2 = dto2.hashCode();
+
+        // Then
+        assertNotEquals(hashCode1, hashCode2);
+    }
+
+    @Test
+    public void toString_shouldReturnCorrectStringRepresentation() {
+        // Given
+        PasswordUpdateDTO dto = PasswordUpdateDTO.builder()
+                .currentPassword("password123")
+                .newPassword("newPassword123")
+                .confirmPassword("newPassword123")
+                .build();
+
+        // When
+        String expected = "PasswordUpdateDTO(currentPassword=password123, newPassword=newPassword123, confirmPassword=newPassword123)";
+        String actual = dto.toString();
+
+        // Then
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void equals_shouldReturnTrueWhenComparingWithSameInstance() {
+        // Given
+        PasswordUpdateDTO dto = PasswordUpdateDTO.builder()
+                .currentPassword("password123")
+                .newPassword("newPassword123")
+                .confirmPassword("newPassword123")
+                .build();
+
+        // When/Then
+        assertTrue(dto.equals(dto));
+    }
+
+    @Test
+    public void equals_shouldReturnTrueWhenComparingWithEqualInstance() {
+        // Given
+        PasswordUpdateDTO dto1 = PasswordUpdateDTO.builder()
+                .currentPassword("password123")
+                .newPassword("newPassword123")
+                .confirmPassword("newPassword123")
+                .build();
+        PasswordUpdateDTO dto2 = PasswordUpdateDTO.builder()
+                .currentPassword("password123")
+                .newPassword("newPassword123")
+                .confirmPassword("newPassword123")
+                .build();
+
+        // When/Then
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void equals_shouldReturnFalseWhenComparingWithNull() {
+        // Given
+        PasswordUpdateDTO dto = PasswordUpdateDTO.builder()
+                .currentPassword("password123")
+                .newPassword("newPassword123")
+                .confirmPassword("newPassword123")
+                .build();
+
+        // When/Then
+        assertFalse(dto.equals(null));
+    }
+
+    @Test
+    public void equals_shouldReturnFalseWhenComparingWithDifferentClass() {
+        // Given
+        PasswordUpdateDTO dto = PasswordUpdateDTO.builder()
+                .currentPassword("password123")
+                .newPassword("newPassword123")
+                .confirmPassword("newPassword123")
+                .build();
+
+        // When/Then
+        assertFalse(dto.equals("password123"));
+    }
+
+    @Test
+    public void equals_shouldReturnFalseWhenComparingWithDifferentInstance() {
+        // Given
+        PasswordUpdateDTO dto1 = PasswordUpdateDTO.builder()
+                .currentPassword("password123")
+                .newPassword("newPassword123")
+                .confirmPassword("newPassword123")
+                .build();
+        PasswordUpdateDTO dto2 = PasswordUpdateDTO.builder()
+                .currentPassword("password123")
+                .newPassword("differentPassword")
+                .confirmPassword("differentPassword")
+                .build();
+
+        // When/Then
+        assertFalse(dto1.equals(dto2));
     }
 
 }

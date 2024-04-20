@@ -145,17 +145,30 @@ public class TransfertService implements ITransfertService {
         double fee = 0.05;
         String emailAuthor = SecurityContextHolder.getContext().getAuthentication().getName();
         Long userAuthorId = userService.getUserIdByEmail(emailAuthor);
-        User userAuthor = userService.getUserById(userAuthorId).get();
+        //User userAuthor = userService.getUserById(userAuthorId).get();
+        Optional<User> userAuthorOptional = userService.getUserById(userAuthorId);
+        if (!userAuthorOptional.isPresent()) {
+            log.info("Author user not found");
+            return false;
+        }
+        User userAuthor = userAuthorOptional.get();
 
         Double balance = userService.getUserBalance(userAuthorId);
-        User userRecipient = userService.getUserById(newTransfertDTO.getRecipientId()).get();
-        if (newTransfertDTO.getAmount() <= 0) {
+        //User userRecipient = userService.getUserById(newTransfertDTO.getRecipientId()).get();
+        if (balance == null || newTransfertDTO.getAmount() <= 0) {
             log.info("Amount of the transfert not valid");
             return false;
-        } else if (balance == null || balance < newTransfertDTO.getAmount()) {
+        } else if (balance < newTransfertDTO.getAmount()) {
             log.info("Insufficient balance to make the transfer");
             return false;
         }
+
+        Optional<User> userRecipientOptional = userService.getUserById(newTransfertDTO.getRecipientId());
+        if (!userRecipientOptional.isPresent()) {
+            log.info("Recipient user not found");
+            return false;
+        }
+        User userRecipient = userRecipientOptional.get();
 
         double amountToTransfert = newTransfertDTO.getAmount();
         double feeTransfert = amountToTransfert * fee;

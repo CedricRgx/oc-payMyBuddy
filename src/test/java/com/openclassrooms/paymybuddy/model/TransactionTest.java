@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * unit tests for the transaction class.
@@ -165,4 +165,152 @@ public class TransactionTest {
         // Then
         assertEquals(newAuthor, transaction.getAuthor());
     }
+
+    @Test
+    public void hashCode_SameObject_ReturnsSameHashCode() {
+        // Given
+        LocalDateTime transactionDate = LocalDateTime.now();
+        User author = new User();
+
+        Transaction transaction1 = Transaction.builder()
+                .transactionId(1L)
+                .amount(100.0)
+                .description("Test transaction")
+                .transactionDate(transactionDate)
+                .fee(10.0)
+                .author(author)
+                .build();
+
+        // When
+        int hashCode1 = transaction1.hashCode();
+        int hashCode2 = transaction1.hashCode();
+
+        // Then
+        assertEquals(hashCode1, hashCode2);
+    }
+
+    @Test
+    public void hashCode_DifferentObjectsWithSameProperties_ReturnsSameHashCode() {
+        // Given
+        LocalDateTime transactionDate = LocalDateTime.now();
+        User author = new User();
+
+        Transaction transaction1 = Transaction.builder()
+                .transactionId(1L)
+                .amount(100.0)
+                .description("Test transaction")
+                .transactionDate(transactionDate)
+                .fee(10.0)
+                .author(author)
+                .build();
+
+        Transaction transaction2 = Transaction.builder()
+                .transactionId(1L)
+                .amount(100.0)
+                .description("Test transaction")
+                .transactionDate(transactionDate)
+                .fee(10.0)
+                .author(author)
+                .build();
+
+        // When
+        int hashCode1 = transaction1.hashCode();
+        int hashCode2 = transaction2.hashCode();
+
+        // Then
+        assertEquals(hashCode1, hashCode2);
+    }
+
+    @Test
+    public void hashCode_DifferentObjectsWithDifferentProperties_ReturnsDifferentHashCodes() {
+        // Given
+        LocalDateTime transactionDate = LocalDateTime.now();
+        User author1 = new User();
+        User author2 = new User();
+
+        Transaction transaction1 = Transaction.builder()
+                .transactionId(1L)
+                .amount(100.0)
+                .description("Test transaction")
+                .transactionDate(transactionDate)
+                .fee(10.0)
+                .author(author1)
+                .build();
+
+        Transaction transaction2 = Transaction.builder()
+                .transactionId(2L)
+                .amount(150.0)
+                .description("Another test transaction")
+                .transactionDate(transactionDate)
+                .fee(20.0)
+                .author(author2)
+                .build();
+
+        // When
+        int hashCode1 = transaction1.hashCode();
+        int hashCode2 = transaction2.hashCode();
+
+        // Then
+        assertNotEquals(hashCode1, hashCode2);
+    }
+
+    @Test
+    public void equals_ReturnsTrue_WhenSameObject() {
+        // Given
+        Transaction transaction = Transaction.builder().build();
+
+        // When - Then
+        assertTrue(transaction.equals(transaction));
+    }
+
+    @Test
+    public void equals_ReturnsFalse_WhenNullObject() {
+        // Given
+        Transaction transaction = Transaction.builder().build();
+
+        // When - Then
+        assertFalse(transaction.equals(null));
+    }
+
+    @Test
+    public void equals_ReturnsFalse_WhenDifferentClass() {
+        // Given
+        Transaction transaction = Transaction.builder().build();
+        Object obj = new Object();
+
+        // When - Then
+        assertFalse(transaction.equals(obj));
+    }
+
+    @Test
+    public void equals_ReturnsTrue_WhenSameId() {
+        // Given
+        Long transactionId = 1L;
+        Transaction transaction1 = Transaction.builder().transactionId(transactionId).build();
+        Transaction transaction2 = Transaction.builder().transactionId(transactionId).build();
+
+        // When - Then
+        assertTrue(transaction1.equals(transaction2));
+    }
+
+    @Test
+    public void equals_ReturnsFalse_WhenDifferentId() {
+        // Given
+        Transaction transaction1 = Transaction.builder().transactionId(1L).build();
+        Transaction transaction2 = Transaction.builder().transactionId(2L).build();
+
+        // When - Then
+        assertFalse(transaction1.equals(transaction2));
+    }
+
+    @Test
+    public void equals_ReturnsTrue_WhenBothIdsNull() {
+        // Given
+        Transaction transaction1 = Transaction.builder().build();
+        Transaction transaction2 = Transaction.builder().build();
+
+        // When - Then
+        assertTrue(transaction1.equals(transaction2));
+    }
+
 }

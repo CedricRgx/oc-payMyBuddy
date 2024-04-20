@@ -3,7 +3,7 @@ package com.openclassrooms.paymybuddy.model.DTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * unit tests for the TransfertDTO class.
@@ -111,6 +111,159 @@ public class TransfertDTOTest {
 
         // Then
         assertEquals(amount, dto.getAmount());
+    }
+
+    @Test
+    public void hashCode_shouldBeEqualForEqualObjects() {
+        // Given
+        TransfertDTO dto1 = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname("Doe")
+                .description("Expense reimbursement")
+                .amount("50.00")
+                .build();
+
+        TransfertDTO dto2 = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname("Doe")
+                .description("Expense reimbursement")
+                .amount("50.00")
+                .build();
+
+        // When
+        int hashCode1 = dto1.hashCode();
+        int hashCode2 = dto2.hashCode();
+
+        // Then
+        assertEquals(hashCode1, hashCode2);
+    }
+
+    @Test
+    public void hashCode_shouldBeDifferentForDifferentObjects() {
+        // Given
+        TransfertDTO dto1 = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname("Doe")
+                .description("Expense reimbursement")
+                .amount("50.00")
+                .build();
+
+        TransfertDTO dto2 = TransfertDTO.builder()
+                .recipientFirstname("Jane")
+                .recipientLastname("Doe")
+                .description("Expense reimbursement")
+                .amount("50.00")
+                .build();
+
+        // When
+        int hashCode1 = dto1.hashCode();
+        int hashCode2 = dto2.hashCode();
+
+        // Then
+        assertNotEquals(hashCode1, hashCode2);
+    }
+
+    @Test
+    public void toString_shouldReturnExpectedString() {
+        // Given
+        TransfertDTO dto = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname("Doe")
+                .description("Expense reimbursement")
+                .amount("50.00")
+                .build();
+
+        String expectedString = "TransfertDTO(recipientFirstname=John, recipientLastname=Doe, description=Expense reimbursement, amount=50.00)";
+
+        // When
+        String actualString = dto.toString();
+
+        // Then
+        assertEquals(expectedString, actualString);
+    }
+
+    @Test
+    public void equals_shouldReturnTrueWhenObjectsAreEqual() {
+        // Given
+        TransfertDTO dto1 = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname("Doe")
+                .description("Expense reimbursement")
+                .amount("50.00")
+                .build();
+
+        TransfertDTO dto2 = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname("Doe")
+                .description("Expense reimbursement")
+                .amount("50.00")
+                .build();
+
+        // When
+        boolean result = dto1.equals(dto2);
+
+        // Then
+        assertTrue(result);
+    }
+
+    @Test
+    public void equals_shouldReturnFalseWhenObjectsAreNotEqual() {
+        // Given
+        TransfertDTO dto1 = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname("Doe")
+                .description("Expense reimbursement")
+                .amount("50.00")
+                .build();
+
+        TransfertDTO dto2 = TransfertDTO.builder()
+                .recipientFirstname("Jane")
+                .recipientLastname("Smith")
+                .description("Loan repayment")
+                .amount("100.00")
+                .build();
+
+        // When
+        boolean result = dto1.equals(dto2);
+
+        // Then
+        assertFalse(result);
+    }
+
+    @Test
+    public void equals_shouldReturnFalseWhenObjectIsNull() {
+        // Given
+        TransfertDTO dto = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname("Doe")
+                .description("Expense reimbursement")
+                .amount("50.00")
+                .build();
+
+        // When
+        boolean result = dto.equals(null);
+
+        // Then
+        assertFalse(result);
+    }
+
+    @Test
+    public void equals_shouldReturnFalseWhenObjectIsOfDifferentType() {
+        // Given
+        TransfertDTO dto = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname("Doe")
+                .description("Expense reimbursement")
+                .amount("50.00")
+                .build();
+
+        String differentTypeObject = "This is a string";
+
+        // When
+        boolean result = dto.equals(differentTypeObject);
+
+        // Then
+        assertFalse(result);
     }
 
 }
