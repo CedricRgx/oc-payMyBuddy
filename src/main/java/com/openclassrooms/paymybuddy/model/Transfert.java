@@ -32,7 +32,7 @@ public class Transfert extends Transaction {
 
     public Transfert setRecipient(User recipient) {
         this.recipient = recipient;
-        return this; // Allows for method chaining
+        return this;
     }
 
 }

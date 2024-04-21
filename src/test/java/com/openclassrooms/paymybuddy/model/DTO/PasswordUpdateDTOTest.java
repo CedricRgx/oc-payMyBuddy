@@ -3,16 +3,16 @@ package com.openclassrooms.paymybuddy.model.DTO;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * unit tests for the PasswordUpdateDTO class.
- */
-@Slf4j
+@ExtendWith(MockitoExtension.class)
 public class PasswordUpdateDTOTest {
 
     private Validator validator;
@@ -288,6 +288,109 @@ public class PasswordUpdateDTOTest {
 
         // When/Then
         assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullCurrentPassword() {
+        PasswordUpdateDTO dto1 = PasswordUpdateDTO.builder()
+                .currentPassword(null)
+                .newPassword("newPassword123")
+                .confirmPassword("differentPassword")
+                .build();
+        PasswordUpdateDTO dto2 = PasswordUpdateDTO.builder()
+                .currentPassword(null)
+                .newPassword("newPassword123")
+                .confirmPassword("differentPassword")
+                .build();
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_NullAndNonNullCurrentPassword() {
+        PasswordUpdateDTO dto1 = PasswordUpdateDTO.builder()
+                .currentPassword("password123")
+                .newPassword("newPassword123")
+                .confirmPassword("newPassword123")
+                .build();
+        PasswordUpdateDTO dto2 = PasswordUpdateDTO.builder()
+                .currentPassword(null)
+                .newPassword("differentPassword")
+                .confirmPassword("differentPassword")
+                .build();
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullNewPassword() {
+        PasswordUpdateDTO dto1 = PasswordUpdateDTO.builder()
+                .currentPassword("password123")
+                .newPassword(null)
+                .confirmPassword("differentPassword")
+                .build();
+        PasswordUpdateDTO dto2 = PasswordUpdateDTO.builder()
+                .currentPassword("password123")
+                .newPassword(null)
+                .confirmPassword("differentPassword")
+                .build();
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_NullAndNonNullNewPassword() {
+        PasswordUpdateDTO dto1 = PasswordUpdateDTO.builder()
+                .currentPassword("password123")
+                .newPassword("newPassword123")
+                .confirmPassword("differentPassword")
+                .build();
+        PasswordUpdateDTO dto2 = PasswordUpdateDTO.builder()
+                .currentPassword("password123")
+                .newPassword(null)
+                .confirmPassword("differentPassword")
+                .build();
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullConfirmPassword() {
+        PasswordUpdateDTO dto1 = PasswordUpdateDTO.builder()
+                .currentPassword("password123")
+                .newPassword("newPassword123")
+                .confirmPassword(null)
+                .build();
+        PasswordUpdateDTO dto2 = PasswordUpdateDTO.builder()
+                .currentPassword("password123")
+                .newPassword("newPassword123")
+                .confirmPassword(null)
+                .build();
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_NullAndNonNullConfirmPassword() {
+        PasswordUpdateDTO dto1 = PasswordUpdateDTO.builder()
+                .currentPassword("password123")
+                .newPassword("newPassword123")
+                .confirmPassword("newPassword123")
+                .build();
+        PasswordUpdateDTO dto2 = PasswordUpdateDTO.builder()
+                .currentPassword("password123")
+                .newPassword("newPassword123")
+                .confirmPassword(null)
+                .build();
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testHashCode_MutationAffectsHashCode() {
+        PasswordUpdateDTO dto = PasswordUpdateDTO.builder()
+                .currentPassword("password123")
+                .newPassword("newPassword123")
+                .confirmPassword("newPassword123")
+                .build();
+        int originalHashCode = dto.hashCode();
+        dto.setNewPassword("newnewPassword123");
+        int mutatedHashCode = dto.hashCode();
+        assertNotEquals(originalHashCode, mutatedHashCode);
     }
 
 }

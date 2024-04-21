@@ -59,10 +59,8 @@ public class ProfileService implements IProfileService {
         log.info("updating an user profile");
 
         Optional<UserAccount> existingUserAccount = userAccountService.findByEmail(profileDTO.getEmail());
-        if(existingUserAccount == null){
+        if (!existingUserAccount.isPresent()) {
             throw new UsernameNotFoundException("UserAccount not found with email: " + profileDTO.getEmail());
-        } else if(!existingUserAccount.isPresent()){
-            throw new UsernameNotFoundException("UserAccount not found with ID: " + existingUserAccount.get().getUserAccountId());
         }
         UserAccount userAccount = existingUserAccount.get();
         userAccount.setLastConnectionDate(LocalDateTime.now());

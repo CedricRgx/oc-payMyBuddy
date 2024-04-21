@@ -7,15 +7,15 @@ import jakarta.validation.ValidatorFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.time.LocalDate;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * unit tests for the RegisterDTO class.
- */
-@Slf4j
+@ExtendWith(MockitoExtension.class)
 public class RegisterDTOTest {
 
     private Validator validator;
@@ -503,7 +503,6 @@ public class RegisterDTOTest {
                 .address("123 Main St")
                 .phone("1234567890")
                 .build();
-
         RegisterDTO dto2 = RegisterDTO.builder()
                 .email("jane.doe@example.com")
                 .password("password123")
@@ -519,6 +518,328 @@ public class RegisterDTOTest {
 
         // Then
         assertFalse(result);
+    }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullEmail() {
+        RegisterDTO dto1 = RegisterDTO.builder()
+                .email(null)
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        RegisterDTO dto2 = RegisterDTO.builder()
+                .email(null)
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_NullAndNonNullEmail() {
+        RegisterDTO dto1 = RegisterDTO.builder()
+                .email(null)
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        RegisterDTO dto2 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullPassword() {
+        RegisterDTO dto1 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password(null)
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        RegisterDTO dto2 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password(null)
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_NullAndNonNullPassword() {
+        RegisterDTO dto1 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password(null)
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        RegisterDTO dto2 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullFirstname() {
+        RegisterDTO dto1 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname(null)
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        RegisterDTO dto2 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname(null)
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_NullAndNonNullFirstname() {
+        RegisterDTO dto1 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname(null)
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        RegisterDTO dto2 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullLastname() {
+        RegisterDTO dto1 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname(null)
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        RegisterDTO dto2 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname(null)
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_NullAndNonNullLastname() {
+        RegisterDTO dto1 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname(null)
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        RegisterDTO dto2 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullBirthdate() {
+        RegisterDTO dto1 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(null)
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        RegisterDTO dto2 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(null)
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_NullAndNonNullBirthdate() {
+        RegisterDTO dto1 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(null)
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        RegisterDTO dto2 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullAddress() {
+        RegisterDTO dto1 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address(null)
+                .phone("1234567890")
+                .build();
+        RegisterDTO dto2 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address(null)
+                .phone("1234567890")
+                .build();
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_NullAndNonNullAddress() {
+        RegisterDTO dto1 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address(null)
+                .phone("1234567890")
+                .build();
+        RegisterDTO dto2 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullPhone() {
+        RegisterDTO dto1 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone(null)
+                .build();
+        RegisterDTO dto2 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone(null)
+                .build();
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_NullAndNonNullPhone() {
+        RegisterDTO dto1 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone(null)
+                .build();
+        RegisterDTO dto2 = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        assertFalse(dto1.equals(dto2));
     }
 
 }

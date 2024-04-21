@@ -1,18 +1,21 @@
 package com.openclassrooms.paymybuddy.model;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * unit tests for the deposit class.
- */
-@Slf4j
+@ExtendWith(MockitoExtension.class)
 public class DepositTest {
 
+    @Mock
     private Deposit deposit;
+
+    @Mock
     private User mockAuthor;
 
     @BeforeEach
@@ -45,4 +48,45 @@ public class DepositTest {
         assertEquals(0.0, actualFee);
         assertEquals(mockAuthor, actualAuthor);
     }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullDescription() {
+        Deposit dto1 = Deposit.builder()
+                .amount(100.0)
+                .description(null)
+                .transactionDate(LocalDateTime.of(1990, 1, 1, 1, 1))
+                .fee(0.0)
+                .author(User.builder().build())
+                .build();
+        Deposit dto2 = Deposit.builder()
+                .amount(100.0)
+                .description(null)
+                .transactionDate(LocalDateTime.of(1990, 1, 1, 1, 1))
+                .fee(0.0)
+                .author(User.builder().build())
+                .build();
+
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullAuthor() {
+        Deposit dto1 = Deposit.builder()
+                .amount(100.0)
+                .description("Test deposit")
+                .transactionDate(LocalDateTime.of(1990, 1, 1, 1, 1))
+                .fee(0.0)
+                .author(null)
+                .build();
+        Deposit dto2 = Deposit.builder()
+                .amount(100.0)
+                .description("Test deposit")
+                .transactionDate(LocalDateTime.of(1990, 1, 1, 1, 1))
+                .fee(0.0)
+                .author(null)
+                .build();
+
+        assertTrue(dto1.equals(dto2));
+    }
+
 }

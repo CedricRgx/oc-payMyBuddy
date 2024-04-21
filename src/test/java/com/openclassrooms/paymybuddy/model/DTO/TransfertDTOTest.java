@@ -2,13 +2,14 @@ package com.openclassrooms.paymybuddy.model.DTO;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * unit tests for the TransfertDTO class.
- */
-@Slf4j
+@ExtendWith(MockitoExtension.class)
 public class TransfertDTOTest {
 
     private TransfertDTO dto = TransfertDTO.builder()
@@ -264,6 +265,142 @@ public class TransfertDTOTest {
 
         // Then
         assertFalse(result);
+    }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullRecipientFirstname() {
+        TransfertDTO dto1 = TransfertDTO.builder()
+                .recipientFirstname(null)
+                .recipientLastname("Doe")
+                .description("Expense reimbursement")
+                .amount("50.00")
+                .build();
+        TransfertDTO dto2 = TransfertDTO.builder()
+                .recipientFirstname(null)
+                .recipientLastname("Doe")
+                .description("Expense reimbursement")
+                .amount("50.00")
+                .build();
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_NullAndNonNullRecipientFirstname() {
+        TransfertDTO dto1 = TransfertDTO.builder()
+                .recipientFirstname(null)
+                .recipientLastname("Doe")
+                .description("Expense reimbursement")
+                .amount("50.00")
+                .build();
+        TransfertDTO dto2 = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname("Doe")
+                .description("Expense reimbursement")
+                .amount("50.00")
+                .build();
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullRecipientLastname() {
+        TransfertDTO dto1 = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname(null)
+                .description("Expense reimbursement")
+                .amount("50.00")
+                .build();
+        TransfertDTO dto2 = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname(null)
+                .description("Expense reimbursement")
+                .amount("50.00")
+                .build();
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_NullAndNonNullRecipientLastname() {
+        TransfertDTO dto1 = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname(null)
+                .description("Expense reimbursement")
+                .amount("50.00")
+                .build();
+        TransfertDTO dto2 = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname("Doe")
+                .description("Expense reimbursement")
+                .amount("50.00")
+                .build();
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullDescription() {
+        TransfertDTO dto1 = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname("Doe")
+                .description(null)
+                .amount("50.00")
+                .build();
+        TransfertDTO dto2 = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname("Doe")
+                .description(null)
+                .amount("50.00")
+                .build();
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_NullAndNonNullDescription() {
+        TransfertDTO dto1 = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname("Doe")
+                .description(null)
+                .amount("50.00")
+                .build();
+        TransfertDTO dto2 = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname("Doe")
+                .description("Expense reimbursement")
+                .amount("50.00")
+                .build();
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullAmount() {
+        TransfertDTO dto1 = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname("Doe")
+                .description("Expense reimbursement")
+                .amount(null)
+                .build();
+        TransfertDTO dto2 = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname("Doe")
+                .description("Expense reimbursement")
+                .amount(null)
+                .build();
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_NullAndNonNullAmount() {
+        TransfertDTO dto1 = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname("Doe")
+                .description("Expense reimbursement")
+                .amount("50.00")
+                .build();
+        TransfertDTO dto2 = TransfertDTO.builder()
+                .recipientFirstname("John")
+                .recipientLastname("Doe")
+                .description("Expense reimbursement")
+                .amount(null)
+                .build();
+        assertFalse(dto1.equals(dto2));
     }
 
 }

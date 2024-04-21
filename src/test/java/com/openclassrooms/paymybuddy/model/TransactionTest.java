@@ -1,19 +1,20 @@
 package com.openclassrooms.paymybuddy.model;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * unit tests for the transaction class.
- */
-@Slf4j
+@ExtendWith(MockitoExtension.class)
 public class TransactionTest {
 
+    @Mock
     private Transaction transaction;
+
+    @Mock
     private User mockUser;
 
     @BeforeEach
@@ -259,7 +260,7 @@ public class TransactionTest {
         // Given
         Transaction transaction = Transaction.builder().build();
 
-        // When - Then
+        // When Then
         assertTrue(transaction.equals(transaction));
     }
 
@@ -268,7 +269,7 @@ public class TransactionTest {
         // Given
         Transaction transaction = Transaction.builder().build();
 
-        // When - Then
+        // When Then
         assertFalse(transaction.equals(null));
     }
 
@@ -278,7 +279,7 @@ public class TransactionTest {
         Transaction transaction = Transaction.builder().build();
         Object obj = new Object();
 
-        // When - Then
+        // When Then
         assertFalse(transaction.equals(obj));
     }
 
@@ -289,7 +290,7 @@ public class TransactionTest {
         Transaction transaction1 = Transaction.builder().transactionId(transactionId).build();
         Transaction transaction2 = Transaction.builder().transactionId(transactionId).build();
 
-        // When - Then
+        // When Then
         assertTrue(transaction1.equals(transaction2));
     }
 
@@ -299,7 +300,7 @@ public class TransactionTest {
         Transaction transaction1 = Transaction.builder().transactionId(1L).build();
         Transaction transaction2 = Transaction.builder().transactionId(2L).build();
 
-        // When - Then
+        // When Then
         assertFalse(transaction1.equals(transaction2));
     }
 
@@ -309,8 +310,116 @@ public class TransactionTest {
         Transaction transaction1 = Transaction.builder().build();
         Transaction transaction2 = Transaction.builder().build();
 
-        // When - Then
+        // When Then
         assertTrue(transaction1.equals(transaction2));
+    }
+
+    @Test
+    public void testEquals_SameValues_AssertTrue() {
+        // Given
+        User author = new User();
+        author.setUserId(1L);
+
+        Transaction transaction1 = Transaction.builder()
+                .transactionId(1L)
+                .amount(100.0)
+                .description("Payment")
+                .transactionDate(LocalDateTime.of(2023, 10, 1, 12, 0))
+                .fee(5.0)
+                .author(author)
+                .build();
+
+        Transaction transaction2 = Transaction.builder()
+                .transactionId(1L)
+                .amount(100.0)
+                .description("Payment")
+                .transactionDate(LocalDateTime.of(2023, 10, 1, 12, 0))
+                .fee(5.0)
+                .author(author)
+                .build();
+
+        // When Then
+        assertTrue(transaction1.equals(transaction2));
+    }
+
+    @Test
+    public void testEquals_DifferentValues_AssertFalse() {
+        // Given
+        User author1 = new User();
+        author1.setUserId(1L);
+        User author2 = new User();
+        author2.setUserId(2L);
+
+        Transaction transaction1 = Transaction.builder()
+                .transactionId(1L)
+                .amount(100.0)
+                .description("Payment")
+                .transactionDate(LocalDateTime.of(2023, 10, 1, 12, 0))
+                .fee(5.0)
+                .author(author1)
+                .build();
+
+        Transaction transaction2 = Transaction.builder()
+                .transactionId(1L)
+                .amount(100.0)
+                .description("Payment")
+                .transactionDate(LocalDateTime.of(2023, 10, 1, 12, 0))
+                .fee(5.0)
+                .author(author2)
+                .build();
+
+        // When Then
+        assertFalse(transaction1.equals(transaction2));
+    }
+
+    @Test
+    public void testHashCode_ConsistencyCheck() {
+        // Given
+        User author = new User();
+        author.setUserId(1L);
+
+        Transaction transaction = Transaction.builder()
+                .transactionId(1L)
+                .amount(100.0)
+                .description("Payment")
+                .transactionDate(LocalDateTime.of(2023, 10, 1, 12, 0))
+                .fee(5.0)
+                .author(author)
+                .build();
+
+        int hashCode1 = transaction.hashCode();
+        int hashCode2 = transaction.hashCode();
+
+        // When Then
+        assertEquals(hashCode1, hashCode2);
+    }
+
+    @Test
+    public void testHashCode_DifferentObjects_AssertNotEquals() {
+        // Given
+        User author = new User();
+        author.setUserId(1L);
+
+        Transaction transaction1 = Transaction.builder()
+                .transactionId(1L)
+                .amount(100.0)
+                .description("Payment")
+                .transactionDate(LocalDateTime.of(2023, 10, 1, 12, 0))
+                .fee(5.0)
+                .author(author)
+                .build();
+
+        Transaction transaction2 = Transaction.builder()
+                .transactionId(2L)
+                .amount(150.0)
+                .description("Refund")
+                .transactionDate(LocalDateTime.of(2023, 10, 2, 12, 0))
+                .fee(2.0)
+                .author(author)
+                .build();
+
+        // When Then
+        assertNotEquals(transaction1.hashCode(), transaction2.hashCode());
     }
 
 }

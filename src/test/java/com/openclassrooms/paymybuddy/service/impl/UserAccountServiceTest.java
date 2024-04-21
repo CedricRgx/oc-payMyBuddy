@@ -1,69 +1,104 @@
 package com.openclassrooms.paymybuddy.service.impl;
 
-import com.openclassrooms.paymybuddy.model.UserAccount;
-import com.openclassrooms.paymybuddy.repository.UserAccountRepository;
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import com.openclassrooms.paymybuddy.exceptions.UpdateLastConnectionDateFailedException;
 import com.openclassrooms.paymybuddy.service.impl.UserAccountService;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import java.util.Optional;
-import static org.mockito.Mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.jdbc.core.JdbcTemplate;
 
-@Slf4j
-class UserAccountServiceTest {
+@ExtendWith(MockitoExtension.class)
+public class UserAccountServiceTest {
 
     @Mock
-    private UserAccountRepository userAccountRepository;
+    private JdbcTemplate jdbcTemplate;
 
     @InjectMocks
     private UserAccountService userAccountService;
 
     @BeforeEach
-    void setUp() {
+    public void setup() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testGetUserAccounts() {
-        log.info("Running testGetUserAccounts() test in UserAccountServiceTest class");
-        userAccountService.getUserAccounts();
-        verify(userAccountRepository).findAll();
+    public void testIsEmailUnique_True() {
+        // Given
+        String email = "test@example.com";
+
+        // When
+        when(jdbcTemplate.queryForObject(anyString(), any(Object[].class), eq(Integer.class))).thenReturn(0);
+
+        // Then
+        assertTrue(userAccountService.isEmailUnique(email));
     }
 
     @Test
-    public void testGetUserAccountByIdFound() {
-        log.info("Running testGetUserAccountByIdFound() test in UserAccountServiceTest class");
+    public void testIsEmailUnique_False() {
+        // Given
+        String email = "test@example.com";
+
+        // When
+        when(jdbcTemplate.queryForObject(anyString(), any(Object[].class), eq(Integer.class))).thenReturn(1);
+
+        // Then
+        assertFalse(userAccountService.isEmailUnique(email));
+    }
+
+    @Test
+    public void testUpdateLastConnectionDate_Success() {
+        // Given
         Long userAccountId = 1L;
-        when(userAccountRepository.findById(userAccountId)).thenReturn(Optional.of(new UserAccount()));
-        userAccountService.getUserAccountById(userAccountId);
-        verify(userAccountRepository).findById(userAccountId);
+
+        // When
+        when(jdbcTemplate.update(anyString(), eq(userAccountId))).thenReturn(1);
+
+        // Then
+        assertDoesNotThrow(() -> userAccountService.updateLastConnectionDate(userAccountId));
     }
 
     @Test
-    public void testGetUserAccountByIdNotFound() {
-        log.info("Running testGetUserAccountByIdNotFound() test in UserAccountServiceTest class");
-        Long appAccountId = 1L;
-        when(userAccountRepository.findById(appAccountId)).thenReturn(Optional.empty());
-        userAccountService.getUserAccountById(appAccountId);
-        verify(userAccountRepository).findById(appAccountId);
-    }
-
-    @Test
-    public void testAddUserAccount() {
-        log.info("Running testAddUserAccount() test in UserAccountServiceTest class");
-        UserAccount userAccount = new UserAccount();
-        userAccountService.addUserAccount(userAccount);
-        verify(userAccountRepository).save(userAccount);
-    }
-
-    @Test
-    public void testDeleteUserAccountById() {
-        log.info("Running testDeleteUserAccountById() test in UserAccountServiceTest class");
+    public void testUpdateLastConnectionDate_Failure() {
+        // Given
         Long userAccountId = 1L;
-        userAccountService.deleteUserAccountById(userAccountId);
-        verify(userAccountRepository).deleteById(userAccountId);
+
+        // When
+        when(jdbcTemplate.update(anyString(), eq(userAccountId))).thenReturn(0);
+
+        // Then
+        assertThrows(UpdateLastConnectionDateFailedException.class, () -> userAccountService.updateLastConnectionDate(userAccountId));
+    }
+
+    @Test
+    public void testSavePassword_Success() {
+        // Given
+        String password = "newPassword";
+        String email = "test@example.com";
+
+        // When
+        when(jdbcTemplate.update(anyString(), eq(password), eq(email))).thenReturn(1);
+
+        // Then
+        assertTrue(userAccountService.savePassword(password, email));
+    }
+
+    @Test
+    public void testSavePassword_Failure() {
+        // Given
+        String password = "newPassword";
+        String email = "test@example.com";
+
+        // When
+        when(jdbcTemplate.update(anyString(), eq(password), eq(email))).thenReturn(0);
+
+        // Then
+        assertFalse(userAccountService.savePassword(password, email));
     }
 }

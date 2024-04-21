@@ -3,19 +3,16 @@ package com.openclassrooms.paymybuddy.model.DTO;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * unit tests for the ProfileDTO class.
- */
-@Slf4j
+@ExtendWith(MockitoExtension.class)
 public class ProfileDTOTest {
 
     private Validator validator;
@@ -427,5 +424,318 @@ public class ProfileDTOTest {
         // Then
         assertFalse(result);
     }
+
+    @Test
+    public void equals_withDifferentFirstnames_shouldReturnFalse() {
+        // Given
+        ProfileDTO dto1 = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        ProfileDTO dto2 = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("Jonathan")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        // When
+        boolean result = dto1.equals(dto2);
+
+        // Then
+        assertFalse(result);
+    }
+
+    @Test
+    public void hashCode_consistencyCheck_shouldReturnSameValue() {
+        // Given
+        ProfileDTO dto = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        int initialHashCode = dto.hashCode();
+
+        // When
+        int repeatedHashCode = dto.hashCode();
+
+        // Then
+        assertEquals(initialHashCode, repeatedHashCode);
+    }
+
+    @Test
+    public void equals_reflexivityCheck_shouldReturnTrue() {
+        // Given
+        ProfileDTO dto = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        // When Then
+        assertTrue(dto.equals(dto));
+    }
+
+    @Test
+    public void equals_symmetryCheck_shouldBeSymmetric() {
+        // Given
+        ProfileDTO dto1 = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        ProfileDTO dto2 = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        // When Then
+        assertTrue(dto1.equals(dto2) && dto2.equals(dto1));
+    }
+
+    @Test
+    public void equals_transitivityCheck_shouldBeTransitive() {
+        // Given
+        ProfileDTO dto1 = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        ProfileDTO dto2 = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        ProfileDTO dto3 = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        // When Then
+        assertTrue(dto1.equals(dto2) && dto2.equals(dto3) && dto1.equals(dto3));
+    }
+
+    @Test
+    public void testEquals_DifferentClass() {
+        // Given
+        ProfileDTO dto = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+        Object differentClassObject = new Object();
+
+        // When Then
+        assertFalse(dto.equals(differentClassObject));
+    }
+
+    @Test
+    public void testEquals_Null() {
+        // Given
+        ProfileDTO dto = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        // When Then
+        assertFalse(dto.equals(null));
+    }
+
+    @Test
+    public void testHashCode_Reflexivity() {
+        // Given
+        ProfileDTO dto = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .build();
+
+        // When Then
+        assertTrue(dto.hashCode() == dto.hashCode());
+    }
+
+
+
+    @Test
+    public void testEquals_DifferentEmails() {
+        ProfileDTO dto1 = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        ProfileDTO dto2 = new ProfileDTO("jane.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_DifferentFirstname() {
+        ProfileDTO dto1 = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        ProfileDTO dto2 = new ProfileDTO("john.doe@example.com", "Jane", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_DifferentLastname() {
+        ProfileDTO dto1 = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        ProfileDTO dto2 = new ProfileDTO("john.doe@example.com", "John", "Shelley", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_DifferentBirthday() {
+        ProfileDTO dto1 = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        ProfileDTO dto2 = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1989, 1, 1), "123 Main St", "1234567890");
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_DifferentAddress() {
+        ProfileDTO dto1 = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        ProfileDTO dto2 = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), "321 Main St", "1234567890");
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_DifferentPhone() {
+        ProfileDTO dto1 = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        ProfileDTO dto2 = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "0234567890");
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullEmail() {
+        ProfileDTO dto1 = new ProfileDTO(null, "John", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        ProfileDTO dto2 = new ProfileDTO(null, "John", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_NullAndNonNullEmail() {
+        ProfileDTO dto1 = new ProfileDTO(null, "John", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        ProfileDTO dto2 = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullFirstname() {
+        ProfileDTO dto1 = new ProfileDTO("john.doe@example.com", null, "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        ProfileDTO dto2 = new ProfileDTO("john.doe@example.com", null, "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_NullAndNonNullFirstname() {
+        ProfileDTO dto1 = new ProfileDTO("john.doe@example.com", null, "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        ProfileDTO dto2 = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullLastname() {
+        ProfileDTO dto1 = new ProfileDTO("john.doe@example.com", "John", null, LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        ProfileDTO dto2 = new ProfileDTO("john.doe@example.com", "John", null, LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_NullAndNonNullLastname() {
+        ProfileDTO dto1 = new ProfileDTO("john.doe@example.com", "John", null, LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        ProfileDTO dto2 = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullBirthday() {
+        ProfileDTO dto1 = new ProfileDTO("john.doe@example.com", "John", "Doe", null, "123 Main St", "1234567890");
+        ProfileDTO dto2 = new ProfileDTO("john.doe@example.com", "John", "Doe", null, "123 Main St", "1234567890");
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_NullAndNonNullBirthday() {
+        ProfileDTO dto1 = new ProfileDTO("john.doe@example.com", "John", "Doe", null, "123 Main St", "1234567890");
+        ProfileDTO dto2 = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullAddress() {
+        ProfileDTO dto1 = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), null, "1234567890");
+        ProfileDTO dto2 = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), null, "1234567890");
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_NullAndNonNullAddress() {
+        ProfileDTO dto1 = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), null, "1234567890");
+        ProfileDTO dto2 = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_BothObjectsHaveNullPhone() {
+        ProfileDTO dto1 = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", null);
+        ProfileDTO dto2 = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", null);
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEquals_NullAndNonNullPhone() {
+        ProfileDTO dto1 = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", null);
+        ProfileDTO dto2 = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testHashCode_MutationAffectsHashCode() {
+        ProfileDTO dto = new ProfileDTO("john.doe@example.com", "John", "Doe", LocalDate.of(1990, 1, 1), "123 Main St", "1234567890");
+        int originalHashCode = dto.hashCode();
+        dto.setEmail("changed@example.com");
+        int mutatedHashCode = dto.hashCode();
+        assertNotEquals(originalHashCode, mutatedHashCode);
+    }
+
+
+
 
 }
