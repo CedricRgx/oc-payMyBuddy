@@ -1,9 +1,12 @@
 package com.openclassrooms.paymybuddy.controller;
 
+import com.openclassrooms.paymybuddy.model.DTO.NewTransfertDTO;
 import com.openclassrooms.paymybuddy.model.DTO.PasswordUpdateDTO;
 import com.openclassrooms.paymybuddy.model.UserAccount;
 import com.openclassrooms.paymybuddy.service.impl.UserAccountService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,6 +41,26 @@ public class PasswordControllerTest {
 
     @Mock
     private Model model;
+
+    @Mock
+    private HttpSession session;
+
+    @Mock
+    private BindingResult bindingResult;
+
+    @Mock
+    private SecurityContext securityContext;
+
+    @Mock
+    private Authentication authentication;
+
+    @BeforeEach
+    public void setUp() {
+        lenient().when(request.getSession(false)).thenReturn(session);
+        lenient().when(securityContext.getAuthentication()).thenReturn(authentication);
+        lenient().when(authentication.getName()).thenReturn("user@example.com");
+        SecurityContextHolder.setContext(securityContext);
+    }
 
     @Test
     public void showChangePasswordForm_shouldReturnPasswordUpdateForm() {
@@ -88,6 +111,74 @@ public class PasswordControllerTest {
         verify(bindingResult, never()).rejectValue(anyString(), anyString(), anyString());
         verify(model, never()).addAttribute(anyString(), any());
         assertEquals("redirect:/login?logout", viewName);
+    }
+
+    @Test
+    void testChangePassword_UserNotFound() {
+        // Given
+        PasswordUpdateDTO dto = PasswordUpdateDTO.builder().build();
+        when(userAccountService.findByEmail("user@example.com")).thenReturn(Optional.empty()); // User not found scenario
+
+        // When
+        String viewName = passwordController.changePassword(dto, bindingResult, request);
+
+        // Then
+        verify(bindingResult).rejectValue("currentPassword", "error.userNotFound", "User not found.");
+        assertEquals("passwordUpdateForm", viewName);
+    }
+
+    @Test
+    public void changePassword_WhenCurrentPasswordIsIncorrect_ShouldRejectValue() {
+        // Given
+        PasswordUpdateDTO dto = PasswordUpdateDTO.builder()
+                .currentPassword("current")
+                .newPassword("newPass")
+                .confirmPassword("newPass").build();
+        when(userAccountService.findByEmail("user@example.com")).thenReturn(Optional.of(UserAccount.builder().password("hashedPassword").build()));
+        when(passwordEncoder.matches("current", "hashedPassword")).thenReturn(false);
+
+        // When
+        String result = passwordController.changePassword(dto, bindingResult, request);
+
+        // Then
+        verify(bindingResult).rejectValue("currentPassword", "error.currentPassword", "The current password is incorrect.");
+        assertEquals("passwordUpdateForm", result);
+    }
+
+    @Test
+    public void changePassword_WhenNewPasswordDoesNotMatchConfirmation_ShouldReturnToForm() {
+        // Given
+        PasswordUpdateDTO dto = PasswordUpdateDTO.builder()
+                .currentPassword("current")
+                .newPassword("newPass")
+                .confirmPassword("newPass").build();when(userAccountService.findByEmail("user@example.com")).thenReturn(Optional.of(UserAccount.builder().password("hashedPassword").build()));
+        when(passwordEncoder.matches("current", "hashedPassword")).thenReturn(true);
+
+        // When
+        String result = passwordController.changePassword(dto, bindingResult, request);
+
+        // Then
+        assertEquals("redirect:/login?logout", result);
+    }
+
+    @Test
+    public void changePassword_WhenPasswordUpdateIsSuccessful_ShouldInvalidateSessionAndRedirect() {
+        // Given
+        PasswordUpdateDTO dto = PasswordUpdateDTO.builder()
+                .currentPassword("current")
+                .newPassword("newPass")
+                .confirmPassword("newPass").build();
+        when(userAccountService.findByEmail("user@example.com")).thenReturn(Optional.of(UserAccount.builder().password("hashedPassword").build()));
+        when(passwordEncoder.matches("current", "hashedPassword")).thenReturn(true);
+        when(passwordEncoder.encode("newPass")).thenReturn("encodedNewPass");
+
+        // When
+        String result = passwordController.changePassword(dto, bindingResult, request);
+
+        // Then
+        verify(userAccountService).savePassword("encodedNewPass", "user@example.com");
+        verify(session).invalidate();
+        assertEquals("redirect:/login?logout", result);
     }
 
 }

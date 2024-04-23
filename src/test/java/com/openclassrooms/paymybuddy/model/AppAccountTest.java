@@ -1,17 +1,20 @@
 package com.openclassrooms.paymybuddy.model;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * unit tests for the app account class.
- */
-@Slf4j
+@ExtendWith(MockitoExtension.class)
 public class AppAccountTest {
 
+    @Mock
     private AppAccount appAccount;
+
+    @Mock
     private User mockUser;
 
     @BeforeEach
@@ -26,7 +29,7 @@ public class AppAccountTest {
     @Test
     public void testGetAppAccountId() {
         // Given
-        Long expectedId = null; // AppAccount's id is generated automatically.
+        Long expectedId = null;
 
         // When
         Long actualId = appAccount.getAppAccountId();
@@ -151,6 +154,90 @@ public class AppAccountTest {
 
         // Then
         assertEquals(hashCode1, hashCode2);
+    }
+
+    @Test
+    public void testEqualsSymmetry() {
+        AppAccount anotherAppAccount = AppAccount.builder()
+                .balance(100.0)
+                .appOwner(mockUser)
+                .build();
+
+        assertTrue(appAccount.equals(anotherAppAccount) && anotherAppAccount.equals(appAccount), "Equals should be symmetric.");
+    }
+
+    @Test
+    public void testEqualsTransitivity() {
+        AppAccount firstAccount = AppAccount.builder()
+                .balance(100.0)
+                .appOwner(mockUser)
+                .build();
+        AppAccount secondAccount = AppAccount.builder()
+                .balance(100.0)
+                .appOwner(mockUser)
+                .build();
+        AppAccount thirdAccount = AppAccount.builder()
+                .balance(100.0)
+                .appOwner(mockUser)
+                .build();
+
+        assertTrue(firstAccount.equals(secondAccount) && secondAccount.equals(thirdAccount) && firstAccount.equals(thirdAccount),
+                "Equals should be transitive.");
+    }
+
+    @Test
+    public void testEqualsConsistency() {
+        AppAccount anotherAppAccount = AppAccount.builder()
+                .balance(100.0)
+                .appOwner(mockUser)
+                .build();
+
+        assertTrue(appAccount.equals(anotherAppAccount) && appAccount.equals(anotherAppAccount),
+                "Equals should be consistent across multiple calls.");
+    }
+
+    @Test
+    public void testEqualsAllFieldsIdentical() {
+        AppAccount identicalAccount = AppAccount.builder()
+                .balance(100.0)
+                .appOwner(mockUser)
+                .build();
+
+        assertTrue(appAccount.equals(identicalAccount), "Equals should return true for identically constructed objects.");
+    }
+
+    @Test
+    public void testHashCodeConsistency() {
+        int initialHashCode = appAccount.hashCode();
+        assertEquals(initialHashCode, appAccount.hashCode(), "Hash code should remain consistent across multiple calls.");
+    }
+
+    @Test
+    public void testHashCodeEqualityConsistency() {
+        AppAccount anotherAppAccount = AppAccount.builder()
+                .balance(100.0)
+                .appOwner(mockUser)
+                .build();
+        assertTrue(appAccount.equals(anotherAppAccount), "Both accounts should be equal.");
+        assertEquals(appAccount.hashCode(), anotherAppAccount.hashCode(), "Hash codes must be equal for equal objects.");
+    }
+
+    @Test
+    public void testHashCodeDifference() {
+        AppAccount differentAppAccount = AppAccount.builder()
+                .balance(200.0)
+                .appOwner(new User())
+                .build();
+        assertNotEquals(appAccount.hashCode(), differentAppAccount.hashCode(), "Hash codes should ideally be different for non-equal objects.");
+    }
+
+    @Test
+    public void testHashCodeWithNullFields() {
+        AppAccount accountWithNullOwner = AppAccount.builder()
+                .balance(100.0)
+                .appOwner(null)
+                .build();
+        assertDoesNotThrow(accountWithNullOwner::hashCode, "Hash code calculation should handle null fields without throwing an exception.");
     }
 
 }

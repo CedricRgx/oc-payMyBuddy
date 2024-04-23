@@ -1,7 +1,5 @@
 package com.openclassrooms.paymybuddy.model.DTO;
 
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -185,4 +183,74 @@ public class ConnectionDTOTest {
         // Then
         assertFalse(result);
     }
+
+    @Test
+    public void hashCode_withNullFields_shouldHandleNullsGracefully() {
+        // Given
+        ConnectionDTO dtoWithNullFirstname = ConnectionDTO.builder()
+                .userId(1L)
+                .firstname(null)
+                .lastname("Doe")
+                .build();
+
+        ConnectionDTO dtoWithNullLastname = ConnectionDTO.builder()
+                .userId(1L)
+                .firstname("John")
+                .lastname(null)
+                .build();
+
+        // When & Then
+        assertDoesNotThrow(dtoWithNullFirstname::hashCode);
+        assertDoesNotThrow(dtoWithNullLastname::hashCode);
+    }
+
+    @Test
+    public void hashCode_consistencyCheck() {
+        // Given
+        ConnectionDTO dto = ConnectionDTO.builder()
+                .userId(1L)
+                .firstname("John")
+                .lastname("Doe")
+                .build();
+
+        int initialHashCode = dto.hashCode();
+
+        // When & Then
+        assertEquals(initialHashCode, dto.hashCode(), "Hash code should remain consistent across calls.");
+        assertEquals(initialHashCode, dto.hashCode(), "Repeated hash code calls should return the same value.");
+    }
+
+    @Test
+    public void hashCode_eachFieldInfluence() {
+        // Given
+        ConnectionDTO baseDto = ConnectionDTO.builder()
+                .userId(1L)
+                .firstname("John")
+                .lastname("Doe")
+                .build();
+
+        ConnectionDTO differentUserId = ConnectionDTO.builder()
+                .userId(2L)
+                .firstname("John")
+                .lastname("Doe")
+                .build();
+
+        ConnectionDTO differentFirstname = ConnectionDTO.builder()
+                .userId(1L)
+                .firstname("Jane")
+                .lastname("Doe")
+                .build();
+
+        ConnectionDTO differentLastname = ConnectionDTO.builder()
+                .userId(1L)
+                .firstname("John")
+                .lastname("Smith")
+                .build();
+
+        // When & Then
+        assertNotEquals(baseDto.hashCode(), differentUserId.hashCode(), "Different userId should produce different hash codes.");
+        assertNotEquals(baseDto.hashCode(), differentFirstname.hashCode(), "Different firstname should produce different hash codes.");
+        assertNotEquals(baseDto.hashCode(), differentLastname.hashCode(), "Different lastname should produce different hash codes.");
+    }
+
 }

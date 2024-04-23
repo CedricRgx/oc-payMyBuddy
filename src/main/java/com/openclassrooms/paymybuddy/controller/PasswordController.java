@@ -1,6 +1,7 @@
 package com.openclassrooms.paymybuddy.controller;
 
 import com.openclassrooms.paymybuddy.model.DTO.PasswordUpdateDTO;
+import com.openclassrooms.paymybuddy.model.UserAccount;
 import com.openclassrooms.paymybuddy.service.impl.UserAccountService;
 import jakarta.servlet.http.*;
 import jakarta.validation.Valid;
@@ -14,6 +15,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.Optional;
 
 import static java.util.regex.Pattern.matches;
 
@@ -61,14 +64,21 @@ public class PasswordController {
         log.info("passwordUpdateForm template for update");
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        String currentPasswordsaved = userAccountService.findByEmail(email).get().getPassword();
+        Optional<UserAccount> optionalUserAccount = userAccountService.findByEmail(email);
+        if (!optionalUserAccount.isPresent()) {
+            log.info("User not found with email: {}", email);
+            result.rejectValue("currentPassword", "error.userNotFound", "User not found.");
+            return "passwordUpdateForm";
+        }
 
-        if(!passwordEncoder.matches(passwordUpdateDTO.getCurrentPassword(), currentPasswordsaved)){
+        String currentPasswordsaved = optionalUserAccount.get().getPassword();
+
+        if (!passwordEncoder.matches(passwordUpdateDTO.getCurrentPassword(), currentPasswordsaved)) {
             result.rejectValue("currentPassword", "error.currentPassword", "The current password is incorrect.");
             log.info("The current password is incorrect.");
             return "passwordUpdateForm";
         }
-        if(!passwordUpdateDTO.getNewPassword().equals(passwordUpdateDTO.getConfirmPassword())){
+        if (!passwordUpdateDTO.getNewPassword().equals(passwordUpdateDTO.getConfirmPassword())) {
             result.rejectValue("confirmPassword", "error.passwordChange", "The password confirmation does not match.");
             return "passwordUpdateForm";
         }

@@ -1,160 +1,84 @@
 package com.openclassrooms.paymybuddy.service.ti;
 
 import com.openclassrooms.paymybuddy.model.AppAccount;
-import com.openclassrooms.paymybuddy.model.DTO.ConnectionDTO;
-import com.openclassrooms.paymybuddy.model.DTO.UserDTO;
 import com.openclassrooms.paymybuddy.model.User;
-import com.openclassrooms.paymybuddy.model.UserAccount;
-import com.openclassrooms.paymybuddy.repository.AppAccountRepository;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
+import com.openclassrooms.paymybuddy.service.impl.RegisterService;
 import com.openclassrooms.paymybuddy.service.impl.UserService;
-import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
-
-@Slf4j
 @SpringBootTest
-class UserServiceIntegrationTest {
-
-
-
-    /*
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+public class UserServiceIntegrationTest {
 
     @Autowired
     private UserService userService;
 
-    @MockBean
+    @Autowired
     private UserRepository userRepository;
-
-    @MockBean
-    private AppAccountRepository appAccountRepository;
-
-    @MockBean
-    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private RegisterService registerService;
 
     @Test
-    public void testGetUsers() {
-        List<User> userList = new ArrayList<>();
-        when(userRepository.findAll()).thenReturn(userList);
-
-        Iterable<User> result = userService.getUsers();
-
-        assertEquals(userList, result);
-    }
-
-    @Test
-    public void testGetUserById() {
-        User user = new User();
-        Long userId = 1L;
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-
-        Optional<User> result = userService.getUserById(userId);
-
-        assertEquals(Optional.of(user), result);
-    }
-
-    @Test
+    @DisplayName("Test addUser adds a user successfully")
     public void testAddUser() {
         User user = new User();
-        when(userRepository.save(user)).thenReturn(user);
+        user.setFirstname("John");
+        user.setLastname("Doe");
+        user = userService.addUser(user);
 
-        User result = userService.addUser(user);
-
-        assertEquals(user, result);
+        Assertions.assertNotNull(user.getUserId(), "The saved user should have a non-null ID.");
+        Assertions.assertEquals("John", user.getFirstname(), "The saved user should have the name 'John'.");
     }
 
     @Test
+    @DisplayName("Test deleteUserById removes a user successfully")
     public void testDeleteUserById() {
-        Long userId = 1L;
-        userService.deleteUserById(userId);
-
-        verify(userRepository, times(1)).deleteById(userId);
-    }
-
-    @Test
-    public void testGetUserIdByEmail() {
-        String email = "john.doe@example.com";
-        Long expectedUserId = 1L;
-        when(jdbcTemplate.queryForObject(anyString(), any(Object[].class), eq(Long.class))).thenReturn(expectedUserId);
-
-        Long result = userService.getUserIdByEmail(email);
-
-        assertEquals(expectedUserId, result);
-    }
-
-    @Test
-    public void testGetActiveFriends() {
-        User user1 = new User();
-        user1.setUserAccount(new UserAccount());
-        user1.getUserAccount().setIsActive(true);
-
-        User user2 = new User();
-        user2.setUserAccount(new UserAccount());
-        user2.getUserAccount().setIsActive(false);
-
-        List<User> listOfFriends = new ArrayList<>();
-        listOfFriends.add(user1);
-        listOfFriends.add(user2);
-
-        List<ConnectionDTO> expectedList = new ArrayList<>();
-        expectedList.add(ConnectionDTO.builder()
-                .userId(user1.getUserId())
-                .firstname(user1.getFirstname())
-                .lastname(user1.getLastname())
-                .build());
-
-        List<ConnectionDTO> result = userService.getActiveFriends(listOfFriends);
-
-        assertEquals(expectedList, result);
-    }
-
-    @Test
-    public void testGetUserBalance() {
-        Long userId = 1L;
-        Double expectedBalance = 100.0;
-        when(jdbcTemplate.queryForObject(anyString(), any(Object[].class), eq(Double.class))).thenReturn(expectedBalance);
-
-        Double result = userService.getUserBalance(userId);
-
-        assertEquals(expectedBalance, result);
-    }
-
-    @Test
-    public void testCreditUserBalance_UserNotFound() {
-        Long userId = 1L;
-        double amount = 50.0;
-
-        when(userRepository.findById(userId)).thenReturn(Optional.empty());
-
-        assertThrows(IllegalArgumentException.class, () -> userService.creditUserBalance(userId, amount));
-    }
-
-    @Test
-    public void testCreditUserBalance_AppAccountNotFound() {
-        Long userId = 1L;
-        double amount = 50.0;
-
         User user = new User();
-        user.setUserId(userId);
+        user.setFirstname("Jane");
+        user.setLastname("Doe");
+        user = userRepository.save(user);
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        userService.deleteUserById(user.getUserId());
+        Optional<User> deletedUser = userRepository.findById(user.getUserId());
 
-        assertThrows(IllegalStateException.class, () -> userService.creditUserBalance(userId, amount));
+        Assertions.assertTrue(deletedUser.isEmpty(), "The user should have been deleted.");
     }
-    */
 
+    @Test
+    @DisplayName("Test getUserById retrieves a user correctly")
+    public void testGetUserById() {
+        User user = new User();
+        user.setFirstname("Alice");
+        user.setLastname("Wonderland");
+        user = userRepository.save(user);
+
+        Optional<User> foundUser = userService.getUserById(user.getUserId());
+        Assertions.assertTrue(foundUser.isPresent(), "User should be found with the given ID.");
+        Assertions.assertEquals("Alice", foundUser.get().getFirstname(), "The user's name should be Alice.");
+    }
+
+    /*
+    @Test
+    @DisplayName("Test updateUserBalance updates the balance correctly")
+    public void testUpdateUserBalance() {
+        User user = new User();
+        AppAccount appAccount = new AppAccount();
+        appAccount.setBalance(100.00);
+        user.setAppAccount(appAccount);
+        user = userService.addUser(user);
+
+        boolean updateStatus = userService.updateUserBalance(user.getUserId(), 200.00);
+        User updatedUser = userRepository.findById(user.getUserId()).get();
+
+        Assertions.assertTrue(updateStatus, "The balance update should be successful.");
+        Assertions.assertEquals(200.00, updatedUser.getAppAccount().getBalance(), 0.01, "The new balance should be 200.00");
+    }*/
 }

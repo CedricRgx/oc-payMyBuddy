@@ -422,4 +422,34 @@ public class TransactionTest {
         assertNotEquals(transaction1.hashCode(), transaction2.hashCode());
     }
 
+    @Test
+    public void hashCode_NullFields_Test() {
+        // Given
+        User author = User.builder().build();
+        Transaction transaction1 = Transaction.builder()
+                .transactionId(null)
+                .amount(100.0)
+                .description(null)
+                .transactionDate(null)
+                .fee(5.0)
+                .author(null)  // Completely null User
+                .build();
+
+        Transaction transaction2 = Transaction.builder()
+                .transactionId(null)
+                .amount(100.0)
+                .description(null)
+                .transactionDate(null)
+                .fee(5.0)
+                .author(null)
+                .build();
+
+        // When
+        int hashCode1 = transaction1.hashCode();
+        int hashCode2 = transaction2.hashCode();
+
+        // Then
+        assertEquals(hashCode1, hashCode2);
+    }
+
 }

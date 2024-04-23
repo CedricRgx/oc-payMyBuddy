@@ -1,14 +1,12 @@
 package com.openclassrooms.paymybuddy.model.DTO;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * unit tests for the UserDTO class.
- */
-@Slf4j
+@ExtendWith(MockitoExtension.class)
 public class UserDTOTest {
 
     private UserDTO dto = UserDTO.builder()
@@ -298,4 +296,93 @@ public class UserDTOTest {
         // Then
         assertFalse(result);
     }
+
+    @Test
+    public void hashCode_withNullFields_shouldHandleNullsGracefully() {
+        UserDTO nullFirstname = UserDTO.builder().firstname(null).lastname("Doe").address("123 Main St").phone("1234567890").balance("100.00").build();
+        UserDTO nullLastname = UserDTO.builder().firstname("John").lastname(null).address("123 Main St").phone("1234567890").balance("100.00").build();
+        UserDTO nullAddress = UserDTO.builder().firstname("John").lastname("Doe").address(null).phone("1234567890").balance("100.00").build();
+        UserDTO nullPhone = UserDTO.builder().firstname("John").lastname("Doe").address("123 Main St").phone(null).balance("100.00").build();
+        UserDTO nullBalance = UserDTO.builder().firstname("John").lastname("Doe").address("123 Main St").phone("1234567890").balance(null).build();
+
+        assertDoesNotThrow(nullFirstname::hashCode);
+        assertDoesNotThrow(nullLastname::hashCode);
+        assertDoesNotThrow(nullAddress::hashCode);
+        assertDoesNotThrow(nullPhone::hashCode);
+        assertDoesNotThrow(nullBalance::hashCode);
+    }
+
+    @Test
+    public void hashCode_consistencyCheck() {
+        int initialHashCode = dto.hashCode();
+        assertEquals(initialHashCode, dto.hashCode(), "Hash code should remain consistent across multiple calls.");
+        assertEquals(initialHashCode, dto.hashCode(), "Repeated hash code calls should return the same value.");
+    }
+
+    @Test
+    public void hashCode_withDifferentFields_shouldReturnDifferentHashCodes() {
+        // Base DTO
+        UserDTO baseDTO = UserDTO.builder()
+                .firstname("John")
+                .lastname("Doe")
+                .address("123 Main St")
+                .phone("1234567890")
+                .balance("100.00")
+                .build();
+
+        // Different firstname
+        UserDTO differentFirstname = UserDTO.builder()
+                .firstname("Jane")
+                .lastname("Doe")
+                .address("123 Main St")
+                .phone("1234567890")
+                .balance("100.00")
+                .build();
+
+        // Different lastname
+        UserDTO differentLastname = UserDTO.builder()
+                .firstname("John")
+                .lastname("Smith")
+                .address("123 Main St")
+                .phone("1234567890")
+                .balance("100.00")
+                .build();
+
+        // Different address
+        UserDTO differentAddress = UserDTO.builder()
+                .firstname("John")
+                .lastname("Doe")
+                .address("456 Elm St")
+                .phone("1234567890")
+                .balance("100.00")
+                .build();
+
+        // Different phone
+        UserDTO differentPhone = UserDTO.builder()
+                .firstname("John")
+                .lastname("Doe")
+                .address("123 Main St")
+                .phone("0987654321")
+                .balance("100.00")
+                .build();
+
+        // Different balance
+        UserDTO differentBalance = UserDTO.builder()
+                .firstname("John")
+                .lastname("Doe")
+                .address("123 Main St")
+                .phone("1234567890")
+                .balance("200.00")
+                .build();
+
+        // Assertions to check if different field values result in different hash codes
+        assertNotEquals(baseDTO.hashCode(), differentFirstname.hashCode(), "Different firstname should produce different hash codes.");
+        assertNotEquals(baseDTO.hashCode(), differentLastname.hashCode(), "Different lastname should produce different hash codes.");
+        assertNotEquals(baseDTO.hashCode(), differentAddress.hashCode(), "Different address should produce different hash codes.");
+        assertNotEquals(baseDTO.hashCode(), differentPhone.hashCode(), "Different phone should produce different hash codes.");
+        assertNotEquals(baseDTO.hashCode(), differentBalance.hashCode(), "Different balance should produce different hash codes.");
+    }
+
+
+
 }

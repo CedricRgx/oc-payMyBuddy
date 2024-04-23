@@ -145,7 +145,6 @@ public class TransfertService implements ITransfertService {
         double fee = 0.05;
         String emailAuthor = SecurityContextHolder.getContext().getAuthentication().getName();
         Long userAuthorId = userService.getUserIdByEmail(emailAuthor);
-        //User userAuthor = userService.getUserById(userAuthorId).get();
         Optional<User> userAuthorOptional = userService.getUserById(userAuthorId);
         if (!userAuthorOptional.isPresent()) {
             log.info("Author user not found");
@@ -154,7 +153,6 @@ public class TransfertService implements ITransfertService {
         User userAuthor = userAuthorOptional.get();
 
         Double balance = userService.getUserBalance(userAuthorId);
-        //User userRecipient = userService.getUserById(newTransfertDTO.getRecipientId()).get();
         if (balance == null || newTransfertDTO.getAmount() <= 0) {
             log.info("Amount of the transfert not valid");
             return false;
