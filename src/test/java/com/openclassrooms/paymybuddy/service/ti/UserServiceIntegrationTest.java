@@ -1,12 +1,10 @@
 package com.openclassrooms.paymybuddy.service.ti;
 
-import com.openclassrooms.paymybuddy.model.AppAccount;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
 import com.openclassrooms.paymybuddy.service.impl.RegisterService;
 import com.openclassrooms.paymybuddy.service.impl.UserService;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -27,7 +25,6 @@ public class UserServiceIntegrationTest {
     private RegisterService registerService;
 
     @Test
-    @DisplayName("Test addUser adds a user successfully")
     public void testAddUser() {
         User user = new User();
         user.setFirstname("John");
@@ -39,7 +36,6 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    @DisplayName("Test deleteUserById removes a user successfully")
     public void testDeleteUserById() {
         User user = new User();
         user.setFirstname("Jane");
@@ -53,7 +49,6 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    @DisplayName("Test getUserById retrieves a user correctly")
     public void testGetUserById() {
         User user = new User();
         user.setFirstname("Alice");
@@ -65,20 +60,4 @@ public class UserServiceIntegrationTest {
         Assertions.assertEquals("Alice", foundUser.get().getFirstname(), "The user's name should be Alice.");
     }
 
-    /*
-    @Test
-    @DisplayName("Test updateUserBalance updates the balance correctly")
-    public void testUpdateUserBalance() {
-        User user = new User();
-        AppAccount appAccount = new AppAccount();
-        appAccount.setBalance(100.00);
-        user.setAppAccount(appAccount);
-        user = userService.addUser(user);
-
-        boolean updateStatus = userService.updateUserBalance(user.getUserId(), 200.00);
-        User updatedUser = userRepository.findById(user.getUserId()).get();
-
-        Assertions.assertTrue(updateStatus, "The balance update should be successful.");
-        Assertions.assertEquals(200.00, updatedUser.getAppAccount().getBalance(), 0.01, "The new balance should be 200.00");
-    }*/
 }
