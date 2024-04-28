@@ -74,7 +74,7 @@ public class UserService implements IUserService {
 
     /**
      * Retrieve userId of an user from its email address
-     * @param email
+     * @param email email of the user
      * @return userId
      */
     public Long getUserIdByEmail(String email){

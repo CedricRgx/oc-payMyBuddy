@@ -17,6 +17,9 @@ import org.springframework.ui.Model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+/**
+ * The type Contact controller test.
+ */
 @ExtendWith(MockitoExtension.class)
 public class ContactControllerTest {
 
@@ -26,6 +29,9 @@ public class ContactControllerTest {
     @InjectMocks
     private ContactController contactController;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     public void setUp() {
         Authentication authentication = new UsernamePasswordAuthenticationToken("user@example.com", "password");
@@ -34,6 +40,9 @@ public class ContactControllerTest {
         SecurityContextHolder.setContext(securityContext);
     }
 
+    /**
+     * View contact page user dto exists returns contact page.
+     */
     @Test
     public void viewContactPage_UserDTOExists_ReturnsContactPage() {
         // Given
@@ -52,6 +61,9 @@ public class ContactControllerTest {
         assertEquals("contact", result);
     }
 
+    /**
+     * View contact page user dto not exists returns contact page.
+     */
     @Test
     public void viewContactPage_UserDTONotExists_ReturnsContactPage() {
         // Given

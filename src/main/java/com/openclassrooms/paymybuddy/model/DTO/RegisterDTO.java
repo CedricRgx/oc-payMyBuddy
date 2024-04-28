@@ -62,12 +62,30 @@ public class RegisterDTO {
     @ValidBirthdate
     private LocalDate birthdate;
 
+    /**
+     * Custom annotation for validating birthdates
+     * It uses the BirthdateValidator class to perform the actual validation logic.
+     */
     @Target(ElementType.FIELD)
     @Retention(RetentionPolicy.RUNTIME)
     @Constraint(validatedBy = BirthdateValidator.class)
     public @interface ValidBirthdate {
+        /**
+         * Default message to be used when this constraint is violated.
+         */
         String message() default "{birthdate.valid}";
+        /**
+         * Used to define the groups the constraint belongs to.
+         *
+         * @return the groups the constraint belongs to
+         */
         Class<?>[] groups() default {};
+        /**
+         * Can be used by clients of the Bean Validation API to assign custom payload objects to a
+         * constraint
+         *
+         * @return the payload associated with the constraint
+         */
         Class<? extends Payload>[] payload() default {};
     }
 

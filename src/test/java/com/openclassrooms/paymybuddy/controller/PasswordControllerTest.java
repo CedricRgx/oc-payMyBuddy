@@ -23,6 +23,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+/**
+ * The type Password controller test.
+ */
 @ExtendWith(MockitoExtension.class)
 public class PasswordControllerTest {
 
@@ -53,6 +56,9 @@ public class PasswordControllerTest {
     @Mock
     private Authentication authentication;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     public void setUp() {
         lenient().when(request.getSession(false)).thenReturn(session);
@@ -61,6 +67,9 @@ public class PasswordControllerTest {
         SecurityContextHolder.setContext(securityContext);
     }
 
+    /**
+     * Show change password form should return password update form.
+     */
     @Test
     public void showChangePasswordForm_shouldReturnPasswordUpdateForm() {
         // Given
@@ -74,6 +83,9 @@ public class PasswordControllerTest {
         assertEquals("passwordUpdateForm", viewName);
     }
 
+    /**
+     * Change password with valid password update returns redirect to login.
+     */
     @Test
     public void changePassword_WithValidPasswordUpdate_ReturnsRedirectToLogin() {
         // Given
@@ -112,6 +124,9 @@ public class PasswordControllerTest {
         assertEquals("redirect:/login?logout", viewName);
     }
 
+    /**
+     * Test change password user not found.
+     */
     @Test
     void testChangePassword_UserNotFound() {
         // Given
@@ -126,6 +141,9 @@ public class PasswordControllerTest {
         assertEquals("passwordUpdateForm", viewName);
     }
 
+    /**
+     * Change password when current password is incorrect should reject value.
+     */
     @Test
     public void changePassword_WhenCurrentPasswordIsIncorrect_ShouldRejectValue() {
         // Given
@@ -144,6 +162,9 @@ public class PasswordControllerTest {
         assertEquals("passwordUpdateForm", result);
     }
 
+    /**
+     * Change password when new password does not match confirmation should return to form.
+     */
     @Test
     public void changePassword_WhenNewPasswordDoesNotMatchConfirmation_ShouldReturnToForm() {
         // Given
@@ -160,6 +181,9 @@ public class PasswordControllerTest {
         assertEquals("redirect:/login?logout", result);
     }
 
+    /**
+     * Change password when password update is successful should invalidate session and redirect.
+     */
     @Test
     public void changePassword_WhenPasswordUpdateIsSuccessful_ShouldInvalidateSessionAndRedirect() {
         // Given

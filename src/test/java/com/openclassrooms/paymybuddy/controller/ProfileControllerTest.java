@@ -18,6 +18,9 @@ import org.springframework.validation.BindingResult;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+/**
+ * The type Profile controller test.
+ */
 @ExtendWith(MockitoExtension.class)
 public class ProfileControllerTest {
 
@@ -33,9 +36,15 @@ public class ProfileControllerTest {
     @Mock
     private Model model;
 
+    /**
+     * The Security context.
+     */
     @Mock
     SecurityContext securityContext;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     public void setUp() {
         Authentication authentication = mock(Authentication.class);
@@ -44,6 +53,9 @@ public class ProfileControllerTest {
         SecurityContextHolder.setContext(securityContext);
     }
 
+    /**
+     * View profile page should return profile template.
+     */
     @Test
     public void viewProfilePage_ShouldReturnProfileTemplate() {
         // Given
@@ -61,6 +73,9 @@ public class ProfileControllerTest {
         assertEquals("profile", viewName);
     }
 
+    /**
+     * Show edit profile form profile found should return edit profile template.
+     */
     @Test
     public void showEditProfileForm_ProfileFound_ShouldReturnEditProfileTemplate() {
         // Given
@@ -80,6 +95,9 @@ public class ProfileControllerTest {
         assertEquals("editProfile", viewName);
     }
 
+    /**
+     * Show edit profile form profile not found should redirect to profile page.
+     */
     @Test
     public void showEditProfileForm_ProfileNotFound_ShouldRedirectToProfilePage() {
         // Given
@@ -95,6 +113,9 @@ public class ProfileControllerTest {
         assertEquals("redirect:/profile", viewName);
     }
 
+    /**
+     * Update profile with validation errors should return edit profile template.
+     */
     @Test
     public void updateProfile_WithValidationErrors_ShouldReturnEditProfileTemplate() {
         // Given
@@ -110,6 +131,9 @@ public class ProfileControllerTest {
         assertEquals("editProfile", viewName);
     }
 
+    /**
+     * Update profile with valid profile update should redirect to profile page.
+     */
     @Test
     public void updateProfile_WithValidProfileUpdate_ShouldRedirectToProfilePage() {
         // Given
@@ -126,6 +150,9 @@ public class ProfileControllerTest {
         verify(profileService).saveProfile(profileDTO);
     }
 
+    /**
+     * Update profile with exception during profile update should return edit profile template with error.
+     */
     @Test
     public void updateProfile_WithExceptionDuringProfileUpdate_ShouldReturnEditProfileTemplateWithError() {
         // Given

@@ -65,7 +65,7 @@ public class UserAccountService implements IUserAccountService {
      * Finds a user account by email.
      *
      * @param email The email address to search for.
-     * @return An Optional<UserAccount> containing the user account if found, otherwise an empty Optional.
+     * @return An UserAccount containing the user account if found, otherwise an empty Optional.
      */
     public Optional<UserAccount> findByEmail(String email){
         log.info("Found an user account by its email address");
@@ -74,7 +74,7 @@ public class UserAccountService implements IUserAccountService {
 
     /**
      * Check if email is unique for registration
-     * @param email
+     * @param email email for query
      * @return boolean
      */
     public boolean isEmailUnique(String email){

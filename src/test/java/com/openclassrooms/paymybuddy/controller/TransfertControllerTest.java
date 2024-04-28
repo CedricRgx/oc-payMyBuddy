@@ -23,6 +23,9 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+/**
+ * The type Transfert controller test.
+ */
 @ExtendWith(MockitoExtension.class)
 public class TransfertControllerTest {
 
@@ -44,9 +47,15 @@ public class TransfertControllerTest {
     @Mock
     private TransfertService transfertService;
 
+    /**
+     * The Security context.
+     */
     @Mock
     SecurityContext securityContext;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     public void setUp() {
         Authentication authentication = mock(Authentication.class);
@@ -55,6 +64,11 @@ public class TransfertControllerTest {
         SecurityContextHolder.setContext(securityContext);
     }
 
+    /**
+     * View transfert page should display transfert template.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void viewTransfertPage_ShouldDisplayTransfertTemplate() throws Exception {
         // Given
@@ -79,6 +93,11 @@ public class TransfertControllerTest {
         assertEquals("transfert", viewName);
     }
 
+    /**
+     * View transfert page should add error message to model when session contains error message.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void viewTransfertPage_ShouldAddErrorMessageToModelWhenSessionContainsErrorMessage() throws Exception {
         // Given
@@ -95,6 +114,11 @@ public class TransfertControllerTest {
         verify(session).removeAttribute("errorMessage");
     }
 
+    /**
+     * View transfert page should add success message to model when session contains success message.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void viewTransfertPage_ShouldAddSuccessMessageToModelWhenSessionContainsSuccessMessage() throws Exception {
         // Given
@@ -113,6 +137,11 @@ public class TransfertControllerTest {
         verify(session).removeAttribute("successMessage");
     }
 
+    /**
+     * Test add transfert page valid transfer.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testAddTransfertPage_ValidTransfer() throws Exception {
         // Given
@@ -128,6 +157,11 @@ public class TransfertControllerTest {
         assertEquals("redirect:/transfert", viewName);
     }
 
+    /**
+     * Test add transfert page validation failure.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testAddTransfertPage_ValidationFailure() throws Exception {
         // Given
@@ -141,6 +175,11 @@ public class TransfertControllerTest {
         assertEquals("transfert", viewName);
     }
 
+    /**
+     * Test add transfert page exception during transfer.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testAddTransfertPage_ExceptionDuringTransfer() throws Exception {
         // Given
@@ -155,6 +194,11 @@ public class TransfertControllerTest {
         assertEquals("transfert", viewName);
     }
 
+    /**
+     * Test add transfert page insufficient balance.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testAddTransfertPage_InsufficientBalance() throws Exception {
         // Given
@@ -170,6 +214,11 @@ public class TransfertControllerTest {
         assertEquals("redirect:/transfert", viewName);
     }
 
+    /**
+     * View transfert page should handle null session attributes.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void viewTransfertPage_ShouldHandleNullSessionAttributes() throws Exception {
         // Given
@@ -187,6 +236,11 @@ public class TransfertControllerTest {
         assertEquals("transfert", viewName);
     }
 
+    /**
+     * View transfert page should include all attributes.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void viewTransfertPage_ShouldIncludeAllAttributes() throws Exception {
         // Given

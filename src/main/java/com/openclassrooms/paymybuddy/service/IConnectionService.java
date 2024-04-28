@@ -11,7 +11,8 @@ public interface IConnectionService {
     /**
      * Retrieves all connections between users.
      *
-     * @return A List<User> containing all the connections.
+     * @param userId the unique identifier of the user whose connections are to be retrieved.
+     * @return a list containing all connected User
      */
     public List<User> findAllConnections(Long userId);
 
@@ -20,7 +21,7 @@ public interface IConnectionService {
      *
      * @param query The search query.
      * @param userId The id of the user.
-     * @return A List<User> containing the search results.
+     * @return A list of user containing the search results.
      */
     public List<User> searchConnections(String query, Long userId);
 

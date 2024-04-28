@@ -32,8 +32,8 @@ public class Transfert extends Transaction {
 
     /**
      * the recipient of the transfert
-     * @param recipient
-     * @return
+     * @param recipient recipient of the transfert
+     * @return a Transfert
      */
     public Transfert setRecipient(User recipient) {
         this.recipient = recipient;

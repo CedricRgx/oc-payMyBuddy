@@ -73,7 +73,7 @@ public class TransfertService implements ITransfertService {
 
     /**
      * Retrieve the list of connection of an user from its id
-     * @param userId
+     * @param userId userId of the user
      * @return a list of connections
      */
     public List<String> getListOfConnections(Long userId) {

@@ -32,8 +32,7 @@ public class ProfileController {
      * and adds it to the model for view rendering.
      *
      * @param model The model to which profile data is added.
-     * @return The name of the template for displaying the user's profile.
-     * @throws Exception If retrieving the user's profile fails.
+     * @return The name of the template for displaying the user's profile
      */
     @GetMapping("/profile")
     public String viewProfilePage(Model model){

@@ -109,6 +109,7 @@ public class User implements Serializable {
      * @param address The address of the user
      * @param appAccount The appAccount of the user
      * @param userAccount The userAccount of the user
+     * @param friends The list of friends of the user
      */
     @Builder
     public User(String firstname, String lastname, LocalDate birthdate, String phone, String address, AppAccount appAccount, UserAccount userAccount, List<User> friends){

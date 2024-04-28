@@ -38,13 +38,13 @@ public class TransfertController {
      * a history of past transfers.
      *
      * @param model The model for passing attributes to the view
-     * @param session
+     * @param session Session of the user
      * @param page The page number for pagination of the transfer history.
      * @param size The number of transfer records to display per page.
      * @return The name of the view template for the transfer page.
      */
     @GetMapping("/transfert")
-    public String viewTransfertPage(Model model, HttpSession session, @RequestParam(name="page", defaultValue = "0") int page, @RequestParam(name="size", defaultValue = "3") int size) throws Exception {
+    public String viewTransfertPage(Model model, HttpSession session, @RequestParam(name="page", defaultValue = "0") int page, @RequestParam(name="size", defaultValue = "3") int size) {
         log.info("transfert template");
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Long userId = userService.getUserIdByEmail(email);

@@ -16,6 +16,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
+/**
+ * The type Registration controller test.
+ */
 @ExtendWith(MockitoExtension.class)
 public class RegistrationControllerTest {
 
@@ -28,6 +31,9 @@ public class RegistrationControllerTest {
     @InjectMocks
     private RegistrationController registrationController;
 
+    /**
+     * View registration form should return registration form template.
+     */
     @Test
     public void viewRegistrationForm_ShouldReturnRegistrationFormTemplate() {
         // Given
@@ -42,6 +48,9 @@ public class RegistrationControllerTest {
         assertEquals("registrationForm", viewName);
     }
 
+    /**
+     * Add user valid registration redirect to login page.
+     */
     @Test
     public void addUser_ValidRegistration_RedirectToLoginPage() {
         // Given
@@ -57,6 +66,9 @@ public class RegistrationControllerTest {
         assertEquals("redirect:/login", viewName);
     }
 
+    /**
+     * Add user invalid registration returns registration form.
+     */
     @Test
     public void addUser_InvalidRegistration_ReturnsRegistrationForm() {
         // Given
@@ -72,6 +84,9 @@ public class RegistrationControllerTest {
         assertEquals("registrationForm", viewName);
     }
 
+    /**
+     * Add user email already used exception returns registration form with error.
+     */
     @Test
     public void addUser_EmailAlreadyUsedException_ReturnsRegistrationFormWithError() {
         // Given
@@ -88,6 +103,9 @@ public class RegistrationControllerTest {
         assertEquals("registrationForm", viewName);
     }
 
+    /**
+     * Add user generic exception returns registration form with error.
+     */
     @Test
     public void addUser_GenericException_ReturnsRegistrationFormWithError() {
         // Given

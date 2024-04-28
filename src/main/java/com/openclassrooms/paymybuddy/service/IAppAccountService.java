@@ -10,17 +10,17 @@ import java.util.Optional;
 public interface IAppAccountService {
 
     /**
-     * Retrieves all application accounts.
+     * Retrieves all AppAccount instances.
      *
-     * @return An Iterable<AppAccount> containing all the app accounts.
+     * @return an Iterable containing all AppAccount instances available.
      */
     public Iterable<AppAccount> getAppAccounts();
 
     /**
      * Retrieves an application account by its unique identifier.
      *
-     * @param id The unique identifier of the app account.
-     * @return An Optional<AppAccount> containing the found account, or an empty Optional if no account matches the ID.
+     * @param id the unique identifier of the AppAccount to be retrieved.
+     * @return an Optional containing the found AppAccount if present
      */
     public Optional<AppAccount> getAppAccountById(Long id);
 

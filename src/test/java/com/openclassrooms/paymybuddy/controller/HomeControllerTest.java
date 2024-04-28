@@ -16,6 +16,9 @@ import org.springframework.ui.Model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+/**
+ * The type Home controller test.
+ */
 @ExtendWith(MockitoExtension.class)
 public class HomeControllerTest {
 
@@ -28,6 +31,9 @@ public class HomeControllerTest {
     @Mock
     private UserService userService;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     public void setUp() {
         String email = "user@example.com";
@@ -38,6 +44,9 @@ public class HomeControllerTest {
         SecurityContextHolder.setContext(securityContext);
     }
 
+    /**
+     * View home page authenticated user returns home page.
+     */
     @Test
     public void viewHomePage_AuthenticatedUser_ReturnsHomePage() {
         // Given
@@ -53,6 +62,9 @@ public class HomeControllerTest {
         assertEquals("home", result);
     }
 
+    /**
+     * Credit balance should credit user balance and return home page.
+     */
     @Test
     public void creditBalance_shouldCreditUserBalanceAndReturnHomePage() {
         // Given

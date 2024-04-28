@@ -23,21 +23,39 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+/**
+ * The type Connection controller test.
+ */
 @ExtendWith(MockitoExtension.class)
 public class ConnectionControllerTest {
 
+    /**
+     * The Controller.
+     */
     @InjectMocks
     ConnectionController controller;
 
+    /**
+     * The User service.
+     */
     @Mock
     UserService userService;
 
+    /**
+     * The Connection service.
+     */
     @Mock
     ConnectionService connectionService;
 
+    /**
+     * The Security context.
+     */
     @Mock
     SecurityContext securityContext;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     public void setUp() {
         Authentication authentication = mock(Authentication.class);
@@ -46,6 +64,9 @@ public class ConnectionControllerTest {
         SecurityContextHolder.setContext(securityContext);
     }
 
+    /**
+     * Test show connection list.
+     */
     @Test
     public void testShowConnectionList() {
         // Given
@@ -63,6 +84,9 @@ public class ConnectionControllerTest {
         assertEquals("listConnections", viewName);
     }
 
+    /**
+     * Show connection list should retrieve current user and set attribute list of connections.
+     */
     @Test
     public void showConnectionList_shouldRetrieveCurrentUserAndSetAttributeListOfConnections() {
         // Given
@@ -83,6 +107,9 @@ public class ConnectionControllerTest {
         verify(securityContext.getAuthentication()).getName();
     }
 
+    /**
+     * Search connection with query should return search results.
+     */
     @Test
     public void searchConnection_withQuery_shouldReturnSearchResults() {
         // Given
@@ -107,6 +134,9 @@ public class ConnectionControllerTest {
         verify(model).addAttribute("listOfConnections", searchResults);
     }
 
+    /**
+     * Search connection with empty query should return all connections.
+     */
     @Test
     public void searchConnection_withEmptyQuery_shouldReturnAllConnections() {
         // Given
@@ -131,6 +161,9 @@ public class ConnectionControllerTest {
         verify(model).addAttribute("listOfConnections", allConnections);
     }
 
+    /**
+     * Add connection should return success message when connection added.
+     */
     @Test
     public void addConnection_shouldReturnSuccessMessageWhenConnectionAdded() {
         // Given
@@ -149,6 +182,9 @@ public class ConnectionControllerTest {
         assertEquals("Successfully added the connection", redirectAttributes.getFlashAttributes().get("successAddMessage"));
     }
 
+    /**
+     * Add connection should return error message when connection not added.
+     */
     @Test
     public void addConnection_shouldReturnErrorMessageWhenConnectionNotAdded() {
         // Given
@@ -167,6 +203,9 @@ public class ConnectionControllerTest {
         assertEquals("Failed to add the connection", redirectAttributes.getFlashAttributes().get("errorAddMessage"));
     }
 
+    /**
+     * Remove connection should return error message when connection not removed.
+     */
     @Test
     public void removeConnection_shouldReturnErrorMessageWhenConnectionNotRemoved() {
         // Given

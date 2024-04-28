@@ -11,7 +11,7 @@ public interface IDepositService {
     /**
      * Retrieves all deposits.
      *
-     * @return An Iterable<Deposit> containing all deposits.
+     * @return an Iterable containing all Deposit instances available in the system.
      */
     public Iterable<Deposit> getDeposits();
 
@@ -19,7 +19,7 @@ public interface IDepositService {
      * Retrieves a deposit by its ID.
      *
      * @param id The ID of the deposit to retrieve.
-     * @return An Optional<Deposit> containing the deposit if found, otherwise empty.
+     * @return A Deposit containing the deposit if found, otherwise empty.
      */
     public Optional<Deposit> getDepositById(Long id);
 
