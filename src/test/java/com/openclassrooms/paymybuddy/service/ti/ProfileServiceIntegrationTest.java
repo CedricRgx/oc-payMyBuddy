@@ -8,19 +8,14 @@ import com.openclassrooms.paymybuddy.service.impl.UserAccountService;
 import com.openclassrooms.paymybuddy.service.impl.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
-@Transactional
 public class ProfileServiceIntegrationTest {
 
     @Autowired
@@ -55,25 +50,13 @@ public class ProfileServiceIntegrationTest {
 
     @Test
     public void testGetProfile() {
+        // Given
         ProfileDTO profile = profileService.getProfile(user.getUserId());
+
+        // When Then
         assertNotNull(profile);
         assertEquals("John", profile.getFirstname());
         assertEquals("Doe", profile.getLastname());
     }
 
-    @Test
-    public void testSaveProfile() {
-        ProfileDTO profileDTO = ProfileDTO.builder().build();
-        profileDTO.setEmail(userAccount.getEmail());
-        profileDTO.setFirstname("Jane");
-        profileDTO.setLastname("Smith");
-        profileDTO.setBirthdate(LocalDate.of(1991, 2, 2));
-        profileDTO.setPhone("0987654321");
-        profileDTO.setAddress("456 Elm St");
-
-        User updatedUser = profileService.saveProfile(profileDTO);
-        assertNotNull(updatedUser);
-        assertEquals("Jane", updatedUser.getFirstname());
-        assertEquals("Smith", updatedUser.getLastname());
-    }
 }

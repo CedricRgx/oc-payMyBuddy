@@ -40,7 +40,7 @@ public class DepositTest {
         double actualFee = deposit.getFee();
         User actualAuthor = deposit.getAuthor();
 
-        // Then
+        // When Then
         assertEquals(null, actualTransactionId);
         assertEquals(100.0, actualAmount);
         assertEquals("Test deposit", actualDescription);
@@ -51,6 +51,7 @@ public class DepositTest {
 
     @Test
     public void testEquals_BothObjectsHaveNullDescription() {
+        // Given
         Deposit dto1 = Deposit.builder()
                 .amount(100.0)
                 .description(null)
@@ -66,11 +67,13 @@ public class DepositTest {
                 .author(User.builder().build())
                 .build();
 
+        // When Then
         assertTrue(dto1.equals(dto2));
     }
 
     @Test
     public void testEquals_BothObjectsHaveNullAuthor() {
+        // Given
         Deposit dto1 = Deposit.builder()
                 .amount(100.0)
                 .description("Test deposit")
@@ -86,6 +89,7 @@ public class DepositTest {
                 .author(null)
                 .build();
 
+        // When Then
         assertTrue(dto1.equals(dto2));
     }
 

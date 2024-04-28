@@ -4,16 +4,13 @@ import com.openclassrooms.paymybuddy.model.AppAccount;
 import com.openclassrooms.paymybuddy.repository.AppAccountRepository;
 import com.openclassrooms.paymybuddy.service.impl.AppAccountService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class AppAccountServiceIntegrationTest {
 
@@ -25,50 +22,62 @@ public class AppAccountServiceIntegrationTest {
 
     @Test
     public void testGetAppAccounts() {
-        AppAccount account = new AppAccount();
-        account.setBalance(100.0);
+        // Given
+        AppAccount account = AppAccount.builder()
+                .balance(100.0).build();
         appAccountRepository.save(account);
 
+        // When
         Iterable<AppAccount> accounts = appAccountService.getAppAccounts();
 
+        // Then
         assertNotNull(accounts);
-        assertTrue(accounts.iterator().hasNext(), "Expected at least one account in the list");
+        assertTrue(accounts.iterator().hasNext());
     }
 
     @Test
     public void testGetAppAccountById() {
-        AppAccount account = new AppAccount();
-        account.setBalance(100.0);
+        // Given
+        AppAccount account = AppAccount.builder()
+                .balance(100.0).build();
         account = appAccountRepository.save(account);
         Long id = account.getAppAccountId();
 
+        // When
         Optional<AppAccount> retrievedAccount = appAccountService.getAppAccountById(id);
 
-        assertTrue(retrievedAccount.isPresent(), "Account should be found with ID " + id);
-        assertEquals(100.0, retrievedAccount.get().getBalance(), "Balance should be 100.0");
+        // Then
+        assertTrue(retrievedAccount.isPresent());
+        assertEquals(100.0, retrievedAccount.get().getBalance());
     }
 
     @Test
     public void testAddAppAccount() {
-        AppAccount account = new AppAccount();
-        account.setBalance(200.0);
+        // Given
+        AppAccount account = AppAccount.builder()
+                .balance(200.0).build();
 
+        // When
         AppAccount savedAccount = appAccountService.addAppAccount(account);
 
-        assertNotNull(savedAccount.getAppAccountId(), "Saved account should have an ID");
-        assertEquals(200.0, savedAccount.getBalance(), "Balance should be 200.0");
+        // Then
+        assertNotNull(savedAccount.getAppAccountId());
+        assertEquals(200.0, savedAccount.getBalance());
     }
 
     @Test
     public void testDeleteAppAccountById() {
-        AppAccount account = new AppAccount();
-        account.setBalance(300.0);
+        // Given
+        AppAccount account = AppAccount.builder()
+                .balance(300.0).build();
         account = appAccountRepository.save(account);
         Long id = account.getAppAccountId();
 
+        // When
         appAccountService.deleteAppAccountById(id);
-
         Optional<AppAccount> deletedAccount = appAccountRepository.findById(id);
-        assertFalse(deletedAccount.isPresent(), "Account should not exist after being deleted");
+
+        // Then
+        assertFalse(deletedAccount.isPresent());
     }
 }

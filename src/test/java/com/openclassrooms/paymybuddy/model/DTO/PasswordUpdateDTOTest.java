@@ -7,14 +7,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDate;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class PasswordUpdateDTOTest {
 
+    @Autowired
     private Validator validator;
 
     private PasswordUpdateDTO dto = PasswordUpdateDTO.builder()
@@ -104,7 +104,11 @@ public class PasswordUpdateDTOTest {
     @Test
     public void testCurrentPasswordNotNull() {
         // Given
-        PasswordUpdateDTO dtoNotNull = new PasswordUpdateDTO(null, "newPassword", "newPassword");
+        PasswordUpdateDTO dtoNotNull = PasswordUpdateDTO.builder()
+                .currentPassword(null)
+                .newPassword("newPassword")
+                .confirmPassword("newPassword")
+                .build();
 
         // When
         var violations = validator.validate(dtoNotNull);
@@ -116,7 +120,11 @@ public class PasswordUpdateDTOTest {
     @Test
     public void testNewPasswordNotNull() {
         // Given
-        PasswordUpdateDTO dtoNewNotNull = new PasswordUpdateDTO("currentPassword", null, "newPassword");
+        PasswordUpdateDTO dtoNewNotNull = PasswordUpdateDTO.builder()
+                .currentPassword("currentPassword")
+                .newPassword(null)
+                .confirmPassword("newPassword")
+                .build();
 
         // When
         var violations = validator.validate(dtoNewNotNull);
@@ -128,7 +136,11 @@ public class PasswordUpdateDTOTest {
     @Test
     public void testConfirmPasswordNotNull() {
         // Given
-        PasswordUpdateDTO dtoConfirmNotNull = new PasswordUpdateDTO("currentPassword", "newPassword", null);
+        PasswordUpdateDTO dtoConfirmNotNull = PasswordUpdateDTO.builder()
+                .currentPassword("currentPassword")
+                .newPassword("newPassword")
+                .confirmPassword(null)
+                .build();
 
         // When
         var violations = validator.validate(dtoConfirmNotNull);
@@ -140,10 +152,11 @@ public class PasswordUpdateDTOTest {
     @Test
     public void testConfirmPasswordEqualsNewPassword() {
         // Given
-        String currentPassword = "currentPassword";
-        String newPassword = "newPassword";
-        String confirmPassword = "newPassword";
-        PasswordUpdateDTO dtoConfirmPassword = new PasswordUpdateDTO(currentPassword, newPassword, confirmPassword);
+        PasswordUpdateDTO dtoConfirmPassword = PasswordUpdateDTO.builder()
+                .currentPassword("currentPassword")
+                .newPassword("newPassword")
+                .confirmPassword("newPassword")
+                .build();
 
         // When
         var violations = validator.validate(dtoConfirmPassword);

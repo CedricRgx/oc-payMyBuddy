@@ -5,15 +5,13 @@ import com.openclassrooms.paymybuddy.model.DTO.TransfertDTO;
 import com.openclassrooms.paymybuddy.model.Transfert;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.repository.TransfertRepository;
-import com.openclassrooms.paymybuddy.service.impl.TransfertService;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.core.Authentication;
@@ -30,6 +28,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class TransfertServiceTest {
 
     @InjectMocks
@@ -55,26 +54,23 @@ public class TransfertServiceTest {
         SecurityContextHolder.setContext(securityContext);
     }
 
-
     @Test
     public void getTransferts_shouldReturnAllTransferts() {
         // Given
         User user1 = User.builder().firstname("John").lastname("Doe").build();
         User user2 = User.builder().firstname("Mary").lastname("Shelley").build();
+        Transfert transfert1 = Transfert.builder()
+                .recipient(user1).build();
+        Transfert transfert2 = Transfert.builder()
+                .recipient(user2).build();
 
-        Transfert transfert1 = new Transfert();
-        transfert1.setRecipient(user1);
-
-        Transfert transfert2 = new Transfert();
-        transfert2.setRecipient(user2);
-
+        // When
         List<Transfert> expectedTransferts = Arrays.asList(transfert1, transfert2);
         when(transfertRepository.findAll()).thenReturn(expectedTransferts);
 
         expectedTransferts = Arrays.asList(transfert1, transfert2);
         when(transfertRepository.findAll()).thenReturn(expectedTransferts);
 
-        // When
         Iterable<Transfert> actualTransferts = transfertService.getTransferts();
 
         // Then
@@ -188,8 +184,8 @@ public class TransfertServiceTest {
     @Test
     public void addNewTransfert_ShouldFail_WhenAmountIsInvalid() {
         // Given
-        NewTransfertDTO newTransfertDTO = NewTransfertDTO.builder().build();
-        newTransfertDTO.setAmount(-10.0);
+        NewTransfertDTO newTransfertDTO = NewTransfertDTO.builder()
+                .amount(-10.0).build();
 
         // When Then
         assertFalse(transfertService.addNewTransfert(newTransfertDTO));
@@ -203,9 +199,9 @@ public class TransfertServiceTest {
         when(userService.getUserBalance(1L)).thenReturn(5.0);
 
         // When
-        NewTransfertDTO newTransfertDTO = NewTransfertDTO.builder().build();
-        newTransfertDTO.setAmount(10.0);
-        newTransfertDTO.setRecipientId(2L);
+        NewTransfertDTO newTransfertDTO = NewTransfertDTO.builder()
+                .amount(10.0)
+                .recipientId(2L).build();
 
         // Then
         assertFalse(transfertService.addNewTransfert(newTransfertDTO));
@@ -215,11 +211,11 @@ public class TransfertServiceTest {
     public void addNewTransfert_ShouldFail_WhenUserNotFound() {
         // When
         when(userService.getUserIdByEmail("user@example.com")).thenReturn(1L);
-        when(userService.getUserById(1L)).thenReturn(Optional.empty()); // User not found
+        when(userService.getUserById(1L)).thenReturn(Optional.empty());
 
-        NewTransfertDTO newTransfertDTO = NewTransfertDTO.builder().build();
-        newTransfertDTO.setAmount(50.0);
-        newTransfertDTO.setRecipientId(2L);
+        NewTransfertDTO newTransfertDTO = NewTransfertDTO.builder()
+                .amount(50.0)
+                .recipientId(2L).build();
 
         // Then
         assertFalse(transfertService.addNewTransfert(newTransfertDTO));
@@ -233,9 +229,9 @@ public class TransfertServiceTest {
         when(userService.getUserById(2L)).thenReturn(Optional.of(new User()));
         when(userService.getUserBalance(1L)).thenReturn(100.0);
 
-        NewTransfertDTO newTransfertDTO = NewTransfertDTO.builder().build();
-        newTransfertDTO.setAmount(50.0);
-        newTransfertDTO.setRecipientId(2L);
+        NewTransfertDTO newTransfertDTO = NewTransfertDTO.builder()
+                .amount(50.0)
+                .recipientId(2L).build();
 
         // Then
         assertTrue(transfertService.addNewTransfert(newTransfertDTO));
@@ -250,12 +246,12 @@ public class TransfertServiceTest {
         when(userService.getUserById(2L)).thenReturn(Optional.empty());
 
         // When
-        NewTransfertDTO newTransfertDTO = NewTransfertDTO.builder().build();
-        newTransfertDTO.setAmount(20.0);
-        newTransfertDTO.setRecipientId(2L);
+        NewTransfertDTO newTransfertDTO = NewTransfertDTO.builder()
+                .amount(20.0)
+                .recipientId(2L).build();
 
         // Then
-        assertFalse(transfertService.addNewTransfert(newTransfertDTO), "Transfer should fail if the recipient user is not found");
+        assertFalse(transfertService.addNewTransfert(newTransfertDTO));
     }
 
     @Test
@@ -266,12 +262,13 @@ public class TransfertServiceTest {
         when(userService.getUserBalance(1L)).thenReturn(100.0);
 
         // When
-        NewTransfertDTO newTransfertDTO = NewTransfertDTO.builder().build();
-        newTransfertDTO.setAmount(0);
-        newTransfertDTO.setRecipientId(2L);
+
+        NewTransfertDTO newTransfertDTO = NewTransfertDTO.builder()
+                .amount(0)
+                .recipientId(2L).build();
 
         // Then
-        assertFalse(transfertService.addNewTransfert(newTransfertDTO), "Transfer should fail if the amount is non-positive");
+        assertFalse(transfertService.addNewTransfert(newTransfertDTO));
     }
 
     @Test
@@ -282,12 +279,12 @@ public class TransfertServiceTest {
         when(userService.getUserBalance(1L)).thenReturn(null);
 
         // When
-        NewTransfertDTO newTransfertDTO = NewTransfertDTO.builder().build();
-        newTransfertDTO.setAmount(50.0);
-        newTransfertDTO.setRecipientId(2L);
+        NewTransfertDTO newTransfertDTO = NewTransfertDTO.builder()
+                .amount(50.0)
+                .recipientId(2L).build();
 
         // Then
-        assertFalse(transfertService.addNewTransfert(newTransfertDTO), "Transfer should fail if the balance is null");
+        assertFalse(transfertService.addNewTransfert(newTransfertDTO));
     }
 
 }

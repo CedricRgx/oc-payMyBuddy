@@ -30,6 +30,11 @@ public class Transfert extends Transaction {
     @JoinColumn(name="recipient_id", nullable = false)
     private User recipient;
 
+    /**
+     * the recipient of the transfert
+     * @param recipient
+     * @return
+     */
     public Transfert setRecipient(User recipient) {
         this.recipient = recipient;
         return this;

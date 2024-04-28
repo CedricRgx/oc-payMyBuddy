@@ -1,13 +1,14 @@
 package com.openclassrooms.paymybuddy.service.ti;
 
 import com.openclassrooms.paymybuddy.model.Deposit;
+import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.repository.DepositRepository;
 import com.openclassrooms.paymybuddy.service.impl.DepositService;
+import com.openclassrooms.paymybuddy.service.impl.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -15,24 +16,30 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@ActiveProfiles("test")
 public class DepositServiceIntegrationTest {
 
     @Autowired
     private DepositService depositService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private DepositRepository depositRepository;
+
+    private User user = User.builder().build();
 
     @BeforeEach
     void setup() {
         depositRepository.deleteAll();
+        userService.addUser(user);
     }
 
     @Test
     void testAddDeposit() {
         Deposit deposit = Deposit.builder().build();
         deposit.setAmount(100.00);
+        deposit.setAuthor(user);
         deposit.setDescription("Test deposit");
 
         Deposit savedDeposit = depositService.addDeposit(deposit);
@@ -45,6 +52,7 @@ public class DepositServiceIntegrationTest {
     void testGetDepositById() {
         Deposit deposit = new Deposit();
         deposit.setAmount(100.00);
+        deposit.setAuthor(user);
         deposit.setDescription("Test deposit");
         deposit = depositRepository.save(deposit);
 
@@ -57,9 +65,11 @@ public class DepositServiceIntegrationTest {
     void testGetAllDeposits() {
         Deposit deposit1 = new Deposit();
         deposit1.setAmount(100.00);
+        deposit1.setAuthor(user);
         deposit1.setDescription("Test deposit 1");
         Deposit deposit2 = new Deposit();
         deposit2.setAmount(200.00);
+        deposit2.setAuthor(user);
         deposit2.setDescription("Test deposit 2");
         depositRepository.save(deposit1);
         depositRepository.save(deposit2);
@@ -73,6 +83,7 @@ public class DepositServiceIntegrationTest {
     void testDeleteDepositById() {
         Deposit deposit = new Deposit();
         deposit.setAmount(100.00);
+        deposit.setAuthor(user);
         deposit.setDescription("Test deposit");
         deposit = depositRepository.save(deposit);
 

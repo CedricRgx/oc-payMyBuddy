@@ -4,17 +4,16 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.openclassrooms.paymybuddy.exceptions.UpdateLastConnectionDateFailedException;
-import com.openclassrooms.paymybuddy.service.impl.UserAccountService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class UserAccountServiceTest {
 
     @Mock
@@ -22,11 +21,6 @@ public class UserAccountServiceTest {
 
     @InjectMocks
     private UserAccountService userAccountService;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void testIsEmailUnique_True() {

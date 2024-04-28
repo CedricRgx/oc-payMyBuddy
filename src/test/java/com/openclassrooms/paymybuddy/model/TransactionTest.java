@@ -32,7 +32,7 @@ public class TransactionTest {
     @Test
     public void testGetTransactionId() {
         // Given
-        Long expectedId = null; // Transaction's id is generated automatically.
+        Long expectedId = null;
 
         // When
         Long actualId = transaction.getTransactionId();
@@ -151,7 +151,7 @@ public class TransactionTest {
         // When
         User actualAuthor = transaction.getAuthor();
 
-        // Then
+        // When Then
         assertEquals(mockUser, actualAuthor);
     }
 
@@ -171,7 +171,7 @@ public class TransactionTest {
     public void hashCode_SameObject_ReturnsSameHashCode() {
         // Given
         LocalDateTime transactionDate = LocalDateTime.now();
-        User author = new User();
+        User author = User.builder().build();
 
         Transaction transaction1 = Transaction.builder()
                 .transactionId(1L)
@@ -194,7 +194,7 @@ public class TransactionTest {
     public void hashCode_DifferentObjectsWithSameProperties_ReturnsSameHashCode() {
         // Given
         LocalDateTime transactionDate = LocalDateTime.now();
-        User author = new User();
+        User author = User.builder().build();
 
         Transaction transaction1 = Transaction.builder()
                 .transactionId(1L)
@@ -226,8 +226,8 @@ public class TransactionTest {
     public void hashCode_DifferentObjectsWithDifferentProperties_ReturnsDifferentHashCodes() {
         // Given
         LocalDateTime transactionDate = LocalDateTime.now();
-        User author1 = new User();
-        User author2 = new User();
+        User author1 = User.builder().build();
+        User author2 = User.builder().build();
 
         Transaction transaction1 = Transaction.builder()
                 .transactionId(1L)
@@ -317,7 +317,7 @@ public class TransactionTest {
     @Test
     public void testEquals_SameValues_AssertTrue() {
         // Given
-        User author = new User();
+        User author = User.builder().build();
         author.setUserId(1L);
 
         Transaction transaction1 = Transaction.builder()
@@ -345,9 +345,9 @@ public class TransactionTest {
     @Test
     public void testEquals_DifferentValues_AssertFalse() {
         // Given
-        User author1 = new User();
+        User author1 = User.builder().build();
         author1.setUserId(1L);
-        User author2 = new User();
+        User author2 = User.builder().build();
         author2.setUserId(2L);
 
         Transaction transaction1 = Transaction.builder()
@@ -375,7 +375,7 @@ public class TransactionTest {
     @Test
     public void testHashCode_ConsistencyCheck() {
         // Given
-        User author = new User();
+        User author = User.builder().build();
         author.setUserId(1L);
 
         Transaction transaction = Transaction.builder()
@@ -397,7 +397,7 @@ public class TransactionTest {
     @Test
     public void testHashCode_DifferentObjects_AssertNotEquals() {
         // Given
-        User author = new User();
+        User author = User.builder().build();
         author.setUserId(1L);
 
         Transaction transaction1 = Transaction.builder()

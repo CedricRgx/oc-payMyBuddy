@@ -47,7 +47,8 @@ public class ConnectionService implements IConnectionService{
     }
 
     /**
-     * Searches and returns connections based on an email query.
+     * Searches and returns connections based on an email query
+     *
      * @param email The email search query to match against user's email.
      * @return A list of users representing the matched connections.
      */
@@ -75,6 +76,11 @@ public class ConnectionService implements IConnectionService{
      * @return True if the connection was successfully added, False otherwise.
      */
     public boolean addConnection(Long userId, Long friendId){
+/*        User user = userService.getUserById(userId).get();
+        User userFriend = userService.getUserById(friendId).get();
+        user.getFriends().add(userFriend);
+        userService.addUser(userFriend);
+        return true;*/
         String sql = "INSERT INTO assoc_user_friend (user_id, friend_id) VALUES (?, ?)";
         try{
             int result = jdbcTemplate.update(sql, userId, friendId);
@@ -83,6 +89,7 @@ public class ConnectionService implements IConnectionService{
             log.error("Error adding connection between user {} and friend {}: {}", userId, friendId, e.getMessage());
             return false;
         }
+
     }
 
     /**

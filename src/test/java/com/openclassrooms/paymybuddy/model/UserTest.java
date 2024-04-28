@@ -1,19 +1,17 @@
 package com.openclassrooms.paymybuddy.model;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * unit tests for the user class.
- */
-@Slf4j
 public class UserTest {
 
+    @Autowired
     private User user;
 
     @BeforeEach

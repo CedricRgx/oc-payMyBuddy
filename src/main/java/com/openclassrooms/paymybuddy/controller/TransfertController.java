@@ -37,7 +37,8 @@ public class TransfertController {
      * Displays the transfer page, showing available connections for initiating transfers and
      * a history of past transfers.
      *
-     * @param model The model for passing attributes to the view.
+     * @param model The model for passing attributes to the view
+     * @param session
      * @param page The page number for pagination of the transfer history.
      * @param size The number of transfer records to display per page.
      * @return The name of the view template for the transfer page.

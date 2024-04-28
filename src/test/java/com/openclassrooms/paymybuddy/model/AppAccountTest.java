@@ -158,16 +158,19 @@ public class AppAccountTest {
 
     @Test
     public void testEqualsSymmetry() {
+        // Given
         AppAccount anotherAppAccount = AppAccount.builder()
                 .balance(100.0)
                 .appOwner(mockUser)
                 .build();
 
-        assertTrue(appAccount.equals(anotherAppAccount) && anotherAppAccount.equals(appAccount), "Equals should be symmetric.");
+        // When Then
+        assertTrue(appAccount.equals(anotherAppAccount) && anotherAppAccount.equals(appAccount));
     }
 
     @Test
     public void testEqualsTransitivity() {
+        // Given
         AppAccount firstAccount = AppAccount.builder()
                 .balance(100.0)
                 .appOwner(mockUser)
@@ -181,63 +184,78 @@ public class AppAccountTest {
                 .appOwner(mockUser)
                 .build();
 
-        assertTrue(firstAccount.equals(secondAccount) && secondAccount.equals(thirdAccount) && firstAccount.equals(thirdAccount),
-                "Equals should be transitive.");
+        // When Then
+        assertTrue(firstAccount.equals(secondAccount) && secondAccount.equals(thirdAccount) && firstAccount.equals(thirdAccount));
     }
 
     @Test
     public void testEqualsConsistency() {
+        // Given
         AppAccount anotherAppAccount = AppAccount.builder()
                 .balance(100.0)
                 .appOwner(mockUser)
                 .build();
 
-        assertTrue(appAccount.equals(anotherAppAccount) && appAccount.equals(anotherAppAccount),
-                "Equals should be consistent across multiple calls.");
+        // When Then
+        assertTrue(appAccount.equals(anotherAppAccount) && appAccount.equals(anotherAppAccount));
     }
 
     @Test
     public void testEqualsAllFieldsIdentical() {
+        // Given
         AppAccount identicalAccount = AppAccount.builder()
                 .balance(100.0)
                 .appOwner(mockUser)
                 .build();
 
-        assertTrue(appAccount.equals(identicalAccount), "Equals should return true for identically constructed objects.");
+        // When Then
+        assertTrue(appAccount.equals(identicalAccount));
     }
 
     @Test
     public void testHashCodeConsistency() {
+        // Given
         int initialHashCode = appAccount.hashCode();
-        assertEquals(initialHashCode, appAccount.hashCode(), "Hash code should remain consistent across multiple calls.");
+
+        // When Then
+        assertEquals(initialHashCode, appAccount.hashCode());
     }
 
     @Test
     public void testHashCodeEqualityConsistency() {
+        // Given
         AppAccount anotherAppAccount = AppAccount.builder()
                 .balance(100.0)
                 .appOwner(mockUser)
                 .build();
-        assertTrue(appAccount.equals(anotherAppAccount), "Both accounts should be equal.");
-        assertEquals(appAccount.hashCode(), anotherAppAccount.hashCode(), "Hash codes must be equal for equal objects.");
+
+        // When Then
+        assertTrue(appAccount.equals(anotherAppAccount));
+        assertEquals(appAccount.hashCode(), anotherAppAccount.hashCode());
     }
 
     @Test
     public void testHashCodeDifference() {
+        // Given
         AppAccount differentAppAccount = AppAccount.builder()
                 .balance(200.0)
                 .appOwner(new User())
                 .build();
-        assertNotEquals(appAccount.hashCode(), differentAppAccount.hashCode(), "Hash codes should ideally be different for non-equal objects.");
+
+        // When Then
+        assertNotEquals(appAccount.hashCode(), differentAppAccount.hashCode());
     }
 
     @Test
     public void testHashCodeWithNullFields() {
+        // Given
         AppAccount accountWithNullOwner = AppAccount.builder()
                 .balance(100.0)
                 .appOwner(null)
                 .build();
-        assertDoesNotThrow(accountWithNullOwner::hashCode, "Hash code calculation should handle null fields without throwing an exception.");
+
+        // When Then
+        assertDoesNotThrow(accountWithNullOwner::hashCode);
     }
 
 }

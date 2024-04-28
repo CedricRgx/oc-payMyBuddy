@@ -2,38 +2,41 @@ package com.openclassrooms.paymybuddy.util;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 public class FormatterTest {
+
     private Formatter formatter;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         formatter = new Formatter();
     }
 
     @Test
-    void formatDoubleToString_ReturnsCorrectlyFormattedString() {
-        // Arrange
+    public void formatDoubleToString_ReturnsCorrectlyFormattedString() {
+        // Given
         double input = 1234.5678;
 
-        // Act
+        // When
         String formatted = formatter.formatDoubleToString(input);
 
-        // Assert
-        assertEquals("1234.57", formatted, "The double should be formatted to two decimal places.");
+        // Then
+        assertEquals("1234.57", formatted);
     }
 
     @Test
-    void addCurrency_AppendsCurrencySymbol() {
-        // Arrange
+    public void addCurrency_AppendsCurrencySymbol() {
+        // Given
         String amount = "1234.57";
 
-        // Act
+        // When
         String result = formatter.addCurrency(amount);
 
-        // Assert
-        assertEquals("1234.57 €", result, "The currency symbol should be appended to the amount.");
+        // Then
+        assertEquals("1234.57 €", result);
     }
 }

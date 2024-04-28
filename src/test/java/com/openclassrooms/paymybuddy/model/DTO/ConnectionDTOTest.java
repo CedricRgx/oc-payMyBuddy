@@ -3,10 +3,12 @@ package com.openclassrooms.paymybuddy.model.DTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class ConnectionDTOTest {
 
     private ConnectionDTO connectionDTO = ConnectionDTO.builder()
@@ -110,7 +112,7 @@ public class ConnectionDTOTest {
                 .build();
 
         ConnectionDTO dto2 = ConnectionDTO.builder()
-                .userId(2L) // Different user ID
+                .userId(2L)
                 .firstname("John")
                 .lastname("Doe")
                 .build();
@@ -199,7 +201,7 @@ public class ConnectionDTOTest {
                 .lastname(null)
                 .build();
 
-        // When & Then
+        // When Then
         assertDoesNotThrow(dtoWithNullFirstname::hashCode);
         assertDoesNotThrow(dtoWithNullLastname::hashCode);
     }
@@ -215,9 +217,9 @@ public class ConnectionDTOTest {
 
         int initialHashCode = dto.hashCode();
 
-        // When & Then
-        assertEquals(initialHashCode, dto.hashCode(), "Hash code should remain consistent across calls.");
-        assertEquals(initialHashCode, dto.hashCode(), "Repeated hash code calls should return the same value.");
+        // When Then
+        assertEquals(initialHashCode, dto.hashCode());
+        assertEquals(initialHashCode, dto.hashCode());
     }
 
     @Test
@@ -247,10 +249,10 @@ public class ConnectionDTOTest {
                 .lastname("Smith")
                 .build();
 
-        // When & Then
-        assertNotEquals(baseDto.hashCode(), differentUserId.hashCode(), "Different userId should produce different hash codes.");
-        assertNotEquals(baseDto.hashCode(), differentFirstname.hashCode(), "Different firstname should produce different hash codes.");
-        assertNotEquals(baseDto.hashCode(), differentLastname.hashCode(), "Different lastname should produce different hash codes.");
+        // When Then
+        assertNotEquals(baseDto.hashCode(), differentUserId.hashCode());
+        assertNotEquals(baseDto.hashCode(), differentFirstname.hashCode());
+        assertNotEquals(baseDto.hashCode(), differentLastname.hashCode());
     }
 
 }

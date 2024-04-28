@@ -8,6 +8,9 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
+/**
+ * Transaction class is the parent of deposit and Transfert
+ */
 @Data
 @SuperBuilder
 @NoArgsConstructor

@@ -2,7 +2,6 @@ package com.openclassrooms.paymybuddy.service.impl;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
-
 import com.openclassrooms.paymybuddy.model.DTO.ProfileDTO;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.model.UserAccount;
@@ -12,12 +11,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class ProfileServiceTest {
 
     @Mock
@@ -34,15 +35,17 @@ public class ProfileServiceTest {
 
     @BeforeEach
     public void setUp() {
-        user = new User();
-        user.setFirstname("John");
-        user.setLastname("Doe");
-        user.setBirthdate(LocalDate.of(1985, 5, 20));
-        user.setPhone("1234567890");
-        user.setAddress("123 Main St");
+        user = User.builder()
+                .firstname("John")
+                .lastname("Doe")
+                        .birthdate(LocalDate.of(1985, 5, 20))
+                .phone("1234567890")
+                .address("123 Main St")
+                .build();
 
-        UserAccount userAccount = new UserAccount();
-        userAccount.setEmail("john.doe@example.com");
+        UserAccount userAccount = UserAccount.builder()
+                .email("john.doe@example.com")
+                .build();
         user.setUserAccount(userAccount);
 
         expectedProfile = ProfileDTO.builder()
@@ -57,30 +60,32 @@ public class ProfileServiceTest {
 
     @Test
     public void testGetProfile_UserExists() {
+        // When
         when(userService.getUserById(anyLong())).thenReturn(Optional.of(user));
-
         ProfileDTO result = profileService.getProfile(1L);
 
+        // Then
         assertAll(
-                () -> assertNotNull(result, "Profile should not be null"),
-                () -> assertEquals(expectedProfile.getEmail(), result.getEmail(), "Emails should match"),
-                () -> assertEquals(expectedProfile.getFirstname(), result.getFirstname(), "First names should match"),
-                () -> assertEquals(expectedProfile.getLastname(), result.getLastname(), "Last names should match"),
-                () -> assertEquals(expectedProfile.getBirthdate(), result.getBirthdate(), "Birthdates should match"),
-                () -> assertEquals(expectedProfile.getPhone(), result.getPhone(), "Phones should match"),
-                () -> assertEquals(expectedProfile.getAddress(), result.getAddress(), "Addresses should match")
+                () -> assertNotNull(result),
+                () -> assertEquals(expectedProfile.getEmail(), result.getEmail()),
+                () -> assertEquals(expectedProfile.getFirstname(), result.getFirstname()),
+                () -> assertEquals(expectedProfile.getLastname(), result.getLastname()),
+                () -> assertEquals(expectedProfile.getBirthdate(), result.getBirthdate()),
+                () -> assertEquals(expectedProfile.getPhone(), result.getPhone()),
+                () -> assertEquals(expectedProfile.getAddress(), result.getAddress())
         );
     }
 
     @Test
     public void testGetProfile_UserNotFound() {
+        // When
         when(userService.getUserById(anyLong())).thenReturn(Optional.empty());
 
+        // Then
         Exception exception = assertThrows(NoSuchElementException.class, () -> {
             profileService.getProfile(1L);
         });
-
-        assertTrue(exception.getMessage().contains("No value present"), "Should throw NoSuchElementException");
+        assertTrue(exception.getMessage().contains("No value present"));
     }
 
     @Test
@@ -94,13 +99,12 @@ public class ProfileServiceTest {
                 .phone("1234567890")
                 .address("1234 Street Name").build();
         UserAccount userAccount = new UserAccount();
-        User user = new User();
+        User user = User.builder().build();
 
         // When
         when(userAccountService.findByEmail(anyString())).thenReturn(Optional.of(userAccount));
         when(userService.getUserIdByEmail(anyString())).thenReturn(1L);
         when(userService.getUserById(anyLong())).thenReturn(Optional.of(user));
-
         User result = profileService.saveProfile(profileDTO);
 
         // Then

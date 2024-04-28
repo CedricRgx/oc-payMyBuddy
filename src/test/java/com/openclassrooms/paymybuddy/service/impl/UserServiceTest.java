@@ -6,19 +6,15 @@ import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.model.UserAccount;
 import com.openclassrooms.paymybuddy.repository.AppAccountRepository;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
-import com.openclassrooms.paymybuddy.service.impl.UserService;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class UserServiceTest {
 
     @Mock
@@ -181,8 +178,8 @@ class UserServiceTest {
         // Given
         Long userId = 1L;
         Double newBalance = 100.0;
-        User user = new User();
-        user.setAppAccount(new AppAccount());
+        User user = User.builder().build();
+        user.setAppAccount(AppAccount.builder().build());
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         // When
@@ -217,13 +214,12 @@ class UserServiceTest {
         Long userId = 1L;
         double amount = 100.0;
         User user = mock(User.class);
-        AppAccount appAccount = new AppAccount();
-        appAccount.setBalance(200.0);
+        AppAccount appAccount = AppAccount.builder()
+                .balance(200.0).build();
 
         // When
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(user.getAppAccount()).thenReturn(appAccount);
-
         userService.creditUserBalance(userId, amount);
 
         // Then

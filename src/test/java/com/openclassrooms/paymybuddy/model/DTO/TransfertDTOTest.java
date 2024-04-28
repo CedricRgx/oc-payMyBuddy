@@ -1,11 +1,8 @@
 package com.openclassrooms.paymybuddy.model.DTO;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -269,6 +266,7 @@ public class TransfertDTOTest {
 
     @Test
     public void testEquals_BothObjectsHaveNullRecipientFirstname() {
+        // Given
         TransfertDTO dto1 = TransfertDTO.builder()
                 .recipientFirstname(null)
                 .recipientLastname("Doe")
@@ -281,11 +279,14 @@ public class TransfertDTOTest {
                 .description("Expense reimbursement")
                 .amount("50.00")
                 .build();
+
+        // When Then
         assertTrue(dto1.equals(dto2));
     }
 
     @Test
     public void testEquals_NullAndNonNullRecipientFirstname() {
+        // Given
         TransfertDTO dto1 = TransfertDTO.builder()
                 .recipientFirstname(null)
                 .recipientLastname("Doe")
@@ -298,11 +299,14 @@ public class TransfertDTOTest {
                 .description("Expense reimbursement")
                 .amount("50.00")
                 .build();
+
+        // When Then
         assertFalse(dto1.equals(dto2));
     }
 
     @Test
     public void testEquals_BothObjectsHaveNullRecipientLastname() {
+        // Given
         TransfertDTO dto1 = TransfertDTO.builder()
                 .recipientFirstname("John")
                 .recipientLastname(null)
@@ -315,11 +319,14 @@ public class TransfertDTOTest {
                 .description("Expense reimbursement")
                 .amount("50.00")
                 .build();
+
+        // When Then
         assertTrue(dto1.equals(dto2));
     }
 
     @Test
     public void testEquals_NullAndNonNullRecipientLastname() {
+        // Given
         TransfertDTO dto1 = TransfertDTO.builder()
                 .recipientFirstname("John")
                 .recipientLastname(null)
@@ -332,11 +339,14 @@ public class TransfertDTOTest {
                 .description("Expense reimbursement")
                 .amount("50.00")
                 .build();
+
+        // When Then
         assertFalse(dto1.equals(dto2));
     }
 
     @Test
     public void testEquals_BothObjectsHaveNullDescription() {
+        // Given
         TransfertDTO dto1 = TransfertDTO.builder()
                 .recipientFirstname("John")
                 .recipientLastname("Doe")
@@ -349,11 +359,14 @@ public class TransfertDTOTest {
                 .description(null)
                 .amount("50.00")
                 .build();
+
+        // When Then
         assertTrue(dto1.equals(dto2));
     }
 
     @Test
     public void testEquals_NullAndNonNullDescription() {
+        // Given
         TransfertDTO dto1 = TransfertDTO.builder()
                 .recipientFirstname("John")
                 .recipientLastname("Doe")
@@ -366,11 +379,14 @@ public class TransfertDTOTest {
                 .description("Expense reimbursement")
                 .amount("50.00")
                 .build();
+
+        // When Then
         assertFalse(dto1.equals(dto2));
     }
 
     @Test
     public void testEquals_BothObjectsHaveNullAmount() {
+        // Given
         TransfertDTO dto1 = TransfertDTO.builder()
                 .recipientFirstname("John")
                 .recipientLastname("Doe")
@@ -383,11 +399,14 @@ public class TransfertDTOTest {
                 .description("Expense reimbursement")
                 .amount(null)
                 .build();
+
+        // When Then
         assertTrue(dto1.equals(dto2));
     }
 
     @Test
     public void testEquals_NullAndNonNullAmount() {
+        // Given
         TransfertDTO dto1 = TransfertDTO.builder()
                 .recipientFirstname("John")
                 .recipientLastname("Doe")
@@ -400,6 +419,8 @@ public class TransfertDTOTest {
                 .description("Expense reimbursement")
                 .amount(null)
                 .build();
+
+        // When Then
         assertFalse(dto1.equals(dto2));
     }
 

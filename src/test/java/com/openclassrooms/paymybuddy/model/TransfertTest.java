@@ -1,13 +1,10 @@
 package com.openclassrooms.paymybuddy.model;
 
-import com.openclassrooms.paymybuddy.model.DTO.RegisterDTO;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,8 +17,8 @@ public class TransfertTest {
 
     @BeforeEach
     public void setUp() {
-        mockAuthor = new User();
-        mockRecipient = new User();
+        mockAuthor = User.builder().build();
+        mockRecipient = User.builder().build();
         transfert = Transfert.builder()
                 .amount(100.0)
                 .description("Test transfert")
@@ -74,25 +71,25 @@ public class TransfertTest {
 
     @Test
     public void testTransactionDetails() {
-        // Assert initial state is correct
+        // Then
         assertAll("Ensure all transaction details are correctly initialized",
-                () -> assertEquals(100.0, transfert.getAmount(), "Amount should be initialized correctly"),
-                () -> assertEquals("Test transfert", transfert.getDescription(), "Description should be initialized correctly"),
-                () -> assertNotNull(transfert.getTransactionDate(), "Transaction date should not be null"),
-                () -> assertEquals(5.0, transfert.getFee(), "Fee should be initialized correctly"),
-                () -> assertEquals(mockAuthor, transfert.getAuthor(), "Author should match the mockAuthor"),
-                () -> assertEquals(mockRecipient, transfert.getRecipient(), "Recipient should match the mockRecipient")
+                () -> assertEquals(100.0, transfert.getAmount()),
+                () -> assertEquals("Test transfert", transfert.getDescription()),
+                () -> assertNotNull(transfert.getTransactionDate()),
+                () -> assertEquals(5.0, transfert.getFee()),
+                () -> assertEquals(mockAuthor, transfert.getAuthor()),
+                () -> assertEquals(mockRecipient, transfert.getRecipient())
         );
     }
 
     @Test
     public void testTransactionDateBehavior() {
-        // Given a transaction date set to the exact current time
+        // Given
         LocalDateTime now = LocalDateTime.now();
         transfert.setTransactionDate(now);
 
-        // When/Then
-        assertTrue(transfert.getTransactionDate().isEqual(now), "Transaction date should exactly match the set value");
+        // When Then
+        assertTrue(transfert.getTransactionDate().isEqual(now));
     }
 
     @Test
@@ -107,16 +104,16 @@ public class TransfertTest {
                 .recipient(mockRecipient)
                 .build();
 
-        // When/Then
+        // When Then
         assertAll("Test equals and hash code",
-                () -> assertEquals(transfert, anotherTransfert, "Transfert should be equal to anotherTransfert with the same attributes"),
-                () -> assertEquals(transfert.hashCode(), anotherTransfert.hashCode(), "Hash codes should be equal for equal objects")
+                () -> assertEquals(transfert, anotherTransfert),
+                () -> assertEquals(transfert.hashCode(), anotherTransfert.hashCode())
         );
     }
     @Test
     public void testAllGettersAndSetters() {
-        // Set new values to all fields and check if getters retrieve them correctly
-        User anotherUser = new User();
+        // Given
+        User anotherUser = User.builder().build();
         LocalDateTime newDate = LocalDateTime.now().plusDays(1);
         transfert.setAmount(200.0);
         transfert.setDescription("Updated description");
@@ -125,18 +122,20 @@ public class TransfertTest {
         transfert.setAuthor(anotherUser);
         transfert.setRecipient(anotherUser);
 
+        // When Then
         assertAll(
-                () -> assertEquals(200.0, transfert.getAmount(), "Should get the correct amount"),
-                () -> assertEquals("Updated description", transfert.getDescription(), "Should get the correct description"),
-                () -> assertEquals(newDate, transfert.getTransactionDate(), "Should get the correct transaction date"),
-                () -> assertEquals(10.0, transfert.getFee(), "Should get the correct fee"),
-                () -> assertEquals(anotherUser, transfert.getAuthor(), "Should get the correct author"),
-                () -> assertEquals(anotherUser, transfert.getRecipient(), "Should get the correct recipient")
+                () -> assertEquals(200.0, transfert.getAmount()),
+                () -> assertEquals("Updated description", transfert.getDescription()),
+                () -> assertEquals(newDate, transfert.getTransactionDate()),
+                () -> assertEquals(10.0, transfert.getFee()),
+                () -> assertEquals(anotherUser, transfert.getAuthor()),
+                () -> assertEquals(anotherUser, transfert.getRecipient())
         );
     }
 
     @Test
     public void testEquals() {
+        // Given
         Transfert identicalTransfert = Transfert.builder()
                 .amount(100.0)
                 .description("Test transfert")
@@ -146,12 +145,14 @@ public class TransfertTest {
                 .recipient(mockRecipient)
                 .build();
 
-        assertEquals(transfert, identicalTransfert, "Two transfers with the same attributes should be equal");
+        // When Then
+        assertEquals(transfert, identicalTransfert);
     }
 
 
     @Test
     public void testHashCode() {
+        // Given
         Transfert sameAttributesTransfert = Transfert.builder()
                 .amount(100.0)
                 .description("Test transfert")
@@ -161,12 +162,14 @@ public class TransfertTest {
                 .recipient(mockRecipient)
                 .build();
 
-        assertEquals(transfert.hashCode(), sameAttributesTransfert.hashCode(), "Hash code should be the same for identical attributes");
+        // When Then
+        assertEquals(transfert.hashCode(), sameAttributesTransfert.hashCode());
     }
 
 
     @Test
     public void testEquals_NullAndNonNullAmount() {
+        // Given
         Transfert dto1 = Transfert.builder()
                 .amount(100.0)
                 .description("Test transfert")
@@ -183,11 +186,14 @@ public class TransfertTest {
                 .author(User.builder().build())
                 .recipient(User.builder().build())
                 .build();
+
+        // When Then
         assertFalse(dto1.equals(dto2));
     }
 
     @Test
     public void testEquals_NullAndNonNullTransactionDate() {
+        // Given
         Transfert dto1 = Transfert.builder()
                 .amount(100.0)
                 .description("Test transfert")
@@ -204,11 +210,14 @@ public class TransfertTest {
                 .author(User.builder().build())
                 .recipient(User.builder().build())
                 .build();
+
+        // When Then
         assertFalse(dto1.equals(dto2));
     }
 
     @Test
     public void testEquals_NullAndNonNullAuthor() {
+        // Given
         Transfert dto1 = Transfert.builder()
                 .amount(100.0)
                 .description("Test transfert")
@@ -225,11 +234,14 @@ public class TransfertTest {
                 .author(User.builder().build())
                 .recipient(User.builder().build())
                 .build();
+
+        // When Then
         assertFalse(dto1.equals(dto2));
     }
 
     @Test
     public void testEquals_BothObjectsHaveNullRecipient() {
+        // Given
         Transfert dto1 = Transfert.builder()
                 .amount(100.0)
                 .description("Test transfert")
@@ -247,11 +259,13 @@ public class TransfertTest {
                 .recipient(null)
                 .build();
 
+        // When Then
         assertTrue(dto1.equals(dto2));
     }
 
     @Test
     public void testEquals_NullAndNonNullRecipient() {
+        // Given
         Transfert dto1 = Transfert.builder()
                 .amount(100.0)
                 .description("Test transfert")
@@ -268,6 +282,8 @@ public class TransfertTest {
                 .author(User.builder().build())
                 .recipient(User.builder().build())
                 .build();
+
+        // When Then
         assertFalse(dto1.equals(dto2));
     }
 

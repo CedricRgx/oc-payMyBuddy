@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +16,7 @@ import java.util.stream.IntStream;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class NewTransfertDTOTest {
 
     private Validator validator;
@@ -29,7 +31,10 @@ public class NewTransfertDTOTest {
     public void testRecipientIdSetter() {
         // Given
         Long recipientId = 123L;
-        NewTransfertDTO dto = new NewTransfertDTO(recipientId, "Test description", 100.0);
+        NewTransfertDTO dto = NewTransfertDTO.builder()
+                .recipientId(recipientId)
+                .description("Test description")
+                .amount(100.0).build();
 
         // When
         dto.setRecipientId(recipientId);
@@ -42,7 +47,10 @@ public class NewTransfertDTOTest {
     public void testRecipientIdGetter() {
         // Given
         Long recipientId = 123L;
-        NewTransfertDTO dto = new NewTransfertDTO(recipientId, "Test description", 100.0);
+        NewTransfertDTO dto = NewTransfertDTO.builder()
+                .recipientId(recipientId)
+                .description("Test description")
+                .amount(100.0).build();
 
         // When
         Long retrievedRecipientId = dto.getRecipientId();
@@ -55,7 +63,10 @@ public class NewTransfertDTOTest {
     public void testDescriptionSetter() {
         // Given
         String description = "Test description";
-        NewTransfertDTO dto = new NewTransfertDTO(123L, description, 100.0);
+        NewTransfertDTO dto = NewTransfertDTO.builder()
+                .recipientId(123L)
+                .description("Test description")
+                .amount(100.0).build();
 
         // When
         dto.setDescription(description);
@@ -68,7 +79,10 @@ public class NewTransfertDTOTest {
     public void testDescriptionGetter() {
         // Given
         String description = "Test description";
-        NewTransfertDTO dto = new NewTransfertDTO(123L, description, 100.0);
+        NewTransfertDTO dto = NewTransfertDTO.builder()
+                .recipientId(123L)
+                .description("Test description")
+                .amount(100.0).build();
 
         // When
         String retrievedDescription = dto.getDescription();
@@ -81,7 +95,10 @@ public class NewTransfertDTOTest {
     public void testAmountSetter() {
         // Given
         double amount = 100.0;
-        NewTransfertDTO dto = new NewTransfertDTO(123L, "Test description", amount);
+        NewTransfertDTO dto = NewTransfertDTO.builder()
+                .recipientId(123L)
+                .description("Test description")
+                .amount(amount).build();
 
         // When
         dto.setAmount(amount);
@@ -94,7 +111,10 @@ public class NewTransfertDTOTest {
     public void testAmountGetter() {
         // Given
         double amount = 100.0;
-        NewTransfertDTO dto = new NewTransfertDTO(123L, "Test description", amount);
+        NewTransfertDTO dto = NewTransfertDTO.builder()
+                .recipientId(123L)
+                .description("Test description")
+                .amount(amount).build();
 
         // When
         double retrievedAmount = dto.getAmount();
@@ -245,7 +265,7 @@ public class NewTransfertDTOTest {
         int initialHashCode = dto.hashCode();
 
         // Then
-        assertEquals(initialHashCode, dto.hashCode(), "Hash code should be consistent across calls.");
+        assertEquals(initialHashCode, dto.hashCode());
     }
 
     @Test
@@ -263,7 +283,7 @@ public class NewTransfertDTOTest {
                 .build();
 
         // When/Then
-        assertNotEquals(dto1.hashCode(), dto2.hashCode(), "Hash codes should differ when field values differ.");
+        assertNotEquals(dto1.hashCode(), dto2.hashCode());
     }
 
     @Test
@@ -281,12 +301,9 @@ public class NewTransfertDTOTest {
                 .build();
 
         // Then
-        assertDoesNotThrow(dto1::hashCode, "hashCode should handle null recipientId without throwing.");
-        assertDoesNotThrow(dto2::hashCode, "hashCode should handle null description without throwing.");
+        assertDoesNotThrow(dto1::hashCode);
+        assertDoesNotThrow(dto2::hashCode);
     }
-
-
-
 
     @Test
     public void toString_shouldReturnCorrectStringRepresentation() {
@@ -393,7 +410,7 @@ public class NewTransfertDTOTest {
         boolean result = dto.equals(other);
 
         // Then
-        assertFalse(result, "equals should return false when comparing different classes.");
+        assertFalse(result);
     }
 
     @Test
@@ -416,8 +433,8 @@ public class NewTransfertDTOTest {
                 .build();
 
         // Then
-        assertNotEquals(dto1.hashCode(), dto2.hashCode(), "Hash code should differ when descriptions differ.");
-        assertNotEquals(dto1.hashCode(), dto3.hashCode(), "Hash code should differ when amounts differ.");
+        assertNotEquals(dto1.hashCode(), dto2.hashCode());
+        assertNotEquals(dto1.hashCode(), dto3.hashCode());
     }
 
     @Test
@@ -472,7 +489,7 @@ public class NewTransfertDTOTest {
         boolean result = dto1.equals(dto2);
 
         // Then
-        assertTrue(result, "equals should return true when all fields are null and identical.");
+        assertTrue(result);
     }
 
     @Test
@@ -493,7 +510,7 @@ public class NewTransfertDTOTest {
         boolean result = dto1.equals(dto2);
 
         // Then
-        assertFalse(result, "equals should return false when any field does not match.");
+        assertFalse(result);
     }
 
     @Test
@@ -511,7 +528,7 @@ public class NewTransfertDTOTest {
                 .build();
 
         // Then
-        assertTrue(dto1.equals(dto2) && dto2.equals(dto1), "equals should be symmetric.");
+        assertTrue(dto1.equals(dto2) && dto2.equals(dto1));
     }
 
     @Test
@@ -534,7 +551,7 @@ public class NewTransfertDTOTest {
                 .build();
 
         // Then
-        assertTrue(dto1.equals(dto2) && dto2.equals(dto3) && dto1.equals(dto3), "equals should be transitive.");
+        assertTrue(dto1.equals(dto2) && dto2.equals(dto3) && dto1.equals(dto3));
     }
 
     @Test
@@ -552,17 +569,17 @@ public class NewTransfertDTOTest {
                 .build();
 
         // Then
-        assertTrue(dto1.equals(dto2) && dto1.equals(dto2), "equals should be consistent across multiple calls.");
+        assertTrue(dto1.equals(dto2) && dto1.equals(dto2));
     }
 
     @Test
     public void equals_whenOnlyOneFieldDiffers_eachFieldTested() {
+        // Given
         NewTransfertDTO base = NewTransfertDTO.builder()
                 .recipientId(1L)
                 .description("description")
                 .amount(100.00)
                 .build();
-
         NewTransfertDTO diffRecipientId = NewTransfertDTO.builder()
                 .recipientId(2L)
                 .description("description")
@@ -579,9 +596,10 @@ public class NewTransfertDTOTest {
                 .amount(200.00)
                 .build();
 
-        assertFalse(base.equals(diffRecipientId), "Different recipientId should not be equal.");
-        assertFalse(base.equals(diffDescription), "Different description should not be equal.");
-        assertFalse(base.equals(diffAmount), "Different amount should not be equal.");
+        // When Then
+        assertFalse(base.equals(diffRecipientId));
+        assertFalse(base.equals(diffDescription));
+        assertFalse(base.equals(diffAmount));
     }
 
 }

@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * Represents an deposit.
+ * Represents a deposit.
  * This class is annotated as a JPA entity and utilizes Lombok.
  */
 @Data
