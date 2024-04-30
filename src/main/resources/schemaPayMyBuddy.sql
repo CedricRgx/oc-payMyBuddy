@@ -19,79 +19,116 @@
 CREATE DATABASE IF NOT EXISTS `paymybuddy` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `paymybuddy`;
 
--- Listage de la structure de la table paymybuddy. user
-CREATE TABLE IF NOT EXISTS `user` (
-                                      `user_id` bigint NOT NULL AUTO_INCREMENT,
-                                      `firstname` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-                                      `lastname` varchar(250) NOT NULL,
-                                      PRIMARY KEY (`user_id`),
-                                      UNIQUE KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- Listage de la structure de la table paymybuddy. app_account
+-- Table paymybuddy. app_account
 CREATE TABLE IF NOT EXISTS `app_account` (
-  `app_account_id` bigint NOT NULL AUTO_INCREMENT,
-  `balance` double NOT NULL DEFAULT '0',
-  `app_owner` bigint NOT NULL,
-  PRIMARY KEY (`app_account_id`),
-  KEY `app_account_id` (`app_account_id`),
-  KEY `app_owner` (`app_owner`),
-  CONSTRAINT `app_owner` FOREIGN KEY (`app_owner`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+`balance` double DEFAULT NULL,
+`app_account_id` bigint NOT NULL AUTO_INCREMENT,
+PRIMARY KEY (`app_account_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage de la structure de la table paymybuddy. assoc_user_friend
+INSERT INTO `app_account` (`balance`, `app_account_id`) VALUES
+(157, 1),
+(345, 2),
+(9087, 3);
+
+-- Table paymybuddy. assoc_user_friend
 CREATE TABLE IF NOT EXISTS `assoc_user_friend` (
-  `user_id` bigint NOT NULL,
-  `friend_id` bigint NOT NULL,
-  KEY `user_id` (`user_id`),
-  KEY `friend_id` (`friend_id`),
-  CONSTRAINT `friend_id` FOREIGN KEY (`friend_id`) REFERENCES `user` (`user_id`),
-  CONSTRAINT `user_assoc_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
+`friend_id` bigint NOT NULL,
+`user_id` bigint NOT NULL,
+KEY `FK7qxtavpiecs7ikd22rwffqhnw` (`friend_id`),
+KEY `FKm1qogjemapss2g8vtmrcu0kgl` (`user_id`),
+CONSTRAINT `FK7qxtavpiecs7ikd22rwffqhnw` FOREIGN KEY (`friend_id`) REFERENCES `user` (`user_id`),
+CONSTRAINT `FKm1qogjemapss2g8vtmrcu0kgl` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage de la structure de la table paymybuddy. deposit
+INSERT INTO `assoc_user_friend` (`friend_id`, `user_id`) VALUES
+(1, 3),
+(1, 2),
+(3, 2),
+(3, 1),
+(2, 1);
+
+-- Table paymybuddy. deposit
 CREATE TABLE IF NOT EXISTS `deposit` (
-  `deposit_id` bigint NOT NULL AUTO_INCREMENT,
-  `amount` double NOT NULL,
-  `transaction_date` datetime NOT NULL,
-  `fee` double NOT NULL,
-  `depositor_id` bigint NOT NULL,
-  PRIMARY KEY (`deposit_id`),
-  UNIQUE KEY `deposit_id` (`deposit_id`),
-  KEY `user_id` (`depositor_id`) USING BTREE,
-  CONSTRAINT `user_id_deposit` FOREIGN KEY (`depositor_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+`amount` double DEFAULT NULL,
+`fee` double DEFAULT NULL,
+`author_id` bigint NOT NULL,
+`id` bigint NOT NULL AUTO_INCREMENT,
+`transaction_date` datetime(6) DEFAULT NULL,
+`description` varchar(255) DEFAULT NULL,
+PRIMARY KEY (`id`),
+KEY `FK5hjt3w60iwi4maro5xgnovewk` (`author_id`),
+CONSTRAINT `FK5hjt3w60iwi4maro5xgnovewk` FOREIGN KEY (`author_id`) REFERENCES `user` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage de la structure de la table paymybuddy. transfert
+INSERT INTO `deposit` (`amount`, `fee`, `author_id`, `id`, `transaction_date`, `description`) VALUES
+(56, 5, 1, 1, '2024-02-03 18:33:00.000000', 'Dépôt 1'),
+(76.5, 3, 3, 2, '2022-02-06 18:34:00.000000', 'Deuxième dépôt'),
+(567.6, 25, 2, 3, '2023-02-06 18:39:00.000000', 'Deposit 3'),
+(59.5, 3, 3, 2, '2023-10-06 18:34:00.000000', 'Quatrième dépôt'),
+(100.0, 5, 2, 3, '2023-02-06 20:39:00.000000', 'Deposit 3');
+
+-- Table paymybuddy. transfert
 CREATE TABLE IF NOT EXISTS `transfert` (
-  `transfert_id` bigint NOT NULL AUTO_INCREMENT,
-  `amount` double NOT NULL,
-  `transaction_date` datetime NOT NULL,
-  `fee` double NOT NULL,
-  `sender_id` bigint NOT NULL,
-  `recipient_id` bigint NOT NULL,
-  PRIMARY KEY (`transfert_id`) USING BTREE,
-  UNIQUE KEY `deposit_id` (`transfert_id`) USING BTREE,
-  KEY `user_id` (`sender_id`) USING BTREE,
-  KEY `recipient_id` (`recipient_id`),
-  CONSTRAINT `recipient_id` FOREIGN KEY (`recipient_id`) REFERENCES `user` (`user_id`),
-  CONSTRAINT `sender_id` FOREIGN KEY (`sender_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
+`amount` double DEFAULT NULL,
+`fee` double DEFAULT NULL,
+`author_id` bigint NOT NULL,
+`id` bigint NOT NULL AUTO_INCREMENT,
+`recipient_id` bigint NOT NULL,
+`transaction_date` datetime(6) DEFAULT NULL,
+`description` varchar(255) DEFAULT NULL,
+PRIMARY KEY (`id`),
+KEY `FKms5nh1c4g3qc0wb8g7280i2h0` (`author_id`),
+KEY `FKegcjgu9qp7u3h7e885cdmyxvb` (`recipient_id`),
+CONSTRAINT `FKegcjgu9qp7u3h7e885cdmyxvb` FOREIGN KEY (`recipient_id`) REFERENCES `user` (`user_id`),
+CONSTRAINT `FKms5nh1c4g3qc0wb8g7280i2h0` FOREIGN KEY (`author_id`) REFERENCES `user` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage de la structure de la table paymybuddy. user_account
+INSERT INTO `transfert` (`amount`, `fee`, `author_id`, `id`, `recipient_id`, `transaction_date`, `description`) VALUES
+(56, 3, 1, 1, 3, '2024-03-06 18:32:17.000000', 'ceci est une transaction'),
+(314, 20, 3, 2, 1, '2023-03-06 18:32:00.000000', 'Transfert2'),
+(4000, 50, 1, 3, 3, '2024-03-04 18:33:00.000000', 'Transfert trois'),
+(70, 4, 1, 3, 3, '2024-03-03 16:41:57.000000', 'Transact'),
+(455, 10, 1, 2, 2, '2024-03-03 16:45:53.000000', 'Transfert56'),
+(65, 3, 1, 2, 3, '2024-03-03 16:46:19.000000', 'Transfert33');
+
+-- Table paymybuddy. user
+CREATE TABLE IF NOT EXISTS `user` (
+`app_account_id` bigint DEFAULT NULL,
+`birthdate` date DEFAULT NULL,
+`user_account_id` bigint DEFAULT NULL,
+`user_id` bigint NOT NULL AUTO_INCREMENT,
+`firstname` varchar(255) DEFAULT NULL,
+`lastname` varchar(255) DEFAULT NULL,
+`phone` varchar(255) DEFAULT NULL,
+`address` varchar(255) DEFAULT NULL,
+PRIMARY KEY (`user_id`),
+UNIQUE KEY `UK_of5ucevdpusnfngt7mub8lnac` (`app_account_id`),
+UNIQUE KEY `UK_o0u0lb3mfcc21hog1f34omrii` (`user_account_id`),
+CONSTRAINT `FKa2ixh18irxw16xxl1ka3gfth6` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`user_account_id`),
+CONSTRAINT `FKsk6harw8nolriwfiuqosnri2` FOREIGN KEY (`app_account_id`) REFERENCES `app_account` (`app_account_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `user` (`app_account_id`, `birthdate`, `user_account_id`, `user_id`, `firstname`, `lastname`, `phone`, `address`) VALUES
+(1, '1978-01-05', 1, 1, 'Charly', 'Martel', '6654332244', '22 rue de Poitiers, 90000 Ville'),
+(2, '1977-08-02', 2, 2, 'Louis', 'Capet', '0022446677', 'Place de Versailles, 67009 Ville'),
+(3, '1930-01-02', 3, 3, 'Léon', 'Napo', '1819191922', '13 Boulevard d\'Iéna, 78015 Paris');
+
+-- Table paymybuddy. user_account
 CREATE TABLE IF NOT EXISTS `user_account` (
-  `user_account_id` bigint NOT NULL AUTO_INCREMENT,
-  `email` varchar(320) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `last_connection_date` datetime NOT NULL,
-  `is_active` tinyint NOT NULL DEFAULT '1',
-  `user_id` bigint NOT NULL,
-  PRIMARY KEY (`user_account_id`),
-  UNIQUE KEY `user_account_id` (`user_account_id`),
-  UNIQUE KEY `email` (`email`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+`is_active` bit(1) DEFAULT NULL,
+`last_connection_date` datetime(6) DEFAULT NULL,
+`user_account_id` bigint NOT NULL AUTO_INCREMENT,
+`email` varchar(255) DEFAULT NULL,
+`password` varchar(255) DEFAULT NULL,
+`role` varchar(255) DEFAULT NULL,
+PRIMARY KEY (`user_account_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `user_account` (`is_active`, `last_connection_date`, `user_account_id`, `email`, `password`, `role`) VALUES
+(b'1', '2024-04-22 19:24:36.000000', 1, 'charles.martel@email.com', '$2a$10$snji6Tf/l1tRfwaDsKJateUL177C/nUSKH62ZtPXC/4hplDQ3DUmW', 'USER'),
+(b'1', '2024-03-16 18:09:10.727598', 2, 'louiscapet@email.com', '$2a$10$K3sIN3qDbtN7sXFYC93baO1CIcTFz/5v42VaABh6LSMj9dhpQrXue', 'USER'),
+(b'1', '2024-03-16 18:17:23.604776', 3, 'leonnapo@email.com', '$2a$10$K3sIN3qDbtN7sXFYC93baO1CIcTFz/5v42VaABh6LSMj9dhpQrXue', 'USER');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
