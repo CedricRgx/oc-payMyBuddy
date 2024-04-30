@@ -5,6 +5,7 @@ import com.openclassrooms.paymybuddy.model.DTO.TransfertDTO;
 import com.openclassrooms.paymybuddy.model.Transfert;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.repository.TransfertRepository;
+import jakarta.persistence.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,20 +13,22 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
+import jakarta.persistence.*;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
@@ -41,7 +44,7 @@ public class TransfertServiceTest {
     private UserService userService;
 
     @Mock
-    private JdbcTemplate jdbcTemplate;
+    private EntityManager entityManager;
 
     @Mock
     SecurityContext securityContext;
@@ -136,49 +139,41 @@ public class TransfertServiceTest {
     }
 
     @Test
-    public void getListOfConnections_shouldReturnConnections() {
-        // Given
-        Long userId = 1L;
-        List<String> expectedConnections = Arrays.asList("John Doe", "Jane Doe");
-        when(jdbcTemplate.query(anyString(), any(Object[].class), any(RowMapper.class))).thenReturn(expectedConnections);
-
-        // When
-        List<String> actualConnections = transfertService.getListOfConnections(userId);
-
-        // Then
-        assertEquals(expectedConnections, actualConnections);
-        verify(jdbcTemplate).query(anyString(), any(Object[].class), any(RowMapper.class));
-    }
-
-    @Test
     public void getListOfTransferts_shouldReturnPagedTransferts() {
         // Given
         Long userId = 1L;
-        int page = 0, size = 10;
-        List<TransfertDTO> expectedTransferts = Arrays.asList(TransfertDTO.builder().build());
-        when(jdbcTemplate.query(anyString(), any(Object[].class), any(RowMapper.class))).thenReturn(expectedTransferts);
+        int page = 0;
+        int size = 10;
+        User user = mock(User.class);
+        lenient().when(user.getUserId()).thenReturn(userId);
+        lenient().when(user.getFirstname()).thenReturn("John");
+        lenient().when(user.getLastname()).thenReturn("Doe");
+
+        User recipient1 = mock(User.class);
+        when(recipient1.getFirstname()).thenReturn("John");
+        when(recipient1.getLastname()).thenReturn("Doe");
+
+        List<Transfert> transferts = new ArrayList<>();
+        transferts.add(Transfert.builder()
+                .recipient(recipient1)
+                .author(user)
+                .amount(100.0)
+                .description("Test Transfer 1")
+                .transactionDate(LocalDateTime.now()).build());
+
+        lenient().when(transfertRepository.findAll()).thenReturn(transferts);
 
         // When
-        List<TransfertDTO> actualTransferts = transfertService.getListOfTransferts(userId, page, size);
+        Page<TransfertDTO> result = transfertService.getListOfTransferts(userId, page, size);
 
         // Then
-        assertEquals(expectedTransferts, actualTransferts);
-        verify(jdbcTemplate).query(anyString(), any(Object[].class), any(RowMapper.class));
-    }
-
-    @Test
-    public void countTransferts_shouldReturnCount() {
-        // Given
-        Long userId = 1L;
-        int expectedCount = 5;
-        when(jdbcTemplate.queryForObject(anyString(), any(Object[].class), eq(Integer.class))).thenReturn(expectedCount);
-
-        // When
-        int actualCount = transfertService.countTransferts(userId);
-
-        // Then
-        assertEquals(expectedCount, actualCount);
-        verify(jdbcTemplate).queryForObject(anyString(), any(Object[].class), eq(Integer.class));
+        assertEquals(1, result.getTotalPages());
+        assertEquals(1, result.getTotalElements());
+        assertEquals(1, result.getContent().size());
+        assertEquals("John", result.getContent().get(0).getRecipientFirstname());
+        assertEquals("Doe", result.getContent().get(0).getRecipientLastname());
+        assertEquals("100.00", result.getContent().get(0).getAmount());
+        assertEquals("Test Transfer 1", result.getContent().get(0).getDescription());
     }
 
     @Test

@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -13,7 +15,9 @@ public class TransfertDTOTest {
             .recipientFirstname("John")
             .recipientLastname("Doe")
             .description("test description")
-            .amount("50.00").build();
+            .amount("50.00")
+            .transactionDate(LocalDateTime.of(2020, 10, 10, 10, 10))
+            .build();
 
     @Test
     public void testRecipientFirstnameGetter() {
@@ -112,6 +116,30 @@ public class TransfertDTOTest {
     }
 
     @Test
+    public void testRecipientTransactionDateGetter() {
+        // Given
+        LocalDateTime transactionDate = LocalDateTime.of(2020, 10, 10, 10, 10);
+
+        // When
+        LocalDateTime retrievedTransactionDate = dto.getTransactionDate();
+
+        // Then
+        assertEquals(transactionDate, retrievedTransactionDate);
+    }
+
+    @Test
+    public void testRecipientTransactionDateSetter() {
+        // Given
+        LocalDateTime transactionDate = LocalDateTime.of(2019, 10, 10, 10, 10);
+
+        // When
+        dto.setTransactionDate(transactionDate);
+
+        // Then
+        assertEquals(transactionDate, dto.getTransactionDate());
+    }
+
+    @Test
     public void hashCode_shouldBeEqualForEqualObjects() {
         // Given
         TransfertDTO dto1 = TransfertDTO.builder()
@@ -169,9 +197,10 @@ public class TransfertDTOTest {
                 .recipientLastname("Doe")
                 .description("Expense reimbursement")
                 .amount("50.00")
+                .transactionDate(LocalDateTime.of(2019, 10, 10, 10, 10))
                 .build();
 
-        String expectedString = "TransfertDTO(recipientFirstname=John, recipientLastname=Doe, description=Expense reimbursement, amount=50.00)";
+        String expectedString = "TransfertDTO(recipientFirstname=John, recipientLastname=Doe, description=Expense reimbursement, amount=50.00, transactionDate=2019-10-10T10:10)";
 
         // When
         String actualString = dto.toString();

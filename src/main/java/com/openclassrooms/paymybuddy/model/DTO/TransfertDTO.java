@@ -1,7 +1,10 @@
 package com.openclassrooms.paymybuddy.model.DTO;
 
+import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 /**
  * Data Transfer Object (DTO) for transfer operations in the PayMyBuddy application.
@@ -30,5 +33,10 @@ public class TransfertDTO {
      * The amount of money to be transferred.
      */
     private String amount;
+
+    /**
+     * The date of transaction.
+     */
+    private LocalDateTime transactionDate;
 
 }

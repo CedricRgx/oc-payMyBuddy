@@ -4,10 +4,15 @@ import com.openclassrooms.paymybuddy.exceptions.UpdateLastConnectionDateFailedEx
 import com.openclassrooms.paymybuddy.model.UserAccount;
 import com.openclassrooms.paymybuddy.repository.UserAccountRepository;
 import com.openclassrooms.paymybuddy.service.IUserAccountService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -20,8 +25,8 @@ public class UserAccountService implements IUserAccountService {
     @Autowired
     private UserAccountRepository userAccountRepository;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     /**
      * Retrieves all user accounts from the repository.
@@ -78,8 +83,11 @@ public class UserAccountService implements IUserAccountService {
      * @return boolean
      */
     public boolean isEmailUnique(String email){
-        String sql = "SELECT COUNT(*) FROM user_account ua WHERE ua.email = ?;";
-        int count = jdbcTemplate.queryForObject(sql, new Object[]{email}, Integer.class);
+        log.info("isEmailUnique in UserAccountService");
+        String jpql = "SELECT COUNT(ua) FROM UserAccount ua WHERE ua.email = :email";
+        TypedQuery<Long> query = entityManager.createQuery(jpql, Long.class);
+        query.setParameter("email", email);
+        Long count = query.getSingleResult();
         return count==0;
     }
 
@@ -89,17 +97,11 @@ public class UserAccountService implements IUserAccountService {
      * @param userAccountId The ID of the user account to update.
      * @throws UpdateLastConnectionDateFailedException if the update operation fails.
      */
-    public void updateLastConnectionDate(Long userAccountId){
-        String sql = "UPDATE user_account " +
-                "SET last_connection_date = CURRENT_TIMESTAMP " +
-                "WHERE user_account_id = ?;";
-        int resultCount = jdbcTemplate.update(sql, userAccountId);
-        if (resultCount!=1) {
-            log.error("The update of the last connection date has succeed.");
-            throw new UpdateLastConnectionDateFailedException("The update of the last connection date has failed.");
-        }else{
-            log.info("The update of the last connection date has succeed.");
-        }
+    public void updateLastConnectionDate(Long userAccountId) {
+        log.info("updateLastConnectionDate in UserAccountService");
+        UserAccount userAccount = userAccountRepository.findById(userAccountId).get();
+        userAccount.setLastConnectionDate(LocalDateTime.now());
+        userAccountRepository.save(userAccount);
     }
 
     /**
@@ -109,11 +111,11 @@ public class UserAccountService implements IUserAccountService {
      * @param email The email address of the user account to update.
      * @return True if the password was successfully updated, False otherwise.
      */
-    public boolean savePassword(String password, String email){
-        String sql = "UPDATE user_account " +
-                "SET password = ? " +
-                "WHERE email = ?;";
-        int resultCount = jdbcTemplate.update(sql, password, email);
-        return resultCount==1;
+    public boolean savePassword(String password, String email) {
+        log.info("savePassword in UserAccountService");
+        UserAccount userAccount = userAccountRepository.findByEmail(email);
+        userAccount.setPassword(password);
+        userAccountRepository.save(userAccount);
+        return true;
     }
 }

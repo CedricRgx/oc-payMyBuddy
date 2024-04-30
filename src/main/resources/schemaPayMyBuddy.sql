@@ -19,6 +19,15 @@
 CREATE DATABASE IF NOT EXISTS `paymybuddy` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `paymybuddy`;
 
+-- Listage de la structure de la table paymybuddy. user
+CREATE TABLE IF NOT EXISTS `user` (
+                                      `user_id` bigint NOT NULL AUTO_INCREMENT,
+                                      `firstname` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+                                      `lastname` varchar(250) NOT NULL,
+                                      PRIMARY KEY (`user_id`),
+                                      UNIQUE KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 -- Listage de la structure de la table paymybuddy. app_account
 CREATE TABLE IF NOT EXISTS `app_account` (
   `app_account_id` bigint NOT NULL AUTO_INCREMENT,
@@ -30,8 +39,6 @@ CREATE TABLE IF NOT EXISTS `app_account` (
   CONSTRAINT `app_owner` FOREIGN KEY (`app_owner`) REFERENCES `user` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Les données exportées n'étaient pas sélectionnées.
-
 -- Listage de la structure de la table paymybuddy. assoc_user_friend
 CREATE TABLE IF NOT EXISTS `assoc_user_friend` (
   `user_id` bigint NOT NULL,
@@ -41,8 +48,6 @@ CREATE TABLE IF NOT EXISTS `assoc_user_friend` (
   CONSTRAINT `friend_id` FOREIGN KEY (`friend_id`) REFERENCES `user` (`user_id`),
   CONSTRAINT `user_assoc_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- Les données exportées n'étaient pas sélectionnées.
 
 -- Listage de la structure de la table paymybuddy. deposit
 CREATE TABLE IF NOT EXISTS `deposit` (
@@ -56,8 +61,6 @@ CREATE TABLE IF NOT EXISTS `deposit` (
   KEY `user_id` (`depositor_id`) USING BTREE,
   CONSTRAINT `user_id_deposit` FOREIGN KEY (`depositor_id`) REFERENCES `user` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- Les données exportées n'étaient pas sélectionnées.
 
 -- Listage de la structure de la table paymybuddy. transfert
 CREATE TABLE IF NOT EXISTS `transfert` (
@@ -75,19 +78,6 @@ CREATE TABLE IF NOT EXISTS `transfert` (
   CONSTRAINT `sender_id` FOREIGN KEY (`sender_id`) REFERENCES `user` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
 
--- Les données exportées n'étaient pas sélectionnées.
-
--- Listage de la structure de la table paymybuddy. user
-CREATE TABLE IF NOT EXISTS `user` (
-  `user_id` bigint NOT NULL AUTO_INCREMENT,
-  `firstname` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `lastname` varchar(250) NOT NULL,
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- Les données exportées n'étaient pas sélectionnées.
-
 -- Listage de la structure de la table paymybuddy. user_account
 CREATE TABLE IF NOT EXISTS `user_account` (
   `user_account_id` bigint NOT NULL AUTO_INCREMENT,
@@ -102,8 +92,6 @@ CREATE TABLE IF NOT EXISTS `user_account` (
   KEY `user_id` (`user_id`),
   CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- Les données exportées n'étaient pas sélectionnées.
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

@@ -6,13 +6,15 @@ import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.model.UserAccount;
 import com.openclassrooms.paymybuddy.repository.AppAccountRepository;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ class UserServiceTest {
     private AppAccountRepository appAccountRepository;
 
     @Mock
-    private JdbcTemplate jdbcTemplate;
+    private EntityManager entityManager;
 
     @InjectMocks
     private UserService userService;
@@ -109,15 +111,22 @@ class UserServiceTest {
     @Test
     public void getUserIdByEmail_shouldReturnUserId() {
         // Given
-        String email = "test@example.com";
-        Long userId = 1L;
-        when(jdbcTemplate.queryForObject(anyString(), any(Object[].class), eq(Long.class))).thenReturn(userId);
+        String email = "user@example.com";
+        Long expectedUserId = 1L;
+        TypedQuery<Long> query = mock(TypedQuery.class);
+
+        when(entityManager.createQuery(anyString(), eq(Long.class))).thenReturn(query);
+        when(query.setParameter("email", email)).thenReturn(query);
+        when(query.getSingleResult()).thenReturn(expectedUserId);
 
         // When
-        Long result = userService.getUserIdByEmail(email);
+        Long actualUserId = userService.getUserIdByEmail(email);
 
         // Then
-        assertEquals(userId, result);
+        assertEquals(expectedUserId, actualUserId);
+        verify(entityManager).createQuery("SELECT u.id FROM User u JOIN u.userAccount ua WHERE ua.email = :email", Long.class);
+        verify(query).setParameter("email", email);
+        verify(query).getSingleResult();
     }
 
     @Test

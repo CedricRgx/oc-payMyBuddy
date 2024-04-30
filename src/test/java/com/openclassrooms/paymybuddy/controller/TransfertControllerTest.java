@@ -2,6 +2,7 @@ package com.openclassrooms.paymybuddy.controller;
 
 import com.openclassrooms.paymybuddy.model.DTO.NewTransfertDTO;
 import com.openclassrooms.paymybuddy.model.User;
+import com.openclassrooms.paymybuddy.repository.TransfertRepository;
 import com.openclassrooms.paymybuddy.service.impl.TransfertService;
 import com.openclassrooms.paymybuddy.service.impl.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -11,7 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,9 +24,6 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-/**
- * The type Transfert controller test.
- */
 @ExtendWith(MockitoExtension.class)
 public class TransfertControllerTest {
 
@@ -47,15 +45,12 @@ public class TransfertControllerTest {
     @Mock
     private TransfertService transfertService;
 
-    /**
-     * The Security context.
-     */
+    @Mock
+    private TransfertRepository transfertRepository;
+
     @Mock
     SecurityContext securityContext;
 
-    /**
-     * Sets up.
-     */
     @BeforeEach
     public void setUp() {
         Authentication authentication = mock(Authentication.class);
@@ -64,13 +59,8 @@ public class TransfertControllerTest {
         SecurityContextHolder.setContext(securityContext);
     }
 
-    /**
-     * View transfert page should display transfert template.
-     *
-     * @throws Exception the exception
-     */
     @Test
-    public void viewTransfertPage_ShouldDisplayTransfertTemplate() throws Exception {
+    public void viewTransfertPage_ShouldDisplayTransfertTemplate() {
         // Given
         when(userService.getUserIdByEmail(anyString())).thenReturn(1L);
         User user = User.builder().friends(new ArrayList<>()).build();
@@ -78,26 +68,21 @@ public class TransfertControllerTest {
         when(userService.getUserById(anyLong())).thenReturn(optionalUser);
 
         when(userService.getActiveFriends(any())).thenReturn(Collections.emptyList());
-        when(transfertService.getListOfTransferts(anyLong(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
-        when(transfertService.countTransferts(anyLong())).thenReturn(0);
+        when(transfertService.getListOfTransferts(anyLong(), anyInt(), anyInt())).thenReturn(Page.empty());
+        when(transfertRepository.countByUser(anyLong())).thenReturn(0);
 
         // When
         String viewName = transfertController.viewTransfertPage(model, session, 0, 3);
 
         // Then
         verify(model).addAttribute(eq("listOfConnections"), eq(Collections.emptyList()));
-        verify(model).addAttribute(eq("listTransfertsDTO"), eq(Collections.emptyList()));
+        verify(model).addAttribute(eq("listTransfertsDTO"), eq(Page.empty()));
         verify(model).addAttribute(eq("pages"), eq(0));
         verify(model).addAttribute(eq("currentPage"), eq(0));
         verify(model).addAttribute(eq("pageSize"), eq(3));
         assertEquals("transfert", viewName);
     }
 
-    /**
-     * View transfert page should add error message to model when session contains error message.
-     *
-     * @throws Exception the exception
-     */
     @Test
     public void viewTransfertPage_ShouldAddErrorMessageToModelWhenSessionContainsErrorMessage() throws Exception {
         // Given
@@ -114,11 +99,6 @@ public class TransfertControllerTest {
         verify(session).removeAttribute("errorMessage");
     }
 
-    /**
-     * View transfert page should add success message to model when session contains success message.
-     *
-     * @throws Exception the exception
-     */
     @Test
     public void viewTransfertPage_ShouldAddSuccessMessageToModelWhenSessionContainsSuccessMessage() throws Exception {
         // Given
@@ -137,11 +117,6 @@ public class TransfertControllerTest {
         verify(session).removeAttribute("successMessage");
     }
 
-    /**
-     * Test add transfert page valid transfer.
-     *
-     * @throws Exception the exception
-     */
     @Test
     public void testAddTransfertPage_ValidTransfer() throws Exception {
         // Given
@@ -157,11 +132,6 @@ public class TransfertControllerTest {
         assertEquals("redirect:/transfert", viewName);
     }
 
-    /**
-     * Test add transfert page validation failure.
-     *
-     * @throws Exception the exception
-     */
     @Test
     public void testAddTransfertPage_ValidationFailure() throws Exception {
         // Given
@@ -175,11 +145,6 @@ public class TransfertControllerTest {
         assertEquals("transfert", viewName);
     }
 
-    /**
-     * Test add transfert page exception during transfer.
-     *
-     * @throws Exception the exception
-     */
     @Test
     public void testAddTransfertPage_ExceptionDuringTransfer() throws Exception {
         // Given
@@ -194,11 +159,6 @@ public class TransfertControllerTest {
         assertEquals("transfert", viewName);
     }
 
-    /**
-     * Test add transfert page insufficient balance.
-     *
-     * @throws Exception the exception
-     */
     @Test
     public void testAddTransfertPage_InsufficientBalance() throws Exception {
         // Given
@@ -214,11 +174,6 @@ public class TransfertControllerTest {
         assertEquals("redirect:/transfert", viewName);
     }
 
-    /**
-     * View transfert page should handle null session attributes.
-     *
-     * @throws Exception the exception
-     */
     @Test
     public void viewTransfertPage_ShouldHandleNullSessionAttributes() throws Exception {
         // Given
@@ -234,34 +189,6 @@ public class TransfertControllerTest {
         verify(model, never()).addAttribute(eq("errorMessage"), any());
         verify(model, never()).addAttribute(eq("successMessage"), any());
         assertEquals("transfert", viewName);
-    }
-
-    /**
-     * View transfert page should include all attributes.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void viewTransfertPage_ShouldIncludeAllAttributes() throws Exception {
-        // Given
-        setStandardMockBehavior();
-
-        // When
-        transfertController.viewTransfertPage(model, session, 0, 3);
-
-        // Then
-        verify(model).addAttribute("listOfConnections", Collections.emptyList());
-        verify(model).addAttribute("listTransfertsDTO", Collections.emptyList());
-        verify(model).addAttribute("pages", 0);
-        verify(model).addAttribute("currentPage", 0);
-        verify(model).addAttribute("pageSize", 3);
-    }
-
-    private void setStandardMockBehavior() throws Exception {
-        when(userService.getUserIdByEmail("user@example.com")).thenReturn(1L);
-        when(userService.getUserById(1L)).thenReturn(Optional.of(new User()));
-        when(transfertService.getListOfTransferts(1L, 0, 3)).thenReturn(Collections.emptyList());
-        when(transfertService.countTransferts(1L)).thenReturn(0);
     }
 
 }

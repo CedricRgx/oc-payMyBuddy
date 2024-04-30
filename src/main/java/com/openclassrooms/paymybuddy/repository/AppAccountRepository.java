@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface AppAccountRepository extends JpaRepository<AppAccount, Long> {
+
+    public void deleteAll();
 }

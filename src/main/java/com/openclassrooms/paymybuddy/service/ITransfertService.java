@@ -3,6 +3,8 @@ package com.openclassrooms.paymybuddy.service;
 import com.openclassrooms.paymybuddy.model.DTO.NewTransfertDTO;
 import com.openclassrooms.paymybuddy.model.DTO.TransfertDTO;
 import com.openclassrooms.paymybuddy.model.Transfert;
+import org.springframework.data.domain.Page;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -42,30 +44,14 @@ public interface ITransfertService {
     public void deleteTransfertById(Long id);
 
     /**
-     * Retrieves a list of user connections.
-     *
-     * @param userId The ID of the user for whom to retrieve connections.
-     * @return A list of user connections as strings.
-     */
-    public List<String> getListOfConnections(Long userId);
-
-    /**
      * Retrieves a paginated list of transfers for a given user.
      *
      * @param userId The ID of the user for whom to retrieve transfers.
-     * @param page   The page number (zero-based).
-     * @param size   The size of each page.
+     * @param page The page of the list of transferts
+     * @param size The size of the list of transferts
      * @return A list of transfer DTOs.
      */
-    public List<TransfertDTO> getListOfTransferts(Long userId, int page, int size);
-
-    /**
-     * Counts the total number of transfers for a given user.
-     *
-     * @param userId The ID of the user for whom to count transfers.
-     * @return The total number of transfers.
-     */
-    public int countTransferts(Long userId);
+    public Page<TransfertDTO> getListOfTransferts(Long userId, int page, int size);
 
     /**
      * Adds a new transfer based on the information provided in the new transfer DTO.

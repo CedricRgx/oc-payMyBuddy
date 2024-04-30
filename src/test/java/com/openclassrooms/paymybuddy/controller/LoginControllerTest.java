@@ -22,9 +22,6 @@ public class LoginControllerTest {
     @Mock
     private Model model;
 
-    /**
-     * Login with error should add error message to model.
-     */
     @Test
     public void login_withError_shouldAddErrorMessageToModel() {
         // Given
@@ -38,9 +35,6 @@ public class LoginControllerTest {
         assertEquals("login", viewName);
     }
 
-    /**
-     * Login with logout should add logout message to model.
-     */
     @Test
     public void login_withLogout_shouldAddLogoutMessageToModel() {
         // Given
@@ -54,9 +48,6 @@ public class LoginControllerTest {
         assertEquals("login", viewName);
     }
 
-    /**
-     * Login with disabled should add disabled message to model.
-     */
     @Test
     public void login_withDisabled_shouldAddDisabledMessageToModel() {
         // Given
@@ -70,9 +61,6 @@ public class LoginControllerTest {
         assertEquals("login", viewName);
     }
 
-    /**
-     * Login without messages should return login view.
-     */
     @Test
     public void login_withoutMessages_shouldReturnLoginView() {
         // When

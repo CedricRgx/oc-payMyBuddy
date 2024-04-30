@@ -3,14 +3,15 @@ package com.openclassrooms.paymybuddy.service.impl;
 import com.openclassrooms.paymybuddy.model.DTO.ConnectionDTO;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.service.IConnectionService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -23,8 +24,8 @@ public class ConnectionService implements IConnectionService{
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     /**
      * Finds and returns all connections for a given user that are not already friends.
@@ -32,18 +33,10 @@ public class ConnectionService implements IConnectionService{
      * @return A list of users representing all the user's connections excluding existing friends.
      */
     public List<User> findAllConnections(Long userId){
-        String sql = "SELECT * FROM user u WHERE u.user_id <> ? AND NOT EXISTS (" +
-                "     SELECT 1 FROM assoc_user_friend auf WHERE (auf.friend_id = u.user_id AND auf.user_id = ?) " +
-                "     OR (auf.user_id = u.user_id AND auf.friend_id = ?)" +
-                ")";
-        return jdbcTemplate.query(sql, new Object[]{userId, userId, userId},
-                (rs, rowNum) -> {
-                    User user = new User();
-                    user.setUserId(rs.getLong("user_id"));
-                    user.setFirstname(rs.getString("firstname"));
-                    user.setLastname(rs.getString("lastname"));
-                    return user;
-                });
+        log.info("findAllConnections in ConnectionService");
+        User user = userService.getUserById(userId).get();
+        List<User> listConnections = user.getFriends();
+        return listConnections;
     }
 
     /**
@@ -53,19 +46,17 @@ public class ConnectionService implements IConnectionService{
      * @return A list of users representing the matched connections.
      */
     public List<User> searchConnections(String email, Long userId){
-        String sql = "SELECT u.* FROM user u JOIN user_account ua ON u.user_account_id = ua.user_account_id" +
-                " WHERE LOWER(ua.email) LIKE LOWER(?)" +
-                " AND u.user_id <> ?" +
-                " AND NOT EXISTS (" +
-                "SELECT 1 FROM assoc_user_friend auf WHERE auf.friend_id = u.user_id AND auf.user_id = ?)";
-        return jdbcTemplate.query(sql, new Object[]{"%" + email + "%", userId, userId},
-                (rs, rowNum) -> {
-                    User user = new User();
-                    user.setUserId(rs.getLong("user_id"));
-                    user.setFirstname(rs.getString("firstname"));
-                    user.setLastname(rs.getString("lastname"));
-                    return user;
-                });
+        log.info("searchConnections in ConnectionService");
+        String jpql = "SELECT u FROM User u JOIN u.userAccount ua " +
+                "WHERE LOWER(ua.email) LIKE LOWER(:email) " +
+                "AND u.id <> :userId " +
+                "AND NOT EXISTS (" +
+                "SELECT 1 FROM User f JOIN f.friends fr WHERE fr.id = u.id AND f.id = :userId)";
+        TypedQuery<User> query = entityManager.createQuery(jpql, User.class);
+        query.setParameter("email", "%" + email + "%");
+        query.setParameter("userId", userId);
+
+        return query.getResultList();
     }
 
     /**
@@ -76,20 +67,21 @@ public class ConnectionService implements IConnectionService{
      * @return True if the connection was successfully added, False otherwise.
      */
     public boolean addConnection(Long userId, Long friendId){
-/*        User user = userService.getUserById(userId).get();
-        User userFriend = userService.getUserById(friendId).get();
-        user.getFriends().add(userFriend);
-        userService.addUser(userFriend);
-        return true;*/
-        String sql = "INSERT INTO assoc_user_friend (user_id, friend_id) VALUES (?, ?)";
-        try{
-            int result = jdbcTemplate.update(sql, userId, friendId);
-            return result > 0;
-        }catch(DataAccessException e){
-            log.error("Error adding connection between user {} and friend {}: {}", userId, friendId, e.getMessage());
+        log.info("addConnection in ConnectionService");
+        try {
+            User user = userService.getUserById(userId).orElseThrow(() -> new Exception("User not found"));
+            User userFriend = userService.getUserById(friendId).orElseThrow(() -> new Exception("Friend not found"));
+
+            boolean added = user.getFriends().add(userFriend);
+            if (added) {
+                userService.addUser(user);
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            log.error("Failed to add connection: {}", e.getMessage());
             return false;
         }
-
     }
 
     /**
@@ -99,15 +91,27 @@ public class ConnectionService implements IConnectionService{
      * @param friendId The user ID of the friend to disconnect.
      * @return True if the connection was successfully removed, False otherwise.
      */
+    @Transactional
     public boolean removeConnection(Long userId, Long friendId){
-        String sql = "DELETE FROM assoc_user_friend WHERE user_id = ? AND friend_id = ?";
-        try{
-            int result = jdbcTemplate.update(sql, userId, friendId);
-            return result > 0;
-        }catch(DataAccessException e){
-            log.error("Error removing connection between user {} and friend {}: {}", userId, friendId, e.getMessage());
+        log.info("removeConnection in ConnectionService");
+        User user = entityManager.find(User.class, userId);
+        if (user == null) {
+            log.error("User not found with ID: {}", userId);
             return false;
         }
+        List<User> listFriends = user.getFriends();
+        Iterator<User> iterator = listFriends.iterator();
+        boolean result = false;
+        while (iterator.hasNext()) {
+            User friend = iterator.next();
+            if (friend.getUserId().equals(friendId)) {
+                iterator.remove();
+                result = true;
+                break;
+            }
+        }
+        if(result){entityManager.merge(user);}
+        return result;
     }
 
 }

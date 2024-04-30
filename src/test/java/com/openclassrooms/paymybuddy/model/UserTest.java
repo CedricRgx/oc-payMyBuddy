@@ -172,7 +172,7 @@ public class UserTest {
     @Test
     public void testUserAccountSetter() {
         // Given
-        UserAccount userAccount = new UserAccount();
+        UserAccount userAccount = UserAccount.builder().build();
 
         // When
         user.setUserAccount(userAccount);
@@ -184,7 +184,7 @@ public class UserTest {
     @Test
     public void testUserAccountGetter() {
         // Given
-        UserAccount userAccount = new UserAccount();
+        UserAccount userAccount = UserAccount.builder().build();
         user.setUserAccount(userAccount);
 
         // When
@@ -197,7 +197,7 @@ public class UserTest {
     @Test
     public void testAppAccountSetter() {
         // Given
-        AppAccount appAccount = new AppAccount();
+        AppAccount appAccount = AppAccount.builder().build();
 
         // When
         user.setAppAccount(appAccount);
@@ -209,7 +209,7 @@ public class UserTest {
     @Test
     public void testAppAccountGetter() {
         // Given
-        AppAccount appAccount = new AppAccount();
+        AppAccount appAccount = AppAccount.builder().build();
         user.setAppAccount(appAccount);
 
         // When
@@ -223,8 +223,8 @@ public class UserTest {
     public void testFriendsSetter() {
         // Given
         List<User> friends = new ArrayList<>();
-        User friend1 = new User();
-        User friend2 = new User();
+        User friend1 = User.builder().build();
+        User friend2 = User.builder().build();
         friends.add(friend1);
         friends.add(friend2);
 
@@ -239,8 +239,8 @@ public class UserTest {
     public void testFriendsGetter() {
         // Given
         List<User> friends = new ArrayList<>();
-        User friend1 = new User();
-        User friend2 = new User();
+        User friend1 = User.builder().build();
+        User friend2 = User.builder().build();
         friends.add(friend1);
         friends.add(friend2);
         user.setFriends(friends);
@@ -256,8 +256,8 @@ public class UserTest {
     public void testSourceTransacSetter() {
         // Given
         List<Deposit> sourceTransac = new ArrayList<>();
-        Deposit deposit1 = new Deposit();
-        Deposit deposit2 = new Deposit();
+        Deposit deposit1 = Deposit.builder().build();
+        Deposit deposit2 = Deposit.builder().build();
         sourceTransac.add(deposit1);
         sourceTransac.add(deposit2);
 
@@ -272,8 +272,8 @@ public class UserTest {
     public void testSourceTransacGetter() {
         // Given
         List<Deposit> sourceTransac = new ArrayList<>();
-        Deposit deposit1 = new Deposit();
-        Deposit deposit2 = new Deposit();
+        Deposit deposit1 = Deposit.builder().build();
+        Deposit deposit2 = Deposit.builder().build();
         sourceTransac.add(deposit1);
         sourceTransac.add(deposit2);
         user.setSourceTransac(sourceTransac);
@@ -289,8 +289,8 @@ public class UserTest {
     public void testReceivedTransfertsSetter() {
         // Given
         List<Transfert> receivedTransferts = new ArrayList<>();
-        Transfert transfert1 = new Transfert();
-        Transfert transfert2 = new Transfert();
+        Transfert transfert1 = Transfert.builder().build();
+        Transfert transfert2 = Transfert.builder().build();
         receivedTransferts.add(transfert1);
         receivedTransferts.add(transfert2);
 
@@ -305,8 +305,8 @@ public class UserTest {
     public void testReceivedTransfertsGetter() {
         // Given
         List<Transfert> receivedTransferts = new ArrayList<>();
-        Transfert transfert1 = new Transfert();
-        Transfert transfert2 = new Transfert();
+        Transfert transfert1 = Transfert.builder().build();
+        Transfert transfert2 = Transfert.builder().build();
         receivedTransferts.add(transfert1);
         receivedTransferts.add(transfert2);
         user.setReceivedTransferts(receivedTransferts);

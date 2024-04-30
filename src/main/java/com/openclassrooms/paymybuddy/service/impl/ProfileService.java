@@ -25,9 +25,6 @@ public class ProfileService implements IProfileService {
     @Autowired
     UserAccountService userAccountService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     /**
      * Retrieves the profile details of a specific user by their user ID.
      *

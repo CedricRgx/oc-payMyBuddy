@@ -7,15 +7,15 @@ import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.repository.TransfertRepository;
 import com.openclassrooms.paymybuddy.service.ITransfertService;
 import com.openclassrooms.paymybuddy.util.Formatter;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.data.domain.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Service implementation for handling money transfers between users in the PayMyBuddy application.
@@ -29,9 +29,6 @@ public class TransfertService implements ITransfertService {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     /**
      * Retrieves all transferts from the repository.
@@ -72,67 +69,38 @@ public class TransfertService implements ITransfertService {
     }
 
     /**
-     * Retrieve the list of connection of an user from its id
-     * @param userId userId of the user
-     * @return a list of connections
-     */
-    public List<String> getListOfConnections(Long userId) {
-        String sql = "SELECT u.firstname, u.lastname " +
-                "FROM user u " +
-                "INNER JOIN assoc_user_friend auf ON u.user_id = auf.friend_id " +
-                "WHERE auf.user_id = ?";
-
-        List<String> listOfConnections = new ArrayList<String>();
-        listOfConnections = jdbcTemplate.query(sql, new Object[]{userId}, (rs, rowNum) ->
-                rs.getString("firstname").concat(" ").concat(rs.getString("lastname")));
-
-        return listOfConnections;
-    }
-
-
-    /**
      * Retrieve the list of transferts of an user from its id
      * @param userId, page for displaying transferts, size of display
+     * @param page The page of the list of transferts
+     * @param size The size of the list of transferts
      * @return a list of transferts
      */
-    public List<TransfertDTO> getListOfTransferts(Long userId, int page, int size){
-        int offset = page * size;
-
-        String sql = "SELECT recipient.firstname AS recipient_firstname, recipient.lastname AS recipient_lastname, t.description, t.amount " +
-                "FROM transfert t " +
-                "INNER JOIN user AS author ON t.author_id = author.user_id " +
-                "INNER JOIN user AS recipient ON t.recipient_id = recipient.user_id " +
-                "WHERE t.author_id = ? " +
-                "ORDER BY t.transaction_date DESC " +
-                "LIMIT ? OFFSET ?";
-
+    public Page<TransfertDTO> getListOfTransferts(Long userId, int page, int size){
         log.info("getListOfTransferts");
         Formatter formatDouble = new Formatter();
         List<TransfertDTO> listOfTransfertsDTO = new ArrayList<TransfertDTO>();
-        listOfTransfertsDTO = jdbcTemplate.query(sql, new Object[]{userId, size, offset}, (rs, rowNum) ->
-                TransfertDTO.builder()
-                        .recipientFirstname(rs.getString("recipient_firstname"))
-                        .recipientLastname(rs.getString("recipient_lastname"))
-                        .description(rs.getString("description"))
-                        .amount(formatDouble.formatDoubleToString(rs.getDouble("amount")))
+        Iterable<Transfert> listTransfert = getTransferts();
+        for(Transfert t : listTransfert){
+            if (t.getAuthor().getUserId().equals(userId)) {
+                listOfTransfertsDTO.add(TransfertDTO.builder()
+                        .recipientFirstname(t.getRecipient().getFirstname())
+                        .recipientLastname(t.getRecipient().getLastname())
+                        .amount(formatDouble.formatDoubleToString(t.getAmount()))
+                        .description(t.getDescription())
+                        .transactionDate(t.getTransactionDate())
                         .build());
-        return listOfTransfertsDTO;
+            }
+        }
+        listOfTransfertsDTO.sort(Comparator.comparing(TransfertDTO::getTransactionDate, Comparator.reverseOrder()));
+
+        Pageable pageRequest = PageRequest.of(page, size);
+
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), listOfTransfertsDTO.size());
+        List<TransfertDTO> pageContent = listOfTransfertsDTO.subList(start, end);
+        return new PageImpl<>(pageContent, pageRequest, listOfTransfertsDTO.size());
     }
 
-    /**
-     * Counts the number of transfers made by a specific user.
-     *
-     * @param userId The ID of the user.
-     * @return The number of transfers made by the user.
-     */
-    public int countTransferts(Long userId){
-        String sql = "SELECT COUNT(*) " +
-                "FROM transfert t " +
-                "INNER JOIN user AS author ON t.author_id = author.user_id " +
-                "WHERE t.author_id = ?";
-        int result = jdbcTemplate.queryForObject(sql, new Object[]{userId}, Integer.class);
-        return result;
-    }
 
     /**
      * Adds a new transfer based on the provided transfer DTO.

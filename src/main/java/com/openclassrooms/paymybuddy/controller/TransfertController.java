@@ -4,12 +4,14 @@ import com.openclassrooms.paymybuddy.model.DTO.ConnectionDTO;
 import com.openclassrooms.paymybuddy.model.DTO.TransfertDTO;
 import com.openclassrooms.paymybuddy.model.DTO.NewTransfertDTO;
 import com.openclassrooms.paymybuddy.model.User;
+import com.openclassrooms.paymybuddy.repository.TransfertRepository;
 import com.openclassrooms.paymybuddy.service.impl.TransfertService;
 import com.openclassrooms.paymybuddy.service.impl.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,6 +35,9 @@ public class TransfertController {
     @Autowired
     private TransfertService transfertService;
 
+    @Autowired
+    private TransfertRepository transfertRepository;
+
     /**
      * Displays the transfer page, showing available connections for initiating transfers and
      * a history of past transfers.
@@ -51,8 +56,8 @@ public class TransfertController {
         User userConnected = userService.getUserById(userId).get();
         List<ConnectionDTO> listOfConnections = userService.getActiveFriends(userConnected.getFriends());
 
-        List<TransfertDTO> listTransfertsDTO = transfertService.getListOfTransferts(userId, page, size);
-        int totalTransferts = transfertService.countTransferts(userId);
+        Page<TransfertDTO> listTransfertsDTO = transfertService.getListOfTransferts(userId, page, size);
+        int totalTransferts = transfertRepository.countByUser(userId);
         int totalPages = (int) Math.ceil((double) totalTransferts / size);
 
         if(listOfConnections == null) {

@@ -39,10 +39,10 @@ public interface IUserAccountService {
     public void deleteUserAccountById(Long id);
 
     /**
-     * Finds a user account by email.
+     * This method searches an user from its email
      *
-     * @param email The email of the user account to find.
-     * @return An optional containing the user account if found, otherwise empty.
+     * @param email email of the user has to be found
+     * @return an UserAccount
      */
     public Optional<UserAccount> findByEmail(String email);
 
