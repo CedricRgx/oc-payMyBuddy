@@ -17,7 +17,7 @@ public class FormatterTest {
     }
 
     @Test
-    public void formatDoubleToString_ReturnsCorrectlyFormattedString() {
+    public void testFormatDoubleToString_ReturnsCorrectlyFormattedString() {
         // Given
         double input = 1234.5678;
 
@@ -29,7 +29,7 @@ public class FormatterTest {
     }
 
     @Test
-    public void addCurrency_AppendsCurrencySymbol() {
+    public void testAddCurrency_AppendsCurrencySymbol() {
         // Given
         String amount = "1234.57";
 

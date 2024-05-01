@@ -28,7 +28,7 @@ class CustomUserDetailsServiceTest {
     private CustomUserDetailsService customUserDetailsService;
 
     @Test
-    void loadUserByUsername_UserFoundAndActive_ReturnsUserDetails() {
+    void testLoadUserByUsername_UserFoundAndActive_ReturnsUserDetails() {
         // Given
         UserAccount userAccount = UserAccount.builder()
                 .email("email@example.com")
@@ -48,7 +48,7 @@ class CustomUserDetailsServiceTest {
     }
 
     @Test
-    void loadUserByUsername_UserNotFound_ThrowsUsernameNotFoundException() {
+    void testLoadUserByUsername_UserNotFound_ThrowsUsernameNotFoundException() {
         // Given
         when(userAccountRepository.findByEmail("email@example.com")).thenReturn(null);
 
@@ -57,7 +57,7 @@ class CustomUserDetailsServiceTest {
     }
 
     @Test
-    void loadUserByUsername_UserFoundButNotActive_ReturnsDisabledUser() {
+    void testLoadUserByUsername_UserFoundButNotActive_ReturnsDisabledUser() {
         // Given
         UserAccount userAccount = UserAccount.builder()
                 .email("email@example.com")
@@ -76,7 +76,7 @@ class CustomUserDetailsServiceTest {
     }
 
     @Test
-    void loadUserByUsername_UserActive_UpdatesLastConnection() {
+    void testLoadUserByUsername_UserActive_UpdatesLastConnection() {
         // Given
         UserAccount userAccount = UserAccount.builder()
                 .email("email@example.com")

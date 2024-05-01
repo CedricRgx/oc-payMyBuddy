@@ -140,7 +140,7 @@ public class TransfertDTOTest {
     }
 
     @Test
-    public void hashCode_shouldBeEqualForEqualObjects() {
+    public void testHashCode_shouldBeEqualForEqualObjects() {
         // Given
         TransfertDTO dto1 = TransfertDTO.builder()
                 .recipientFirstname("John")
@@ -165,7 +165,7 @@ public class TransfertDTOTest {
     }
 
     @Test
-    public void hashCode_shouldBeDifferentForDifferentObjects() {
+    public void testHashCode_shouldBeDifferentForDifferentObjects() {
         // Given
         TransfertDTO dto1 = TransfertDTO.builder()
                 .recipientFirstname("John")
@@ -190,7 +190,7 @@ public class TransfertDTOTest {
     }
 
     @Test
-    public void toString_shouldReturnExpectedString() {
+    public void testToString_shouldReturnExpectedString() {
         // Given
         TransfertDTO dto = TransfertDTO.builder()
                 .recipientFirstname("John")
@@ -210,7 +210,7 @@ public class TransfertDTOTest {
     }
 
     @Test
-    public void equals_shouldReturnTrueWhenObjectsAreEqual() {
+    public void testEquals_shouldReturnTrueWhenObjectsAreEqual() {
         // Given
         TransfertDTO dto1 = TransfertDTO.builder()
                 .recipientFirstname("John")
@@ -234,7 +234,7 @@ public class TransfertDTOTest {
     }
 
     @Test
-    public void equals_shouldReturnFalseWhenObjectsAreNotEqual() {
+    public void testEquals_shouldReturnFalseWhenObjectsAreNotEqual() {
         // Given
         TransfertDTO dto1 = TransfertDTO.builder()
                 .recipientFirstname("John")
@@ -258,7 +258,7 @@ public class TransfertDTOTest {
     }
 
     @Test
-    public void equals_shouldReturnFalseWhenObjectIsNull() {
+    public void testEquals_shouldReturnFalseWhenObjectIsNull() {
         // Given
         TransfertDTO dto = TransfertDTO.builder()
                 .recipientFirstname("John")
@@ -275,7 +275,7 @@ public class TransfertDTOTest {
     }
 
     @Test
-    public void equals_shouldReturnFalseWhenObjectIsOfDifferentType() {
+    public void testEquals_shouldReturnFalseWhenObjectIsOfDifferentType() {
         // Given
         TransfertDTO dto = TransfertDTO.builder()
                 .recipientFirstname("John")

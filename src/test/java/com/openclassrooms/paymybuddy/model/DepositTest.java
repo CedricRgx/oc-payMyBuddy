@@ -24,15 +24,15 @@ public class DepositTest {
         deposit = Deposit.builder()
                 .amount(100.0)
                 .description("Test deposit")
-                .transactionDate(LocalDateTime.now())
-                .fee(0.0) // Assuming no fee for deposits
+                .transactionDate(LocalDateTime.of(2020,10,10, 10,10))
+                .fee(0.0)
                 .author(mockAuthor)
                 .build();
     }
 
     @Test
     public void testInheritance() {
-        // When
+        // Given
         Long actualTransactionId = deposit.getTransactionId();
         double actualAmount = deposit.getAmount();
         String actualDescription = deposit.getDescription();
@@ -44,7 +44,7 @@ public class DepositTest {
         assertEquals(null, actualTransactionId);
         assertEquals(100.0, actualAmount);
         assertEquals("Test deposit", actualDescription);
-        assertTrue(actualTransactionDate.isBefore(LocalDateTime.now()) || actualTransactionDate.isEqual(LocalDateTime.now()));
+        assertTrue(actualTransactionDate.isEqual(LocalDateTime.of(2020,10,10, 10,10)));
         assertEquals(0.0, actualFee);
         assertEquals(mockAuthor, actualAuthor);
     }
@@ -91,6 +91,72 @@ public class DepositTest {
 
         // When Then
         assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEqualsReflexivity() {
+        // When Then
+        assertTrue(deposit.equals(deposit));
+    }
+
+    @Test
+    public void testEqualsSymmetry() {
+        // Given
+        Deposit other = Deposit.builder()
+                .amount(100.0)
+                .description("Test deposit")
+                .transactionDate(LocalDateTime.of(2020, 10, 10, 10, 10))
+                .fee(0.0)
+                .author(mockAuthor)
+                .build();
+
+        // When Then
+        assertTrue(deposit.equals(other) && other.equals(deposit));
+    }
+
+    @Test
+    public void testEqualsTransitivity() {
+        // Given
+        Deposit deposit1 = deposit;
+        Deposit deposit2 = Deposit.builder()
+                .amount(100.0)
+                .description("Test deposit")
+                .transactionDate(LocalDateTime.of(2020, 10, 10, 10, 10))
+                .fee(0.0)
+                .author(mockAuthor)
+                .build();
+        Deposit deposit3 = deposit2;
+
+        // When Then
+        assertTrue(deposit1.equals(deposit2) && deposit2.equals(deposit3) && deposit1.equals(deposit3));
+    }
+
+    @Test
+    public void testEqualsConsistency() {
+        // Given
+        Deposit other = Deposit.builder()
+                .amount(100.0)
+                .description("Test deposit")
+                .transactionDate(LocalDateTime.of(2020, 10, 10, 10, 10))
+                .fee(0.0)
+                .author(mockAuthor)
+                .build();
+
+        // When Then
+        assertTrue(deposit.equals(other));
+        assertTrue(deposit.equals(other));
+    }
+
+    @Test
+    public void testEqualsNullComparison() {
+        // When Then
+        assertFalse(deposit.equals(null));
+    }
+
+    @Test
+    public void testEqualsDifferentClass() {
+        // When Then
+        assertFalse(deposit.equals(new Object()));
     }
 
 }

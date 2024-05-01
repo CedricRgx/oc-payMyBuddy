@@ -5,7 +5,6 @@ import com.openclassrooms.paymybuddy.model.DTO.TransfertDTO;
 import com.openclassrooms.paymybuddy.model.Transfert;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.repository.TransfertRepository;
-import jakarta.persistence.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,13 +19,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 import jakarta.persistence.*;
 
@@ -44,9 +41,6 @@ public class TransfertServiceTest {
     private UserService userService;
 
     @Mock
-    private EntityManager entityManager;
-
-    @Mock
     SecurityContext securityContext;
 
     @BeforeEach
@@ -58,7 +52,7 @@ public class TransfertServiceTest {
     }
 
     @Test
-    public void getTransferts_shouldReturnAllTransferts() {
+    public void testGetTransferts_shouldReturnAllTransferts() {
         // Given
         User user1 = User.builder().firstname("John").lastname("Doe").build();
         User user2 = User.builder().firstname("Mary").lastname("Shelley").build();
@@ -82,7 +76,7 @@ public class TransfertServiceTest {
     }
 
     @Test
-    public void getTransfertById_shouldReturnTransfertWhenExists() {
+    public void testGetTransfertById_shouldReturnTransfertWhenExists() {
         // Given
         Long transfertId = 1L;
         Optional<Transfert> expectedTransfert = Optional.of(new Transfert());
@@ -98,7 +92,7 @@ public class TransfertServiceTest {
     }
 
     @Test
-    public void getTransfertById_shouldReturnEmptyWhenNotExists() {
+    public void testGetTransfertById_shouldReturnEmptyWhenNotExists() {
         // Given
         Long transfertId = 1L;
         when(transfertRepository.findById(transfertId)).thenReturn(Optional.empty());
@@ -112,7 +106,7 @@ public class TransfertServiceTest {
     }
 
     @Test
-    public void addTransfert_shouldAddTransfert() {
+    public void testAddTransfert_shouldAddTransfert() {
         // Given
         Transfert transfert = new Transfert();
         when(transfertRepository.save(transfert)).thenReturn(transfert);
@@ -126,7 +120,7 @@ public class TransfertServiceTest {
     }
 
     @Test
-    public void deleteTransfertById_shouldDeleteTransfert() {
+    public void testDeleteTransfertById_shouldDeleteTransfert() {
         // Given
         Long transfertId = 1L;
         doNothing().when(transfertRepository).deleteById(transfertId);
@@ -139,7 +133,7 @@ public class TransfertServiceTest {
     }
 
     @Test
-    public void getListOfTransferts_shouldReturnPagedTransferts() {
+    public void testGetListOfTransferts_shouldReturnPagedTransferts() {
         // Given
         Long userId = 1L;
         int page = 0;
@@ -177,7 +171,7 @@ public class TransfertServiceTest {
     }
 
     @Test
-    public void addNewTransfert_ShouldFail_WhenAmountIsInvalid() {
+    public void testAddNewTransfert_ShouldFail_WhenAmountIsInvalid() {
         // Given
         NewTransfertDTO newTransfertDTO = NewTransfertDTO.builder()
                 .amount(-10.0).build();
@@ -187,7 +181,7 @@ public class TransfertServiceTest {
     }
 
     @Test
-    public void addNewTransfert_ShouldFail_WhenBalanceIsInsufficient() {
+    public void testAddNewTransfert_ShouldFail_WhenBalanceIsInsufficient() {
         // Given
         when(userService.getUserIdByEmail("user@example.com")).thenReturn(1L);
         when(userService.getUserById(1L)).thenReturn(Optional.of(new User()));
@@ -203,7 +197,7 @@ public class TransfertServiceTest {
     }
 
     @Test
-    public void addNewTransfert_ShouldFail_WhenUserNotFound() {
+    public void testAddNewTransfert_ShouldFail_WhenUserNotFound() {
         // When
         when(userService.getUserIdByEmail("user@example.com")).thenReturn(1L);
         when(userService.getUserById(1L)).thenReturn(Optional.empty());
@@ -217,7 +211,7 @@ public class TransfertServiceTest {
     }
 
     @Test
-    public void addNewTransfert_ShouldSucceed_WhenValidRequest() {
+    public void testAddNewTransfert_ShouldSucceed_WhenValidRequest() {
         // When
         when(userService.getUserIdByEmail("user@example.com")).thenReturn(1L);
         when(userService.getUserById(1L)).thenReturn(Optional.of(new User()));
@@ -233,7 +227,7 @@ public class TransfertServiceTest {
     }
 
     @Test
-    public void addNewTransfert_ShouldFail_WhenRecipientNotFound() {
+    public void testAddNewTransfert_ShouldFail_WhenRecipientNotFound() {
         // Given
         when(userService.getUserIdByEmail("user@example.com")).thenReturn(1L);
         when(userService.getUserById(1L)).thenReturn(Optional.of(new User()));
@@ -250,7 +244,7 @@ public class TransfertServiceTest {
     }
 
     @Test
-    public void addNewTransfert_ShouldFail_WhenAmountIsNonPositive() {
+    public void testAddNewTransfert_ShouldFail_WhenAmountIsNonPositive() {
         // Given
         when(userService.getUserIdByEmail("user@example.com")).thenReturn(1L);
         when(userService.getUserById(1L)).thenReturn(Optional.of(new User()));
@@ -267,7 +261,7 @@ public class TransfertServiceTest {
     }
 
     @Test
-    public void addNewTransfert_ShouldFail_WhenBalanceIsNull() {
+    public void testAddNewTransfert_ShouldFail_WhenBalanceIsNull() {
         // Given
         when(userService.getUserIdByEmail("user@example.com")).thenReturn(1L);
         when(userService.getUserById(1L)).thenReturn(Optional.of(new User()));

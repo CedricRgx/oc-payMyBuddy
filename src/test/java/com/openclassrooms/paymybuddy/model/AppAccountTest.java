@@ -6,7 +6,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class AppAccountTest {
@@ -157,6 +161,50 @@ public class AppAccountTest {
     }
 
     @Test
+    public void testHashCodeWithDifferentBalances() {
+        // Given
+        AppAccount account1 = AppAccount.builder()
+                .balance(100.0)
+                .appOwner(mockUser)
+                .build();
+        AppAccount account2 = AppAccount.builder()
+                .balance(200.0)
+                .appOwner(mockUser)
+                .build();
+
+        // When Then
+        assertNotEquals(account1.hashCode(), account2.hashCode());
+    }
+
+    @Test
+    public void testHashCodeWithNullAppOwner() {
+        // Given
+        AppAccount accountWithNullOwner = AppAccount.builder()
+                .balance(100.0)
+                .appOwner(null)
+                .build();
+
+        // When Then
+        assertDoesNotThrow(accountWithNullOwner::hashCode);
+    }
+
+    @Test
+    public void testHashCodeEffectOfEachField() {
+        // Given
+        AppAccount baseAccount = AppAccount.builder()
+                .balance(100.0)
+                .appOwner(mockUser)
+                .build();
+        AppAccount changedBalance = AppAccount.builder()
+                .balance(200.0)
+                .appOwner(mockUser)
+                .build();
+
+        // When Then
+        assertNotEquals(baseAccount.hashCode(), changedBalance.hashCode());
+    }
+
+    @Test
     public void testEqualsSymmetry() {
         // Given
         AppAccount anotherAppAccount = AppAccount.builder()
@@ -256,6 +304,54 @@ public class AppAccountTest {
 
         // When Then
         assertDoesNotThrow(accountWithNullOwner::hashCode);
+    }
+
+    @Test
+    public void testEqualsDifferentBalances() {
+        // Given
+        AppAccount account1 = AppAccount.builder()
+                .balance(100.0)
+                .appOwner(mockUser)
+                .build();
+        AppAccount account2 = AppAccount.builder()
+                .balance(200.0)
+                .appOwner(mockUser)
+                .build();
+
+        // When Then
+        assertFalse(account1.equals(account2));
+    }
+
+    @Test
+    public void testEqualsWithAllFieldsNull() {
+        // Given
+        AppAccount account1 = new AppAccount();
+        AppAccount account2 = new AppAccount();
+
+        // When Then
+        assertTrue(account1.equals(account2));
+    }
+
+    @Test
+    public void testSetAndGetNegativeBalance() {
+        // Given
+        double negativeBalance = -50.0;
+        appAccount.setBalance(negativeBalance);
+
+        // When Then
+        assertEquals(negativeBalance, appAccount.getBalance(), "Balance should be set to negative when explicitly set.");
+    }
+
+    @Test
+    public void testZeroBalanceInitialization() {
+        // Given
+        AppAccount newAccount = AppAccount.builder()
+                .balance(0.0)
+                .appOwner(mockUser)
+                .build();
+
+        // When Then
+        assertEquals(0.0, newAccount.getBalance(), "Newly initialized account should allow zero balance.");
     }
 
 }

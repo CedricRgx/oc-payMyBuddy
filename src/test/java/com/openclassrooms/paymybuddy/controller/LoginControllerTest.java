@@ -10,9 +10,6 @@ import org.springframework.ui.Model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-/**
- * The type Login controller test.
- */
 @ExtendWith(MockitoExtension.class)
 public class LoginControllerTest {
 
@@ -23,7 +20,7 @@ public class LoginControllerTest {
     private Model model;
 
     @Test
-    public void login_withError_shouldAddErrorMessageToModel() {
+    public void testLogin_withError_shouldAddErrorMessageToModel() {
         // Given
         String error = "error";
 
@@ -36,7 +33,7 @@ public class LoginControllerTest {
     }
 
     @Test
-    public void login_withLogout_shouldAddLogoutMessageToModel() {
+    public void testLogin_withLogout_shouldAddLogoutMessageToModel() {
         // Given
         String logout = "logout";
 
@@ -49,7 +46,7 @@ public class LoginControllerTest {
     }
 
     @Test
-    public void login_withDisabled_shouldAddDisabledMessageToModel() {
+    public void testLogin_withDisabled_shouldAddDisabledMessageToModel() {
         // Given
         String disabled = "disabled";
 
@@ -62,7 +59,7 @@ public class LoginControllerTest {
     }
 
     @Test
-    public void login_withoutMessages_shouldReturnLoginView() {
+    public void testLogin_withoutMessages_shouldReturnLoginView() {
         // When
         String viewName = loginController.login(model, null, null, null);
 

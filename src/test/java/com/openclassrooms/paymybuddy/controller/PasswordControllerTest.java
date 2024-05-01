@@ -23,9 +23,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-/**
- * The type Password controller test.
- */
 @ExtendWith(MockitoExtension.class)
 public class PasswordControllerTest {
 
@@ -56,9 +53,6 @@ public class PasswordControllerTest {
     @Mock
     private Authentication authentication;
 
-    /**
-     * Sets up.
-     */
     @BeforeEach
     public void setUp() {
         lenient().when(request.getSession(false)).thenReturn(session);
@@ -67,11 +61,8 @@ public class PasswordControllerTest {
         SecurityContextHolder.setContext(securityContext);
     }
 
-    /**
-     * Show change password form should return password update form.
-     */
     @Test
-    public void showChangePasswordForm_shouldReturnPasswordUpdateForm() {
+    public void testShowChangePasswordForm_shouldReturnPasswordUpdateForm() {
         // Given
         PasswordUpdateDTO passwordUpdateDTO = PasswordUpdateDTO.builder().build();
 
@@ -83,11 +74,8 @@ public class PasswordControllerTest {
         assertEquals("passwordUpdateForm", viewName);
     }
 
-    /**
-     * Change password with valid password update returns redirect to login.
-     */
     @Test
-    public void changePassword_WithValidPasswordUpdate_ReturnsRedirectToLogin() {
+    public void testChangePassword_WithValidPasswordUpdate_ReturnsRedirectToLogin() {
         // Given
         PasswordUpdateDTO passwordUpdateDTO = PasswordUpdateDTO.builder()
                 .currentPassword("oldPassword")
@@ -124,11 +112,8 @@ public class PasswordControllerTest {
         assertEquals("redirect:/login?logout", viewName);
     }
 
-    /**
-     * Test change password user not found.
-     */
     @Test
-    void testChangePassword_UserNotFound() {
+    public void testChangePassword_UserNotFound() {
         // Given
         PasswordUpdateDTO dto = PasswordUpdateDTO.builder().build();
         when(userAccountService.findByEmail("user@example.com")).thenReturn(Optional.empty()); // User not found scenario
@@ -141,11 +126,8 @@ public class PasswordControllerTest {
         assertEquals("passwordUpdateForm", viewName);
     }
 
-    /**
-     * Change password when current password is incorrect should reject value.
-     */
     @Test
-    public void changePassword_WhenCurrentPasswordIsIncorrect_ShouldRejectValue() {
+    public void testChangePassword_WhenCurrentPasswordIsIncorrect_ShouldRejectValue() {
         // Given
         PasswordUpdateDTO dto = PasswordUpdateDTO.builder()
                 .currentPassword("current")
@@ -162,11 +144,26 @@ public class PasswordControllerTest {
         assertEquals("passwordUpdateForm", result);
     }
 
-    /**
-     * Change password when new password does not match confirmation should return to form.
-     */
     @Test
-    public void changePassword_WhenNewPasswordDoesNotMatchConfirmation_ShouldReturnToForm() {
+    public void testChangePassword_WhenNewPasswordDoesNotMatchConfirmation_ShouldReturnToForm() {
+        // Given
+        PasswordUpdateDTO dto = PasswordUpdateDTO.builder()
+                .currentPassword("current")
+                .newPassword("newPass")
+                .confirmPassword("newPassFalse").build();
+        when(userAccountService.findByEmail("user@example.com")).thenReturn(Optional.of(UserAccount.builder().password("hashedPassword").build()));
+        when(passwordEncoder.matches("current", "hashedPassword")).thenReturn(true);
+
+        // When
+        String result = passwordController.changePassword(dto, bindingResult, request);
+
+        // Then
+        verify(bindingResult).rejectValue("confirmPassword", "error.passwordChange", "The password confirmation does not match.");
+        assertEquals("passwordUpdateForm", result);
+    }
+
+    @Test
+    public void testChangePassword_WhenNewPasswordDoesMatchConfirmation() {
         // Given
         PasswordUpdateDTO dto = PasswordUpdateDTO.builder()
                 .currentPassword("current")
@@ -181,11 +178,8 @@ public class PasswordControllerTest {
         assertEquals("redirect:/login?logout", result);
     }
 
-    /**
-     * Change password when password update is successful should invalidate session and redirect.
-     */
     @Test
-    public void changePassword_WhenPasswordUpdateIsSuccessful_ShouldInvalidateSessionAndRedirect() {
+    public void testChangePassword_WhenPasswordUpdateIsSuccessful_ShouldInvalidateSessionAndRedirect() {
         // Given
         PasswordUpdateDTO dto = PasswordUpdateDTO.builder()
                 .currentPassword("current")

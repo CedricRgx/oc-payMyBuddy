@@ -60,7 +60,7 @@ public class TransfertControllerTest {
     }
 
     @Test
-    public void viewTransfertPage_ShouldDisplayTransfertTemplate() {
+    public void testViewTransfertPage_ShouldDisplayTransfertTemplate() {
         // Given
         when(userService.getUserIdByEmail(anyString())).thenReturn(1L);
         User user = User.builder().friends(new ArrayList<>()).build();
@@ -84,7 +84,26 @@ public class TransfertControllerTest {
     }
 
     @Test
-    public void viewTransfertPage_ShouldAddErrorMessageToModelWhenSessionContainsErrorMessage() throws Exception {
+    public void testViewTransfertPage_ShouldDisplayTransfertTemplateWithListConnectionsNull() {
+        // Given
+        when(userService.getUserIdByEmail(anyString())).thenReturn(1L);
+        User user = User.builder().friends(new ArrayList<>()).build();
+        Optional<User> optionalUser = Optional.of(user);
+        when(userService.getUserById(anyLong())).thenReturn(optionalUser);
+
+        when(userService.getActiveFriends(any())).thenReturn(null);
+        when(transfertService.getListOfTransferts(anyLong(), anyInt(), anyInt())).thenReturn(Page.empty());
+        when(transfertRepository.countByUser(anyLong())).thenReturn(0);
+
+        // When
+        String viewName = transfertController.viewTransfertPage(model, session, 0, 3);
+
+        // Then
+        assertEquals("transfert", viewName);
+    }
+
+    @Test
+    public void testViewTransfertPage_ShouldAddErrorMessageToModelWhenSessionContainsErrorMessage() {
         // Given
         User user = User.builder().friends(new ArrayList<>()).build();
         Optional<User> optionalUser = Optional.of(user);
@@ -100,7 +119,7 @@ public class TransfertControllerTest {
     }
 
     @Test
-    public void viewTransfertPage_ShouldAddSuccessMessageToModelWhenSessionContainsSuccessMessage() throws Exception {
+    public void testViewTransfertPage_ShouldAddSuccessMessageToModelWhenSessionContainsSuccessMessage() {
         // Given
         User user = User.builder().friends(new ArrayList<>()).build();
         Optional<User> optionalUser = Optional.of(user);
@@ -115,6 +134,23 @@ public class TransfertControllerTest {
         // Then
         verify(model).addAttribute("successMessage", "Success message from session");
         verify(session).removeAttribute("successMessage");
+    }
+
+    @Test
+    public void testViewTransfertPage_ShouldHandleNullSessionAttributes(){
+        // Given
+        when(userService.getUserIdByEmail(anyString())).thenReturn(1L);
+        User user = User.builder().friends(new ArrayList<>()).build();
+        when(userService.getUserById(anyLong())).thenReturn(Optional.of(user));
+        when(session.getAttribute(anyString())).thenReturn(null);
+
+        // When
+        String viewName = transfertController.viewTransfertPage(model, session, 0, 3);
+
+        // Then
+        verify(model, never()).addAttribute(eq("errorMessage"), any());
+        verify(model, never()).addAttribute(eq("successMessage"), any());
+        assertEquals("transfert", viewName);
     }
 
     @Test
@@ -174,21 +210,6 @@ public class TransfertControllerTest {
         assertEquals("redirect:/transfert", viewName);
     }
 
-    @Test
-    public void viewTransfertPage_ShouldHandleNullSessionAttributes() throws Exception {
-        // Given
-        when(userService.getUserIdByEmail(anyString())).thenReturn(1L);
-        User user = User.builder().friends(new ArrayList<>()).build();
-        when(userService.getUserById(anyLong())).thenReturn(Optional.of(user));
-        when(session.getAttribute(anyString())).thenReturn(null);
 
-        // When
-        String viewName = transfertController.viewTransfertPage(model, session, 0, 3);
-
-        // Then
-        verify(model, never()).addAttribute(eq("errorMessage"), any());
-        verify(model, never()).addAttribute(eq("successMessage"), any());
-        assertEquals("transfert", viewName);
-    }
 
 }

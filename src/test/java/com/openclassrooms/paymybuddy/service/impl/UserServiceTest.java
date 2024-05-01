@@ -8,7 +8,6 @@ import com.openclassrooms.paymybuddy.repository.AppAccountRepository;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -42,7 +41,7 @@ class UserServiceTest {
     private UserService userService;
 
     @Test
-    public void getUsers_shouldReturnAllUsers() {
+    public void testGetUsers_shouldReturnAllUsers() {
         // Given
         List<User> userList = new ArrayList<>();
         when(userRepository.findAll()).thenReturn(userList);
@@ -55,7 +54,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void getUserById_shouldReturnUser_whenUserExists() {
+    public void testGetUserById_shouldReturnUser_whenUserExists() {
         // Given
         Long userId = 1L;
         User user = new User();
@@ -70,7 +69,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void getUserById_shouldReturnEmptyOptional_whenUserDoesNotExist() {
+    public void testGetUserById_shouldReturnEmptyOptional_whenUserDoesNotExist() {
         // Given
         Long userId = 1L;
         when(userRepository.findById(userId)).thenReturn(empty());
@@ -83,7 +82,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void addUser_shouldReturnAddedUser() {
+    public void testAddUser_shouldReturnAddedUser() {
         // Given
         User user = new User();
         when(userRepository.save(user)).thenReturn(user);
@@ -97,7 +96,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void deleteUserById_shouldDeleteUser() {
+    public void testDeleteUserById_shouldDeleteUser() {
         // Given
         Long userId = 1L;
 
@@ -109,7 +108,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void getUserIdByEmail_shouldReturnUserId() {
+    public void testGetUserIdByEmail_shouldReturnUserId() {
         // Given
         String email = "user@example.com";
         Long expectedUserId = 1L;
@@ -130,7 +129,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void getActiveFriends_shouldReturnListOfActiveFriends() {
+    public void testGetActiveFriends_shouldReturnListOfActiveFriends() {
         // Given
         List<User> listOfFriends = new ArrayList<>();
         User activeFriend = new User();
@@ -155,10 +154,10 @@ class UserServiceTest {
 
 
     @Test
-    public void getUserById_existingId_shouldReturnOptionalWithUser() {
+    public void testGetUserById_existingId_shouldReturnOptionalWithUser() {
         // Given
         Long userId = 1L;
-        User user = new User();
+        User user = User.builder().build();
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         // When
@@ -170,7 +169,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void getUserById_nonExistingId_shouldReturnEmptyOptional() {
+    public void testGetUserById_nonExistingId_shouldReturnEmptyOptional() {
         // Given
         Long userId = 1L;
         when(userRepository.findById(userId)).thenReturn(empty());
@@ -183,7 +182,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void updateUserBalance_existingUserId_shouldUpdateBalanceAndReturnTrue() {
+    public void testUpdateUserBalance_existingUserId_shouldUpdateBalanceAndReturnTrue() {
         // Given
         Long userId = 1L;
         Double newBalance = 100.0;
@@ -201,7 +200,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void updateUserBalance_noExistingUserId_shouldReturnFalse() {
+    public void testUpdateUserBalance_noExistingUserId_shouldReturnFalse() {
         // Given
         Long userId = 1L;
         Double newBalance = 100.0;

@@ -253,7 +253,7 @@ public class UserTest {
     }
 
     @Test
-    public void testSourceTransacSetter() {
+    public void testSourceTransactionSetter() {
         // Given
         List<Deposit> sourceTransac = new ArrayList<>();
         Deposit deposit1 = Deposit.builder().build();
@@ -269,7 +269,7 @@ public class UserTest {
     }
 
     @Test
-    public void testSourceTransacGetter() {
+    public void testSourceTransactionGetter() {
         // Given
         List<Deposit> sourceTransac = new ArrayList<>();
         Deposit deposit1 = Deposit.builder().build();

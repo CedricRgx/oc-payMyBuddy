@@ -137,7 +137,7 @@ public class UserDTOTest {
     }
 
     @Test
-    public void hashCode_withEqualObjects_shouldReturnEqualHashCodes() {
+    public void testHashCode_withEqualObjects_shouldReturnEqualHashCodes() {
         // Given
         UserDTO dto1 = UserDTO.builder()
                 .firstname("John")
@@ -164,7 +164,7 @@ public class UserDTOTest {
     }
 
     @Test
-    public void hashCode_withDifferentObjects_shouldReturnDifferentHashCodes() {
+    public void testHashCode_withDifferentObjects_shouldReturnDifferentHashCodes() {
         // Given
         UserDTO dto1 = UserDTO.builder()
                 .firstname("John")
@@ -191,7 +191,7 @@ public class UserDTOTest {
     }
 
     @Test
-    public void toString_shouldReturnCorrectStringRepresentation() {
+    public void testToString_shouldReturnCorrectStringRepresentation() {
         // Given
         UserDTO dto = UserDTO.builder()
                 .firstname("John")
@@ -210,7 +210,7 @@ public class UserDTOTest {
     }
 
     @Test
-    public void equals_shouldReturnTrueForSameObject() {
+    public void testEquals_shouldReturnTrueForSameObject() {
         // Given
         UserDTO dto1 = UserDTO.builder()
                 .firstname("John")
@@ -228,7 +228,7 @@ public class UserDTOTest {
     }
 
     @Test
-    public void equals_shouldReturnTrueForEqualObjects() {
+    public void testEquals_shouldReturnTrueForEqualObjects() {
         // Given
         UserDTO dto1 = UserDTO.builder()
                 .firstname("John")
@@ -254,7 +254,7 @@ public class UserDTOTest {
     }
 
     @Test
-    public void equals_shouldReturnFalseForDifferentObjects() {
+    public void testEquals_shouldReturnFalseForDifferentObjects() {
         // Given
         UserDTO dto1 = UserDTO.builder()
                 .firstname("John")
@@ -280,7 +280,7 @@ public class UserDTOTest {
     }
 
     @Test
-    public void equals_shouldReturnFalseForNullObject() {
+    public void testEquals_shouldReturnFalseForNullObject() {
         // Given
         UserDTO dto = UserDTO.builder()
                 .firstname("John")
@@ -298,7 +298,7 @@ public class UserDTOTest {
     }
 
     @Test
-    public void hashCode_withNullFields_shouldHandleNullsGracefully() {
+    public void testHashCode_withNullFields_shouldHandleNullsGracefully() {
         // Given
         UserDTO nullFirstname = UserDTO.builder()
                 .firstname(null)
@@ -345,7 +345,7 @@ public class UserDTOTest {
     }
 
     @Test
-    public void hashCode_consistencyCheck() {
+    public void testHashCode_consistencyCheck() {
         // Given
         int initialHashCode = dto.hashCode();
 
@@ -355,7 +355,7 @@ public class UserDTOTest {
     }
 
     @Test
-    public void hashCode_withDifferentFields_shouldReturnDifferentHashCodes() {
+    public void testHashCode_withDifferentFields_shouldReturnDifferentHashCodes() {
         // Given
         UserDTO baseDTO = UserDTO.builder()
                 .firstname("John")
@@ -407,7 +407,5 @@ public class UserDTOTest {
         assertNotEquals(baseDTO.hashCode(), differentPhone.hashCode());
         assertNotEquals(baseDTO.hashCode(), differentBalance.hashCode());
     }
-
-
 
 }

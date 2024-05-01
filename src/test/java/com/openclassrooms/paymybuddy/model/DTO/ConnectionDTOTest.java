@@ -186,6 +186,163 @@ public class ConnectionDTOTest {
         assertFalse(result);
     }
 
+
+    @Test
+    public void testNotEqualsWithNullFirstName() {
+        // Given
+        ConnectionDTO dto1 = ConnectionDTO.builder()
+                .userId(1L)
+                .firstname(null)
+                .lastname("Doe")
+                .build();
+        ConnectionDTO dto2 = ConnectionDTO.builder()
+                .userId(1L)
+                .firstname("John")
+                .lastname("Doe")
+                .build();
+
+        // When Then
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEqualsSameInstance() {
+        // Given
+        ConnectionDTO dto = ConnectionDTO.builder()
+                .userId(1L)
+                .firstname("John")
+                .lastname("Doe")
+                .build();
+
+        // When Then
+        assertTrue(dto.equals(dto));
+    }
+
+    @Test
+    public void testNotEqualsDifferentClass() {
+        // Given
+        ConnectionDTO dto = ConnectionDTO.builder()
+                .userId(1L)
+                .firstname("John")
+                .lastname("Doe")
+                .build();
+        Object other = new Object();
+
+        // When Then
+        assertFalse(dto.equals(other));
+    }
+
+    @Test
+    public void testNotEqualsWithNull() {
+        // Given
+        ConnectionDTO dto = ConnectionDTO.builder()
+                .userId(1L)
+                .firstname("John")
+                .lastname("Doe")
+                .build();
+
+        // When Then
+        assertFalse(dto.equals(null));
+    }
+
+    @Test
+    public void testNotEqualsWithDifferentFirstName() {
+        // Given
+        ConnectionDTO dto1 = ConnectionDTO.builder()
+                .userId(1L)
+                .firstname("John")
+                .lastname("Doe")
+                .build();
+        ConnectionDTO dto2 = ConnectionDTO.builder()
+                .userId(1L)
+                .firstname("Jane")
+                .lastname("Doe")
+                .build();
+
+        // When Then
+        assertFalse(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testEqualsSymmetry() {
+        // Given
+        ConnectionDTO dto1 = ConnectionDTO.builder()
+                .userId(1L)
+                .firstname("John")
+                .lastname("Doe")
+                .build();
+        ConnectionDTO dto2 = ConnectionDTO.builder()
+                .userId(1L)
+                .firstname("John")
+                .lastname("Doe")
+                .build();
+
+        // When Then
+        assertTrue(dto1.equals(dto2) && dto2.equals(dto1));
+    }
+
+    @Test
+    public void testEqualsTransitivity() {
+        // Given
+        ConnectionDTO dto1 = ConnectionDTO.builder()
+                .userId(1L)
+                .firstname("John")
+                .lastname("Doe")
+                .build();
+        ConnectionDTO dto2 = ConnectionDTO.builder()
+                .userId(1L)
+                .firstname("John")
+                .lastname("Doe")
+                .build();
+        ConnectionDTO dto3 = ConnectionDTO.builder()
+                .userId(1L)
+                .firstname("John")
+                .lastname("Doe")
+                .build();
+
+        // When Then
+        assertTrue(dto1.equals(dto2) && dto2.equals(dto3) && dto1.equals(dto3));
+    }
+
+
+    @Test
+    public void testEqualsConsistency() {
+        // Given
+        ConnectionDTO dto1 = ConnectionDTO.builder()
+                .userId(1L)
+                .firstname("John")
+                .lastname("Doe")
+                .build();
+        ConnectionDTO dto2 = ConnectionDTO.builder()
+                .userId(1L)
+                .firstname("John")
+                .lastname("Doe")
+                .build();
+
+        // When Then
+        assertTrue(dto1.equals(dto2));
+        assertTrue(dto1.equals(dto2));
+        assertTrue(dto1.equals(dto2));
+    }
+
+    @Test
+    public void testNotEqualsAllFieldsDifferent() {
+        // Given
+        ConnectionDTO dto1 = ConnectionDTO.builder()
+                .userId(1L)
+                .firstname("John")
+                .lastname("Doe")
+                .build();
+        ConnectionDTO dto2 = ConnectionDTO.builder()
+                .userId(2L)
+                .firstname("Jane")
+                .lastname("Smith")
+                .build();
+
+        // When Then
+        assertFalse(dto1.equals(dto2));
+    }
+
     @Test
     public void hashCode_withNullFields_shouldHandleNullsGracefully() {
         // Given

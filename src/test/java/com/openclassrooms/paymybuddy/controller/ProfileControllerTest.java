@@ -18,9 +18,6 @@ import org.springframework.validation.BindingResult;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-/**
- * The type Profile controller test.
- */
 @ExtendWith(MockitoExtension.class)
 public class ProfileControllerTest {
 
@@ -36,15 +33,9 @@ public class ProfileControllerTest {
     @Mock
     private Model model;
 
-    /**
-     * The Security context.
-     */
     @Mock
     SecurityContext securityContext;
 
-    /**
-     * Sets up.
-     */
     @BeforeEach
     public void setUp() {
         Authentication authentication = mock(Authentication.class);
@@ -53,11 +44,8 @@ public class ProfileControllerTest {
         SecurityContextHolder.setContext(securityContext);
     }
 
-    /**
-     * View profile page should return profile template.
-     */
     @Test
-    public void viewProfilePage_ShouldReturnProfileTemplate() {
+    public void testViewProfilePage_ShouldReturnProfileTemplate() {
         // Given
         String email = "user@example.com";
         Long userId = 1L;
@@ -73,11 +61,24 @@ public class ProfileControllerTest {
         assertEquals("profile", viewName);
     }
 
-    /**
-     * Show edit profile form profile found should return edit profile template.
-     */
     @Test
-    public void showEditProfileForm_ProfileFound_ShouldReturnEditProfileTemplate() {
+    public void testViewProfilePage_ShouldReturnProfileTemplateWithProfileDTONull() {
+        // Given
+        String email = "user@example.com";
+        Long userId = 1L;
+        when(userService.getUserIdByEmail(email)).thenReturn(userId);
+        when(profileService.getProfile(userId)).thenReturn(null);
+
+        // When
+        String viewName = profileController.viewProfilePage(model);
+
+        // Then
+        //verify(model).addAttribute("profileDTO", profileDTO);
+        assertEquals("profile", viewName);
+    }
+
+    @Test
+    public void testShowEditProfileForm_ProfileFound_ShouldReturnEditProfileTemplate() {
         // Given
         Model model = mock(Model.class);
         String email = "user@example.com";
@@ -95,11 +96,8 @@ public class ProfileControllerTest {
         assertEquals("editProfile", viewName);
     }
 
-    /**
-     * Show edit profile form profile not found should redirect to profile page.
-     */
     @Test
-    public void showEditProfileForm_ProfileNotFound_ShouldRedirectToProfilePage() {
+    public void testShowEditProfileForm_ProfileNotFound_ShouldRedirectToProfilePage() {
         // Given
         Model model = mock(Model.class);
         when(SecurityContextHolder.getContext().getAuthentication().getName()).thenReturn("user@example.com");
@@ -113,11 +111,8 @@ public class ProfileControllerTest {
         assertEquals("redirect:/profile", viewName);
     }
 
-    /**
-     * Update profile with validation errors should return edit profile template.
-     */
     @Test
-    public void updateProfile_WithValidationErrors_ShouldReturnEditProfileTemplate() {
+    public void testUpdateProfile_WithValidationErrors_ShouldReturnEditProfileTemplate() {
         // Given
         ProfileDTO profileDTO = ProfileDTO.builder().build();
         BindingResult result = mock(BindingResult.class);
@@ -131,11 +126,8 @@ public class ProfileControllerTest {
         assertEquals("editProfile", viewName);
     }
 
-    /**
-     * Update profile with valid profile update should redirect to profile page.
-     */
     @Test
-    public void updateProfile_WithValidProfileUpdate_ShouldRedirectToProfilePage() {
+    public void testUpdateProfile_WithValidProfileUpdate_ShouldRedirectToProfilePage() {
         // Given
         ProfileDTO profileDTO = ProfileDTO.builder().build();
         BindingResult result = mock(BindingResult.class);
@@ -150,11 +142,8 @@ public class ProfileControllerTest {
         verify(profileService).saveProfile(profileDTO);
     }
 
-    /**
-     * Update profile with exception during profile update should return edit profile template with error.
-     */
     @Test
-    public void updateProfile_WithExceptionDuringProfileUpdate_ShouldReturnEditProfileTemplateWithError() {
+    public void testUpdateProfile_WithExceptionDuringProfileUpdate_ShouldReturnEditProfileTemplateWithError() {
         // Given
         ProfileDTO profileDTO = ProfileDTO.builder().build();
         BindingResult result = mock(BindingResult.class);

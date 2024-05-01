@@ -21,20 +21,21 @@ public class RegisterDTOTest {
     @Autowired
     private Validator validator;
 
+    private RegisterDTO dto;
+
     @BeforeEach
     public void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
+        dto = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("123456789").build();
     }
-
-    private RegisterDTO dto = RegisterDTO.builder()
-            .email("john.doe@example.com")
-            .password("password123")
-            .firstname("John")
-            .lastname("Doe")
-            .birthdate(LocalDate.of(1990, 1, 1))
-            .address("123 Main St")
-            .phone("123456789").build();
 
     @Test
     public void testEmailGetter() {
@@ -378,7 +379,7 @@ public class RegisterDTOTest {
     }
 
     @Test
-    public void hashCode_shouldReturnEqualValuesForEqualObjects() {
+    public void testHashCode_shouldReturnEqualValuesForEqualObjects() {
         // Given
         RegisterDTO dto1 = RegisterDTO.builder()
                 .email("john.doe@example.com")
@@ -409,7 +410,7 @@ public class RegisterDTOTest {
     }
 
     @Test
-    public void hashCode_shouldReturnDifferentValuesForDifferentObjects() {
+    public void testHashCode_shouldReturnDifferentValuesForDifferentObjects() {
         // Given
         RegisterDTO dto1 = RegisterDTO.builder()
                 .email("john.doe@example.com")
@@ -440,7 +441,7 @@ public class RegisterDTOTest {
     }
 
     @Test
-    public void toString_shouldReturnCorrectStringRepresentation() {
+    public void testToString_shouldReturnCorrectStringRepresentation() {
         // Given
         RegisterDTO dto = RegisterDTO.builder()
                 .email("john.doe@example.com")
@@ -463,7 +464,7 @@ public class RegisterDTOTest {
     }
 
     @Test
-    public void equals_shouldReturnTrueWhenObjectsAreEqual() {
+    public void testEquals_shouldReturnTrueWhenObjectsAreEqual() {
         // Given
         RegisterDTO dto1 = RegisterDTO.builder()
                 .email("john.doe@example.com")
@@ -493,7 +494,7 @@ public class RegisterDTOTest {
     }
 
     @Test
-    public void equals_shouldReturnFalseWhenObjectsAreNotEqual() {
+    public void testEquals_shouldReturnFalseWhenObjectsAreNotEqual() {
         // Given
         RegisterDTO dto1 = RegisterDTO.builder()
                 .email("john.doe@example.com")

@@ -149,7 +149,6 @@ public class TransfertTest {
         assertEquals(transfert, identicalTransfert);
     }
 
-
     @Test
     public void testHashCode() {
         // Given
@@ -165,7 +164,6 @@ public class TransfertTest {
         // When Then
         assertEquals(transfert.hashCode(), sameAttributesTransfert.hashCode());
     }
-
 
     @Test
     public void testEquals_NullAndNonNullAmount() {

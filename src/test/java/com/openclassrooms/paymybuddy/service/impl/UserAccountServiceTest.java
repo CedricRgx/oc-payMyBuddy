@@ -3,7 +3,6 @@ package com.openclassrooms.paymybuddy.service.impl;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.openclassrooms.paymybuddy.exceptions.UpdateLastConnectionDateFailedException;
 import com.openclassrooms.paymybuddy.model.UserAccount;
 import com.openclassrooms.paymybuddy.repository.UserAccountRepository;
 import jakarta.persistence.EntityManager;

@@ -46,6 +46,7 @@ public class ConnectionServiceIntegrationTest {
                 .build();
 
         user = userRepository.save(user);
+
         // When
         List<User> connections = connectionService.findAllConnections(user.getUserId());
 

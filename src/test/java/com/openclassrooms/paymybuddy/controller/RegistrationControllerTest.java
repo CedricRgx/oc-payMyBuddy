@@ -16,9 +16,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-/**
- * The type Registration controller test.
- */
 @ExtendWith(MockitoExtension.class)
 public class RegistrationControllerTest {
 
@@ -31,11 +28,8 @@ public class RegistrationControllerTest {
     @InjectMocks
     private RegistrationController registrationController;
 
-    /**
-     * View registration form should return registration form template.
-     */
     @Test
-    public void viewRegistrationForm_ShouldReturnRegistrationFormTemplate() {
+    public void testViewRegistrationForm_ShouldReturnRegistrationFormTemplate() {
         // Given
         RegisterDTO registerDTO = RegisterDTO.builder().build();
         when(model.addAttribute(eq("registerDTO"), any(RegisterDTO.class))).thenReturn(model);
@@ -48,11 +42,8 @@ public class RegistrationControllerTest {
         assertEquals("registrationForm", viewName);
     }
 
-    /**
-     * Add user valid registration redirect to login page.
-     */
     @Test
-    public void addUser_ValidRegistration_RedirectToLoginPage() {
+    public void testAddUser_ValidRegistration_RedirectToLoginPage() {
         // Given
         RegisterDTO registerDTO = RegisterDTO.builder().build();
         BindingResult bindingResult = mock(BindingResult.class);
@@ -66,11 +57,8 @@ public class RegistrationControllerTest {
         assertEquals("redirect:/login", viewName);
     }
 
-    /**
-     * Add user invalid registration returns registration form.
-     */
     @Test
-    public void addUser_InvalidRegistration_ReturnsRegistrationForm() {
+    public void testAddUser_InvalidRegistration_ReturnsRegistrationForm() {
         // Given
         RegisterDTO registerDTO = RegisterDTO.builder().build();
         BindingResult bindingResult = mock(BindingResult.class);
@@ -84,11 +72,8 @@ public class RegistrationControllerTest {
         assertEquals("registrationForm", viewName);
     }
 
-    /**
-     * Add user email already used exception returns registration form with error.
-     */
     @Test
-    public void addUser_EmailAlreadyUsedException_ReturnsRegistrationFormWithError() {
+    public void testAddUser_EmailAlreadyUsedException_ReturnsRegistrationFormWithError() {
         // Given
         RegisterDTO registerDTO = RegisterDTO.builder().build();
         BindingResult bindingResult = mock(BindingResult.class);
@@ -103,11 +88,8 @@ public class RegistrationControllerTest {
         assertEquals("registrationForm", viewName);
     }
 
-    /**
-     * Add user generic exception returns registration form with error.
-     */
     @Test
-    public void addUser_GenericException_ReturnsRegistrationFormWithError() {
+    public void testAddUser_GenericException_ReturnsRegistrationFormWithError() {
         // Given
         RegisterDTO registerDTO = RegisterDTO.builder().build();
         BindingResult bindingResult = mock(BindingResult.class);

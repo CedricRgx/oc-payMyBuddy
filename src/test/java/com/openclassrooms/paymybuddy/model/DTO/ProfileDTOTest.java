@@ -19,18 +19,19 @@ public class ProfileDTOTest {
     @Autowired
     private Validator validator;
 
-    private ProfileDTO dto = ProfileDTO.builder()
-            .email("john.doe@example.com")
-            .firstname("John")
-            .lastname("Doe")
-            .birthdate(LocalDate.of(2022, 5, 1))
-            .address("123 Main St")
-            .phone("123456789").build();
+    private ProfileDTO dto;
 
     @BeforeEach
     public void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
+        dto = ProfileDTO.builder()
+                .email("john.doe@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(2022, 5, 1))
+                .address("123 Main St")
+                .phone("123456789").build();
     }
 
     @Test
@@ -296,7 +297,7 @@ public class ProfileDTOTest {
     }
 
     @Test
-    public void hashCode_shouldReturnSameHashCodeForSameObject() {
+    public void testHashCode_shouldReturnSameHashCodeForSameObject() {
         // Given
         ProfileDTO dto = ProfileDTO.builder()
                 .email("john.doe@example.com")
@@ -316,7 +317,7 @@ public class ProfileDTOTest {
     }
 
     @Test
-    public void hashCode_shouldReturnSameValueForEqualObjects() {
+    public void testHashCode_shouldReturnSameValueForEqualObjects() {
         // Given
         ProfileDTO dto1 = ProfileDTO.builder()
                 .email("john.doe@example.com")
@@ -345,7 +346,7 @@ public class ProfileDTOTest {
     }
 
     @Test
-    public void hashCode_shouldReturnDifferentValueForDifferentObjects() {
+    public void testHashCode_shouldReturnDifferentValueForDifferentObjects() {
         // Given
         ProfileDTO dto1 = ProfileDTO.builder()
                 .email("john.doe@example.com")
@@ -374,7 +375,7 @@ public class ProfileDTOTest {
     }
 
     @Test
-    public void toString_shouldReturnExpectedString() {
+    public void testToString_shouldReturnExpectedString() {
         // Given
         ProfileDTO dto = ProfileDTO.builder()
                 .email("john.doe@example.com")
@@ -395,7 +396,7 @@ public class ProfileDTOTest {
     }
 
     @Test
-    public void equals_withEqualObjects_shouldReturnTrue() {
+    public void testEquals_withEqualObjects_shouldReturnTrue() {
         // Given
         ProfileDTO dto1 = ProfileDTO.builder()
                 .email("john.doe@example.com")
@@ -423,7 +424,7 @@ public class ProfileDTOTest {
     }
 
     @Test
-    public void equals_withDifferentObjects_shouldReturnFalse() {
+    public void testEquals_withDifferentObjects_shouldReturnFalse() {
         // Given
         ProfileDTO dto1 = ProfileDTO.builder()
                 .email("john.doe@example.com")
@@ -451,7 +452,7 @@ public class ProfileDTOTest {
     }
 
     @Test
-    public void equals_withNullObject_shouldReturnFalse() {
+    public void testEquals_withNullObject_shouldReturnFalse() {
         // Given
         ProfileDTO dto = ProfileDTO.builder()
                 .email("john.doe@example.com")
@@ -470,7 +471,7 @@ public class ProfileDTOTest {
     }
 
     @Test
-    public void equals_withDifferentFirstnames_shouldReturnFalse() {
+    public void testEquals_withDifferentFirstnames_shouldReturnFalse() {
         // Given
         ProfileDTO dto1 = ProfileDTO.builder()
                 .email("john.doe@example.com")
@@ -498,7 +499,7 @@ public class ProfileDTOTest {
     }
 
     @Test
-    public void hashCode_consistencyCheck_shouldReturnSameValue() {
+    public void testHashCode_consistencyCheck_shouldReturnSameValue() {
         // Given
         ProfileDTO dto = ProfileDTO.builder()
                 .email("john.doe@example.com")
@@ -519,7 +520,7 @@ public class ProfileDTOTest {
     }
 
     @Test
-    public void equals_reflexivityCheck_shouldReturnTrue() {
+    public void testEquals_reflexivityCheck_shouldReturnTrue() {
         // Given
         ProfileDTO dto = ProfileDTO.builder()
                 .email("john.doe@example.com")
@@ -535,7 +536,7 @@ public class ProfileDTOTest {
     }
 
     @Test
-    public void equals_symmetryCheck_shouldBeSymmetric() {
+    public void testEquals_symmetryCheck_shouldBeSymmetric() {
         // Given
         ProfileDTO dto1 = ProfileDTO.builder()
                 .email("john.doe@example.com")
@@ -560,7 +561,7 @@ public class ProfileDTOTest {
     }
 
     @Test
-    public void equals_transitivityCheck_shouldBeTransitive() {
+    public void testEquals_transitivityCheck_shouldBeTransitive() {
         // Given
         ProfileDTO dto1 = ProfileDTO.builder()
                 .email("john.doe@example.com")
@@ -641,8 +642,6 @@ public class ProfileDTOTest {
         // When Then
         assertTrue(dto.hashCode() == dto.hashCode());
     }
-
-
 
     @Test
     public void testEquals_DifferentEmails() {
@@ -1114,8 +1113,4 @@ public class ProfileDTOTest {
         // Then
         assertNotEquals(originalHashCode, mutatedHashCode);
     }
-
-
-
-
 }

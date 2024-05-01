@@ -168,7 +168,7 @@ public class TransactionTest {
     }
 
     @Test
-    public void hashCode_SameObject_ReturnsSameHashCode() {
+    public void testHashCode_SameObject_ReturnsSameHashCode() {
         // Given
         LocalDateTime transactionDate = LocalDateTime.now();
         User author = User.builder().build();
@@ -191,7 +191,7 @@ public class TransactionTest {
     }
 
     @Test
-    public void hashCode_DifferentObjectsWithSameProperties_ReturnsSameHashCode() {
+    public void testHashCode_DifferentObjectsWithSameProperties_ReturnsSameHashCode() {
         // Given
         LocalDateTime transactionDate = LocalDateTime.now();
         User author = User.builder().build();
@@ -223,7 +223,7 @@ public class TransactionTest {
     }
 
     @Test
-    public void hashCode_DifferentObjectsWithDifferentProperties_ReturnsDifferentHashCodes() {
+    public void testHashCode_DifferentObjectsWithDifferentProperties_ReturnsDifferentHashCodes() {
         // Given
         LocalDateTime transactionDate = LocalDateTime.now();
         User author1 = User.builder().build();
@@ -256,7 +256,7 @@ public class TransactionTest {
     }
 
     @Test
-    public void equals_ReturnsTrue_WhenSameObject() {
+    public void testEquals_ReturnsTrue_WhenSameObject() {
         // Given
         Transaction transaction = Transaction.builder().build();
 
@@ -265,7 +265,7 @@ public class TransactionTest {
     }
 
     @Test
-    public void equals_ReturnsFalse_WhenNullObject() {
+    public void testEquals_ReturnsFalse_WhenNullObject() {
         // Given
         Transaction transaction = Transaction.builder().build();
 
@@ -274,7 +274,7 @@ public class TransactionTest {
     }
 
     @Test
-    public void equals_ReturnsFalse_WhenDifferentClass() {
+    public void testEquals_ReturnsFalse_WhenDifferentClass() {
         // Given
         Transaction transaction = Transaction.builder().build();
         Object obj = new Object();
@@ -284,7 +284,7 @@ public class TransactionTest {
     }
 
     @Test
-    public void equals_ReturnsTrue_WhenSameId() {
+    public void testEquals_ReturnsTrue_WhenSameId() {
         // Given
         Long transactionId = 1L;
         Transaction transaction1 = Transaction.builder().transactionId(transactionId).build();
@@ -295,7 +295,7 @@ public class TransactionTest {
     }
 
     @Test
-    public void equals_ReturnsFalse_WhenDifferentId() {
+    public void testEquals_ReturnsFalse_WhenDifferentId() {
         // Given
         Transaction transaction1 = Transaction.builder().transactionId(1L).build();
         Transaction transaction2 = Transaction.builder().transactionId(2L).build();
@@ -305,7 +305,7 @@ public class TransactionTest {
     }
 
     @Test
-    public void equals_ReturnsTrue_WhenBothIdsNull() {
+    public void testEquals_ReturnsTrue_WhenBothIdsNull() {
         // Given
         Transaction transaction1 = Transaction.builder().build();
         Transaction transaction2 = Transaction.builder().build();
@@ -423,7 +423,7 @@ public class TransactionTest {
     }
 
     @Test
-    public void hashCode_NullFields_Test() {
+    public void testHashCode_NullFields_Test() {
         // Given
         User author = User.builder().build();
         Transaction transaction1 = Transaction.builder()
