@@ -63,6 +63,10 @@ public class PasswordController {
     public String changePassword(@Valid @ModelAttribute("passwordChange") PasswordUpdateDTO passwordUpdateDTO, BindingResult result, HttpServletRequest request) {
         log.info("passwordUpdateForm template for update");
 
+        if(result.hasErrors()){
+            return "passwordUpdateForm";
+        }
+
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<UserAccount> optionalUserAccount = userAccountService.findByEmail(email);
         if (!optionalUserAccount.isPresent()) {

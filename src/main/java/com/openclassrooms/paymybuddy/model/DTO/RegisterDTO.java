@@ -102,7 +102,7 @@ public class RegisterDTO {
      */
     @NotNull(message = "{phone.notnull}")
     @NotEmpty(message = "{phone.notempty}")
-    @Pattern(regexp="^[0-9]+$", message ="{phone.pattern}")
+    @Pattern(regexp="^[0-9]{10}$", message ="{phone.pattern}")
     private String phone;
 
 }

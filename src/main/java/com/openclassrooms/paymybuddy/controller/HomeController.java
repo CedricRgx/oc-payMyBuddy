@@ -1,9 +1,6 @@
 package com.openclassrooms.paymybuddy.controller;
 
-import com.openclassrooms.paymybuddy.model.DTO.ConnectionDTO;
 import com.openclassrooms.paymybuddy.model.DTO.UserDTO;
-import com.openclassrooms.paymybuddy.model.User;
-import com.openclassrooms.paymybuddy.service.impl.AppAccountService;
 import com.openclassrooms.paymybuddy.service.impl.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * Controller responsible for managing the homepage of the PayMyBuddy application.
@@ -49,7 +45,7 @@ public class HomeController {
      * @return The redirect path after processing the credit balance.
      */
     @PostMapping("/creditBalance")
-    public String creditBalance(@RequestParam("amount") double amount, Model model) {
+    public String creditBalance(@RequestParam("amount") double amount, Model model, RedirectAttributes redirectAttributes) {
         log.info("Credit balance: {}", amount);
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -57,9 +53,9 @@ public class HomeController {
         setUserDTOHome(model, email);
         userService.creditUserBalance(userId, amount);
 
-        model.addAttribute("successMessage", "Balance credited successfully.");
+        redirectAttributes.addFlashAttribute("successMessage", "Balance credited successfully.");
 
-        return "home";
+        return "redirect:home";
     }
 
     /**
