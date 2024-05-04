@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -60,17 +62,18 @@ public class HomeControllerTest {
         String email = "user@example.com";
         Long userId = 1L;
         Model model = mock(Model.class);
+        RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
 
         when(userService.getUserIdByEmail(email)).thenReturn(userId);
 
         // When
-        String result = homeController.creditBalance(amount, model);
+        String result = homeController.creditBalance(amount, model, redirectAttributes);
 
         // Then
         verify(userService).getUserIdByEmail(email);
         verify(userService).creditUserBalance(userId, amount);
-        verify(model).addAttribute("successMessage", "Balance credited successfully.");
-        assertEquals("home", result);
+        verify(redirectAttributes).addFlashAttribute("successMessage", "Balance credited successfully.");
+        assertEquals("redirect:home", result);
     }
 
 }
