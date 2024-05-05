@@ -192,4 +192,28 @@ public class UserService implements IUserService {
         }
     }
 
+    /**
+     * Debits the balance of a user's associated app account.
+     *
+     * @param userId The ID of the user whose balance needs to be debited.
+     * @param amount The amount to debit.
+     * @throws IllegalArgumentException If the user with the specified ID is not found.
+     * @throws IllegalStateException    If the app account associated with the user is not found.
+     */
+    public void debitUserBalance(Long userId, double amount) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user != null) {
+            AppAccount appAccount = user.getAppAccount();
+            if (appAccount != null) {
+                double newBalance = appAccount.getBalance() - amount;
+                appAccount.setBalance(newBalance);
+                userRepository.save(user);
+            } else {
+                throw new IllegalStateException("AppAccount not found for User with ID: " + userId);
+            }
+        } else {
+            throw new IllegalArgumentException("User not found with ID: " + userId);
+        }
+    }
+
 }

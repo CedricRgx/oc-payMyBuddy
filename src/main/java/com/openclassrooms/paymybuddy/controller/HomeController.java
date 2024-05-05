@@ -45,15 +45,47 @@ public class HomeController {
      * @return The redirect path after processing the credit balance.
      */
     @PostMapping("/creditBalance")
-    public String creditBalance(@RequestParam("amount") double amount, Model model, RedirectAttributes redirectAttributes) {
+    public String creditBalance(@RequestParam("creditAmount") double amount, Model model, RedirectAttributes redirectAttributes) {
         log.info("Credit balance: {}", amount);
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Long userId = userService.getUserIdByEmail(email);
         setUserDTOHome(model, email);
-        userService.creditUserBalance(userId, amount);
 
-        redirectAttributes.addFlashAttribute("successMessage", "Balance credited successfully.");
+        if(amount<=0){
+            redirectAttributes.addFlashAttribute("errorCreditMinusZeroMessage", "Balance credit unsuccessful. The amount must higher than zero.");
+        }else{
+            userService.creditUserBalance(userId, amount);
+            redirectAttributes.addFlashAttribute("successCreditMessage", "Balance credited successfully.");
+        }
+
+        return "redirect:home";
+    }
+
+    /**
+     * Handles the submission of the debit balance form.
+     *
+     * @param amount The amount to debit.
+     * @param model The Model object used for adding attributes to be rendered on the view.
+     * @return The redirect path after processing the debit balance.
+     */
+    @PostMapping("/debitBalance")
+    public String debitBalance(@RequestParam("debitAmount") double amount, Model model, RedirectAttributes redirectAttributes) {
+        log.info("Debit balance: {}", amount);
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Long userId = userService.getUserIdByEmail(email);
+        setUserDTOHome(model, email);
+        double balanceAmount = userService.getUserBalance(userId);
+
+        if (amount <= 0) {
+            redirectAttributes.addFlashAttribute("errorDebitMinusZeroMessage", "Balance debit unsuccessful. The amount must be higher than zero.");
+        } else if(amount > balanceAmount) {
+            redirectAttributes.addFlashAttribute("errorDebitLowerThanBalanceMessage", "Balance debit unsuccessful. The amount must be lower than your current balance.");
+        } else{
+            userService.debitUserBalance(userId, amount);
+            redirectAttributes.addFlashAttribute("successDebitMessage", "Balance debited successfully.");
+        }
 
         return "redirect:home";
     }
