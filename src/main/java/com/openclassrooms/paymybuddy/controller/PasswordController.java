@@ -1,8 +1,8 @@
 package com.openclassrooms.paymybuddy.controller;
 
 import com.openclassrooms.paymybuddy.model.DTO.PasswordUpdateDTO;
-import com.openclassrooms.paymybuddy.model.UserAccount;
-import com.openclassrooms.paymybuddy.service.impl.UserAccountService;
+import com.openclassrooms.paymybuddy.model.User;
+import com.openclassrooms.paymybuddy.service.impl.UserService;
 import jakarta.servlet.http.*;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Optional;
 
-import static java.util.regex.Pattern.matches;
 
 /**
  * Controller responsible for managing password updates for users of the PayMyBuddy application.
@@ -28,7 +27,7 @@ import static java.util.regex.Pattern.matches;
 public class PasswordController {
 
     @Autowired
-    private UserAccountService userAccountService;
+    private UserService userService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -68,14 +67,14 @@ public class PasswordController {
         }
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<UserAccount> optionalUserAccount = userAccountService.findByEmail(email);
-        if (!optionalUserAccount.isPresent()) {
+        Optional<User> optionalUser = userService.findByEmail(email);
+        if (!optionalUser.isPresent()) {
             log.info("User not found with email: {}", email);
             result.rejectValue("currentPassword", "error.userNotFound", "User not found.");
             return "passwordUpdateForm";
         }
 
-        String currentPasswordsaved = optionalUserAccount.get().getPassword();
+        String currentPasswordsaved = optionalUser.get().getPassword();
 
         if (!passwordEncoder.matches(passwordUpdateDTO.getCurrentPassword(), currentPasswordsaved)) {
             result.rejectValue("currentPassword", "error.currentPassword", "The current password is incorrect.");
@@ -87,7 +86,7 @@ public class PasswordController {
             return "passwordUpdateForm";
         }
 
-        userAccountService.savePassword(passwordEncoder.encode(passwordUpdateDTO.getNewPassword()), email);
+        userService.savePassword(passwordEncoder.encode(passwordUpdateDTO.getNewPassword()), email);
 
         // Log out the user
         SecurityContextHolder.clearContext();

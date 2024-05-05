@@ -50,7 +50,7 @@ public class HomeController {
         log.info("Credit balance: {}", amount);
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Long userId = userService.getUserIdByEmail(email);
+        Long userId = userService.findByEmail(email).get().getUserId();
         setUserDTOHome(model, email);
 
         if(amount<=0){
@@ -76,7 +76,7 @@ public class HomeController {
         log.info("Debit balance: {}", amount);
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Long userId = userService.getUserIdByEmail(email);
+        Long userId = userService.findByEmail(email).get().getUserId();
         setUserDTOHome(model, email);
         double balanceAmount = userService.getUserBalance(userId);
 

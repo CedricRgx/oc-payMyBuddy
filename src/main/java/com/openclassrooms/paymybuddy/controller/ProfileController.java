@@ -38,7 +38,7 @@ public class ProfileController {
     public String viewProfilePage(Model model){
         log.info("profile template");
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long userId = userService.getUserIdByEmail(email);
+        Long userId = userService.findByEmail(email).get().getUserId();
         ProfileDTO profileDTO = profileService.getProfile(userId);
         if(profileDTO==null){
             log.error("Profile not found");
@@ -57,7 +57,7 @@ public class ProfileController {
     @GetMapping("/editProfile")
     public String showEditProfileForm(Model model){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long userId = userService.getUserIdByEmail(email);
+        Long userId = userService.findByEmail(email).get().getUserId();
         ProfileDTO profileDTO = profileService.getProfile(userId);
         if (profileDTO == null) {
             log.error("Profile not found for editing");

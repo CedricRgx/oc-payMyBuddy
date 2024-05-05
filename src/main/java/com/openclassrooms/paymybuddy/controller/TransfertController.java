@@ -52,7 +52,7 @@ public class TransfertController {
     public String viewTransfertPage(Model model, HttpSession session, @RequestParam(name="page", defaultValue = "0") int page, @RequestParam(name="size", defaultValue = "3") int size) {
         log.info("transfert template");
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long userId = userService.getUserIdByEmail(email);
+        Long userId = userService.findByEmail(email).get().getUserId();
         User userConnected = userService.getUserById(userId).get();
         List<ConnectionDTO> listOfConnections = userService.getActiveFriends(userConnected.getFriends());
 

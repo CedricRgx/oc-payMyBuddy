@@ -1,19 +1,16 @@
 package com.openclassrooms.paymybuddy.config;
 
-import com.openclassrooms.paymybuddy.model.UserAccount;
-import com.openclassrooms.paymybuddy.repository.UserAccountRepository;
-import com.openclassrooms.paymybuddy.service.impl.UserAccountService;
+import com.openclassrooms.paymybuddy.model.User;
+import com.openclassrooms.paymybuddy.repository.UserRepository;
+import com.openclassrooms.paymybuddy.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,10 +21,10 @@ import java.util.List;
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private UserAccountRepository userAccountRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    private UserAccountService userAccountService;
+    private UserService userService;
 
     /**
      * Loads the user details required by Spring Security for authentication and authorization, based on the username provided.
@@ -38,17 +35,17 @@ public class CustomUserDetailsService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserAccount userAccount = userAccountRepository.findByEmail(username);
-        if(userAccount==null){
+        User user = userService.findByEmail(username).get();
+        if(user==null){
             throw new UsernameNotFoundException("No user found with this email : " + username);
         }
 
-        boolean enabled = userAccount.getIsActive();
+        boolean enabled = user.getIsActive();
         if(enabled){
-            userAccountService.updateLastConnectionDate(userAccount.getUserAccountId());
+            userService.updateLastConnectionDate(user.getUserId());
         }
 
-        return new User(userAccount.getEmail(), userAccount.getPassword(), enabled, true, true, true, getGrantedAuthorities(userAccount.getRole()));
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), enabled, true, true, true, getGrantedAuthorities(user.getRole()));
     }
 
     /**

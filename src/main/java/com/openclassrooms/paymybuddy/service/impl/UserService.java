@@ -1,5 +1,6 @@
 package com.openclassrooms.paymybuddy.service.impl;
 
+import com.openclassrooms.paymybuddy.exceptions.UpdateLastConnectionDateFailedException;
 import com.openclassrooms.paymybuddy.model.AppAccount;
 import com.openclassrooms.paymybuddy.model.DTO.ConnectionDTO;
 import com.openclassrooms.paymybuddy.model.DTO.UserDTO;
@@ -10,9 +11,12 @@ import com.openclassrooms.paymybuddy.service.IUserService;
 import com.openclassrooms.paymybuddy.util.Formatter;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -76,7 +80,7 @@ public class UserService implements IUserService {
      * @param email email of the user
      * @return userId
      */
-    public Long getUserIdByEmail(String email) {
+/*    public Long getUserIdByEmail(String email) {
         log.info("getUserIdByEmail in UserService");
         String jpql = "SELECT u.id FROM User u " +
                 "JOIN u.userAccount ua " +
@@ -85,7 +89,7 @@ public class UserService implements IUserService {
                 .setParameter("email", email)
                 .getSingleResult();
         return userId;
-    }
+    }*/
 
     /**
      * Retrieves a list of active friends for a given list of user friends.
@@ -97,7 +101,7 @@ public class UserService implements IUserService {
         log.info("getActiveFriends in UserService");
         List<ConnectionDTO> listOfActiveFriends = new ArrayList<ConnectionDTO>();
         for(User u : listOfFriends) {
-            if(u.getUserAccount().getIsActive() == true) {
+            if(u.getIsActive() == true) {
                 ConnectionDTO connectionDTO = ConnectionDTO.builder()
                         .userId(u.getUserId())
                         .firstname(u.getFirstname())
@@ -117,7 +121,7 @@ public class UserService implements IUserService {
      */
     public UserDTO getUserDTOFromUser(String email){
         log.info("getUserDTOFromUser in UserService");
-        Long userId = getUserIdByEmail(email);
+        Long userId = findByEmail(email).get().getUserId();
         User user = getUserById(userId).get();
         Formatter fd = new Formatter();
         String balanceFormatted = fd.formatDoubleToString(user.getAppAccount().getBalance());
@@ -215,6 +219,59 @@ public class UserService implements IUserService {
         } else {
             throw new IllegalArgumentException("User not found with ID: " + userId);
         }
+    }
+
+    /**
+     * Finds a user account by email.
+     *
+     * @param email The email address to search for.
+     * @return An UserAccount containing the user account if found, otherwise an empty Optional.
+     */
+    public Optional<User> findByEmail(String email){
+        log.info("Found an user by its email address: {} " + email);
+        return Optional.ofNullable(userRepository.findByEmail(email));
+    }
+
+    /**
+     * Check if email is unique for registration
+     * @param email email for query
+     * @return boolean
+     */
+    public boolean isEmailUnique(String email){
+        log.info("isEmailUnique in UserAccountService");
+        String jpql = "SELECT COUNT(ua) FROM UserAccount ua WHERE ua.email = :email";
+        TypedQuery<Long> query = entityManager.createQuery(jpql, Long.class);
+        query.setParameter("email", email);
+        Long count = query.getSingleResult();
+        return count==0;
+    }
+
+    /**
+     * Updates the last connection date of a user account.
+     *
+     * @param userId The ID of the user account to update.
+     * @throws UpdateLastConnectionDateFailedException if the update operation fails.
+     */
+    public void updateLastConnectionDate(Long userId) {
+        log.info("updateLastConnectionDate in UserAccountService");
+        User user = userRepository.findById(userId).get();
+        user.setLastConnectionDate(LocalDateTime.now());
+        userRepository.save(user);
+    }
+
+    /**
+     * Updates the password for a user account identified by email.
+     *
+     * @param password The new password to set, typically after being encrypted.
+     * @param email The email address of the user account to update.
+     * @return True if the password was successfully updated, False otherwise.
+     */
+    public boolean savePassword(String password, String email) {
+        log.info("savePassword in UserAccountService");
+        User user = userRepository.findByEmail(email);
+        user.setPassword(password);
+        userRepository.save(user);
+        return true;
     }
 
 }

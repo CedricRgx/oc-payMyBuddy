@@ -112,7 +112,7 @@ public class TransfertService implements ITransfertService {
         log.info("addNewTransfert service");
         double fee = 0.05;
         String emailAuthor = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long userAuthorId = userService.getUserIdByEmail(emailAuthor);
+        Long userAuthorId = userService.findByEmail(emailAuthor).get().getUserId();
         Optional<User> userAuthorOptional = userService.getUserById(userAuthorId);
         if (!userAuthorOptional.isPresent()) {
             log.info("Author user not found");

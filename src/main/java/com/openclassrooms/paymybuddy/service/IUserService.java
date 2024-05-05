@@ -42,14 +42,6 @@ public interface IUserService {
     public void deleteUserById(Long id);
 
     /**
-     * Retrieves the ID of a user by their email.
-     *
-     * @param email The email of the user.
-     * @return The ID of the user with the specified email.
-     */
-    public Long getUserIdByEmail(String email);
-
-    /**
      * Retrieves active friends of a user.
      *
      * @param listOfFriends The list of friends of the user.

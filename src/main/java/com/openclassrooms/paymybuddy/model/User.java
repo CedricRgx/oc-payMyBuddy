@@ -1,14 +1,11 @@
 package com.openclassrooms.paymybuddy.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -62,13 +59,6 @@ public class User implements Serializable {
     private String address;
 
     /**
-     * The account of the user.
-     */
-    @OneToOne
-    @JoinColumn(name="user_account_id")
-    private UserAccount userAccount;
-
-    /**
      * The app account of the user.
      */
     @OneToOne
@@ -98,6 +88,35 @@ public class User implements Serializable {
             orphanRemoval = true)
     private List<Transfert> receivedTransferts;
 
+    /**
+     * The email of the user.
+     */
+    @Column(name="email")
+    private String email;
+
+    /**
+     * The password of the user.
+     */
+    @Column(name="password")
+    private String password;
+
+    /**
+     * The date of the last connection on the application.
+     */
+    @Column(name="last_connection_date")
+    private LocalDateTime lastConnectionDate;
+
+    /**
+     * The status of the account (true if the account is active).
+     */
+    @Column(name="is_active")
+    private Boolean isActive;
+
+    /**
+     * The role of the user
+     */
+    @Column(name="role")
+    private String role;
 
     /**
      * Constructor with essential fields.
@@ -108,19 +127,27 @@ public class User implements Serializable {
      * @param phone The phone of the user
      * @param address The address of the user
      * @param appAccount The appAccount of the user
-     * @param userAccount The userAccount of the user
      * @param friends The list of friends of the user
+     * @param email The email of the user
+     * @param password  The password of the user
+     * @param lastConnectionDate The last date of connection on the application
+     * @param isActive The status of the account
+     * @param role The role of the user
      */
     @Builder
-    public User(String firstname, String lastname, LocalDate birthdate, String phone, String address, AppAccount appAccount, UserAccount userAccount, List<User> friends){
+    public User(String firstname, String lastname, LocalDate birthdate, String phone, String address, AppAccount appAccount, List<User> friends, String email, String password, LocalDateTime lastConnectionDate, Boolean isActive, String role){
         this.firstname = firstname;
         this.lastname = lastname;
         this.birthdate = birthdate;
         this.phone = phone;
         this.address = address;
         this.appAccount = appAccount;
-        this.userAccount = userAccount;
         this.friends = friends;
+        this.email = email;
+        this.password = password;
+        this.lastConnectionDate = lastConnectionDate;
+        this.isActive = isActive;
+        this.role = role;
     }
 
 }

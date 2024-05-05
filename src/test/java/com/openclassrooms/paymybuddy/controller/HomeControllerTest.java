@@ -64,7 +64,7 @@ public class HomeControllerTest {
         Model model = mock(Model.class);
         RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
 
-        when(userService.getUserIdByEmail(email)).thenReturn(userId);
+        when(userService.findByEmail(email).get().getUserId()).thenReturn(userId);
 
         // When
         String result = homeController.creditBalance(amount, model, redirectAttributes);

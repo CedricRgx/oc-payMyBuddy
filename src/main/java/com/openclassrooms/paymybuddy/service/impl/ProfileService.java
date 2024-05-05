@@ -2,7 +2,6 @@ package com.openclassrooms.paymybuddy.service.impl;
 
 import com.openclassrooms.paymybuddy.model.DTO.ProfileDTO;
 import com.openclassrooms.paymybuddy.model.User;
-import com.openclassrooms.paymybuddy.model.UserAccount;
 import com.openclassrooms.paymybuddy.service.IProfileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +19,7 @@ import java.util.Optional;
 public class ProfileService implements IProfileService {
 
     @Autowired
-    UserService userService;
-
-    @Autowired
-    UserAccountService userAccountService;
+    private UserService userService;
 
     /**
      * Retrieves the profile details of a specific user by their user ID.
@@ -35,7 +31,7 @@ public class ProfileService implements IProfileService {
         log.info("getProfile from the userId");
         Optional<User> user = userService.getUserById(userId);
         ProfileDTO profileDTO = ProfileDTO.builder()
-                .email(user.get().getUserAccount().getEmail())
+                .email(user.get().getEmail())
                 .firstname(user.get().getFirstname())
                 .lastname(user.get().getLastname())
                 .birthdate(user.get().getBirthdate())
@@ -56,16 +52,16 @@ public class ProfileService implements IProfileService {
     public User saveProfile(ProfileDTO profileDTO){
         log.info("updating an user profile");
 
-        Optional<UserAccount> existingUserAccount = userAccountService.findByEmail(profileDTO.getEmail());
+        Optional<User> existingUserAccount = userService.findByEmail(profileDTO.getEmail());
         if (!existingUserAccount.isPresent()) {
             throw new UsernameNotFoundException("UserAccount not found with email: " + profileDTO.getEmail());
         }
-        UserAccount userAccount = existingUserAccount.get();
+        User userAccount = existingUserAccount.get();
         userAccount.setLastConnectionDate(LocalDateTime.now());
 
-        userAccountService.addUserAccount(userAccount);
+        userService.addUser(userAccount);
 
-        Long existingUserId = userService.getUserIdByEmail(profileDTO.getEmail());
+        Long existingUserId = userService.findByEmail(profileDTO.getEmail()).get().getUserId();
         Optional<User> existingUser = userService.getUserById(existingUserId);
         if(existingUser == null){
             throw new UsernameNotFoundException("User not found with email: " + profileDTO.getEmail());

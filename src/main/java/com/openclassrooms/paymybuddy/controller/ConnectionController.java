@@ -40,7 +40,7 @@ public class ConnectionController {
     public String showConnectionList(Model model) {
         log.info("Get on listConnections");
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long userId = userService.getUserIdByEmail(email);
+        Long userId = userService.findByEmail(email).get().getUserId();
         setAttributeListOfConnections(model, userId);
         return "listConnections";
     }
@@ -57,7 +57,7 @@ public class ConnectionController {
     public String searchConnection(Model model, @RequestParam(value = "query", required = false) String query) {
         log.info("Get on searchConnection");
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long userId = userService.getUserIdByEmail(email);
+        Long userId = userService.findByEmail(email).get().getUserId();
 
         List<User> searchResults;
         if (query != null && !query.isEmpty()) {
@@ -82,7 +82,7 @@ public class ConnectionController {
     public String addConnection(@RequestParam("friendId") Long friendId, RedirectAttributes redirectAttributes) {
         log.info("Get on addConnection");
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long userId = userService.getUserIdByEmail(email);
+        Long userId = userService.findByEmail(email).get().getUserId();
         boolean resultAddConnection = connectionService.addConnection(userId, friendId);
 
         if (resultAddConnection) {
@@ -107,7 +107,7 @@ public class ConnectionController {
     public String removeConnection(@RequestParam("friendId") Long friendId, Model model) {
         log.info("DELETE on removeConnection");
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long userId = userService.getUserIdByEmail(email);
+        Long userId = userService.findByEmail(email).get().getUserId();
 
         boolean resultRemoveConnection = connectionService.removeConnection(userId, friendId);
 
