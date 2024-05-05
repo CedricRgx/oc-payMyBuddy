@@ -35,4 +35,10 @@ public class UserDTO {
      */
     private String balance;
 
+    /**
+     * The IBAN of the app account of the user.
+     */
+    private String iban;
+
+
 }

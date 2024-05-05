@@ -53,6 +53,7 @@ public class RegisterService implements IRegisterService {
         log.info("Creating new AppAccount");
         AppAccount newAppAccount = AppAccount.builder()
                 .balance(0.00)
+                .iban(registerDTO.getIban())
                 .build();
         appAccountService.addAppAccount(newAppAccount);
         Long appAccountId = newAppAccount.getAppAccountId();

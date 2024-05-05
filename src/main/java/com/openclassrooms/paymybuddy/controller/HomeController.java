@@ -42,6 +42,7 @@ public class HomeController {
      *
      * @param amount The amount to credit.
      * @param model The Model object used for adding attributes to be rendered on the view.
+     * @param redirectAttributes Used to add attributes that will be available in the model after the redirect.
      * @return The redirect path after processing the credit balance.
      */
     @PostMapping("/creditBalance")
@@ -67,6 +68,7 @@ public class HomeController {
      *
      * @param amount The amount to debit.
      * @param model The Model object used for adding attributes to be rendered on the view.
+     * @param redirectAttributes Used to add attributes that will be available in the model after the redirect.
      * @return The redirect path after processing the debit balance.
      */
     @PostMapping("/debitBalance")

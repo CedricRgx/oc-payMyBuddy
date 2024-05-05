@@ -41,6 +41,7 @@ public class ProfileService implements IProfileService {
                 .birthdate(user.get().getBirthdate())
                 .phone(user.get().getPhone())
                 .address(user.get().getAddress())
+                .iban(user.get().getAppAccount().getIban())
                 .build();
         return profileDTO;
     }
@@ -77,6 +78,7 @@ public class ProfileService implements IProfileService {
         user.setBirthdate(profileDTO.getBirthdate());
         user.setAddress(profileDTO.getAddress());
         user.setPhone(profileDTO.getPhone());
+        user.getAppAccount().setIban(profileDTO.getIban());
         userService.addUser(user);
 
         log.info("User profile updated successfully");

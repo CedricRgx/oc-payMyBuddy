@@ -12,6 +12,7 @@
   <div class="container col-6 d-flex flex-column align-items-center justify-content-center">
     <div class="mb-5 text-center">
       <h3>Welcome <span th:text="${#strings.concat(userDTO.firstname, ' ', userDTO.lastname)}"></span>, there are <span th:text="${userDTO.balance}"></span> on your account.</h3>
+      <h6>This bank account <span th:text="${userDTO.iban}"></span> is linked to your PayMyBuddy account. You can modify it on your profile settings (Profile page).</h6>
     </div>
 
     <form th:action="@{/creditBalance}" method="post" class="mb-3">

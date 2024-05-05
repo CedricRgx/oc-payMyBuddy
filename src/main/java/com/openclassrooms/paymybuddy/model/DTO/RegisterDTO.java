@@ -105,4 +105,12 @@ public class RegisterDTO {
     @Pattern(regexp="^[0-9]{10}$", message ="{phone.pattern}")
     private String phone;
 
+    /**
+     * The user's iban, validated to ensure it contains only 27 characters.
+     */
+    @NotNull(message = "{iban.notnull}")
+    @NotEmpty(message = "{iban.notempty}")
+    @Pattern(regexp="^FR\\d{25}$", message ="{iban.pattern}")
+    private String iban;
+
 }

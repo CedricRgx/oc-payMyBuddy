@@ -4,10 +4,8 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * Represents an app account of an user in the PayMyBuddy application.
@@ -34,13 +32,20 @@ public class AppAccount implements Serializable {
     private double balance;
 
     /**
+     * The iban of the transfert.
+     */
+    @Column(name= "iban1")
+    private String iban;
+
+    /**
      * Constructor with essential fields.
      *
      * @param balance The balance of the account
-     * @param appOwner The owner of app account
+     * @param iban The iban of the bank account of the user
      */
     @Builder
-    public AppAccount(double balance, User appOwner){
+    public AppAccount(double balance, String iban){
         this.balance = balance;
+        this.iban = iban;
     }
 }

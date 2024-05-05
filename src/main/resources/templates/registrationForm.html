@@ -61,6 +61,13 @@
               <div class="text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
             </div>
           </div>
+          <div class="row mb-2">
+            <label class="col-md-4 col-form-label">IBAN</label>
+            <div class="col-md-8">
+              <input type="text" name="iban" class="form-control" placeholder="Enter your iban" th:value="${registerDTO.iban}">
+              <div class="text-danger" th:if="${#fields.hasErrors('iban')}" th:errors="*{iban}"></div>
+            </div>
+          </div>
           <div class="mt-3 d-flex justify-content-end">
             <button type="submit" class="btn btn-success">Save</button>
           </div>

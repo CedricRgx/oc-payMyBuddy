@@ -128,6 +128,7 @@ public class UserService implements IUserService {
                 .phone(user.getPhone())
                 .address(user.getAddress())
                 .balance(balanceFormattedWithCurrency)
+                .iban(user.getAppAccount().getIban())
                 .build();
         return userDTO;
     }

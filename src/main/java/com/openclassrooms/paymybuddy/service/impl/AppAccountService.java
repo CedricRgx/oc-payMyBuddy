@@ -28,7 +28,7 @@ public class AppAccountService implements IAppAccountService {
     }
 
     /**
-     * Retrieves a app account by its ID.
+     * Retrieves an app account by its ID.
      * @param id The ID of the app account to retrieve.
      * @return An Optional containing the app account, or an empty Optional if not found.
      */
