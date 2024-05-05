@@ -70,7 +70,7 @@ public class HomeControllerTest {
         String result = homeController.creditBalance(amount, model, redirectAttributes);
 
         // Then
-        verify(userService).getUserIdByEmail(email);
+        verify(userService).findByEmail(email);
         verify(userService).creditUserBalance(userId, amount);
         verify(redirectAttributes).addFlashAttribute("successMessage", "Balance credited successfully.");
         assertEquals("redirect:home", result);
