@@ -1,6 +1,7 @@
 package com.openclassrooms.paymybuddy.controller;
 
 import com.openclassrooms.paymybuddy.model.DTO.ProfileDTO;
+import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.service.impl.ProfileService;
 import com.openclassrooms.paymybuddy.service.impl.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -50,7 +53,9 @@ public class ProfileControllerTest {
         String email = "user@example.com";
         Long userId = 1L;
         ProfileDTO profileDTO = ProfileDTO.builder().build();
-        when(userService.getUserIdByEmail(email)).thenReturn(userId);
+        User mockUser = User.builder().build();
+        mockUser.setUserId(userId);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
         when(profileService.getProfile(userId)).thenReturn(profileDTO);
 
         // When
@@ -66,7 +71,9 @@ public class ProfileControllerTest {
         // Given
         String email = "user@example.com";
         Long userId = 1L;
-        when(userService.getUserIdByEmail(email)).thenReturn(userId);
+        User mockUser = User.builder().build();
+        mockUser.setUserId(userId);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
         when(profileService.getProfile(userId)).thenReturn(null);
 
         // When
@@ -85,7 +92,9 @@ public class ProfileControllerTest {
         Long userId = 1L;
         ProfileDTO profileDTO = ProfileDTO.builder().build();
         when(SecurityContextHolder.getContext().getAuthentication().getName()).thenReturn(email);
-        when(userService.getUserIdByEmail(email)).thenReturn(userId);
+        User mockUser = User.builder().build();
+        mockUser.setUserId(userId);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
         when(profileService.getProfile(userId)).thenReturn(profileDTO);
 
         // When
@@ -100,8 +109,11 @@ public class ProfileControllerTest {
     public void testShowEditProfileForm_ProfileNotFound_ShouldRedirectToProfilePage() {
         // Given
         Model model = mock(Model.class);
-        when(SecurityContextHolder.getContext().getAuthentication().getName()).thenReturn("user@example.com");
-        when(userService.getUserIdByEmail(anyString())).thenReturn(1L);
+        String email = "user@example.com";
+        when(SecurityContextHolder.getContext().getAuthentication().getName()).thenReturn(email);
+        User mockUser = User.builder().build();
+        mockUser.setUserId(1L);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
         when(profileService.getProfile(anyLong())).thenReturn(null);
 
         // When

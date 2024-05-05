@@ -1,8 +1,8 @@
 package com.openclassrooms.paymybuddy.controller;
 
 import com.openclassrooms.paymybuddy.model.DTO.PasswordUpdateDTO;
-import com.openclassrooms.paymybuddy.model.UserAccount;
-import com.openclassrooms.paymybuddy.service.impl.UserAccountService;
+import com.openclassrooms.paymybuddy.model.User;
+import com.openclassrooms.paymybuddy.service.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +30,7 @@ public class PasswordControllerTest {
     private PasswordController passwordController;
 
     @Mock
-    private UserAccountService userAccountService;
+    private UserService userService;
 
     @Mock
     private HttpServletRequest request;
@@ -90,8 +90,8 @@ public class PasswordControllerTest {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
 
-        when(userAccountService.findByEmail(anyString()))
-                .thenReturn(Optional.of(UserAccount.builder()
+        when(userService.findByEmail(anyString()))
+                .thenReturn(Optional.of(User.builder()
                         .email("user@example.com")
                         .password("oldPassword")
                         .build()));
@@ -104,8 +104,8 @@ public class PasswordControllerTest {
         String viewName = passwordController.changePassword(passwordUpdateDTO, bindingResult, request);
 
         // Then
-        verify(userAccountService).findByEmail("user@example.com");
-        verify(userAccountService).savePassword(anyString(), eq("user@example.com"));
+        verify(userService).findByEmail("user@example.com");
+        verify(userService).savePassword(anyString(), eq("user@example.com"));
         verify(request).getSession(false);
         verify(bindingResult, never()).rejectValue(anyString(), anyString(), anyString());
         verify(model, never()).addAttribute(anyString(), any());
@@ -116,7 +116,7 @@ public class PasswordControllerTest {
     public void testChangePassword_UserNotFound() {
         // Given
         PasswordUpdateDTO dto = PasswordUpdateDTO.builder().build();
-        when(userAccountService.findByEmail("user@example.com")).thenReturn(Optional.empty()); // User not found scenario
+        when(userService.findByEmail("user@example.com")).thenReturn(Optional.empty()); // User not found scenario
 
         // When
         String viewName = passwordController.changePassword(dto, bindingResult, request);
@@ -133,7 +133,7 @@ public class PasswordControllerTest {
                 .currentPassword("current")
                 .newPassword("newPass")
                 .confirmPassword("newPass").build();
-        when(userAccountService.findByEmail("user@example.com")).thenReturn(Optional.of(UserAccount.builder().password("hashedPassword").build()));
+        when(userService.findByEmail("user@example.com")).thenReturn(Optional.of(User.builder().password("hashedPassword").build()));
         when(passwordEncoder.matches("current", "hashedPassword")).thenReturn(false);
 
         // When
@@ -151,7 +151,7 @@ public class PasswordControllerTest {
                 .currentPassword("current")
                 .newPassword("newPass")
                 .confirmPassword("newPassFalse").build();
-        when(userAccountService.findByEmail("user@example.com")).thenReturn(Optional.of(UserAccount.builder().password("hashedPassword").build()));
+        when(userService.findByEmail("user@example.com")).thenReturn(Optional.of(User.builder().password("hashedPassword").build()));
         when(passwordEncoder.matches("current", "hashedPassword")).thenReturn(true);
 
         // When
@@ -168,7 +168,7 @@ public class PasswordControllerTest {
         PasswordUpdateDTO dto = PasswordUpdateDTO.builder()
                 .currentPassword("current")
                 .newPassword("newPass")
-                .confirmPassword("newPass").build();when(userAccountService.findByEmail("user@example.com")).thenReturn(Optional.of(UserAccount.builder().password("hashedPassword").build()));
+                .confirmPassword("newPass").build();when(userService.findByEmail("user@example.com")).thenReturn(Optional.of(User.builder().password("hashedPassword").build()));
         when(passwordEncoder.matches("current", "hashedPassword")).thenReturn(true);
 
         // When
@@ -185,7 +185,7 @@ public class PasswordControllerTest {
                 .currentPassword("current")
                 .newPassword("newPass")
                 .confirmPassword("newPass").build();
-        when(userAccountService.findByEmail("user@example.com")).thenReturn(Optional.of(UserAccount.builder().password("hashedPassword").build()));
+        when(userService.findByEmail("user@example.com")).thenReturn(Optional.of(User.builder().password("hashedPassword").build()));
         when(passwordEncoder.matches("current", "hashedPassword")).thenReturn(true);
         when(passwordEncoder.encode("newPass")).thenReturn("encodedNewPass");
 
@@ -193,7 +193,7 @@ public class PasswordControllerTest {
         String result = passwordController.changePassword(dto, bindingResult, request);
 
         // Then
-        verify(userAccountService).savePassword("encodedNewPass", "user@example.com");
+        verify(userService).savePassword("encodedNewPass", "user@example.com");
         verify(session).invalidate();
         assertEquals("redirect:/login?logout", result);
     }

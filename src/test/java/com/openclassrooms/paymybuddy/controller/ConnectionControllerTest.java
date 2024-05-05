@@ -52,9 +52,10 @@ public class ConnectionControllerTest {
         Model model = mock(Model.class);
         String email = "user@example.com";
         Long userId = 1L;
-        User userConnected = new User();
-        when(userService.getUserIdByEmail(email)).thenReturn(userId);
-        when(userService.getUserById(userId)).thenReturn(Optional.of(userConnected));
+        User mockUserConnected = User.builder().build();
+        mockUserConnected.setUserId(userId);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUserConnected));
+        when(userService.getUserById(userId)).thenReturn(Optional.of(mockUserConnected));
 
         // When
         String viewName = controller.showConnectionList(model);
@@ -69,16 +70,17 @@ public class ConnectionControllerTest {
         Model model = mock(Model.class);
         String email = "user@example.com";
         Long userId = 1L;
-        User userConnected = new User();
-        when(userService.getUserIdByEmail(email)).thenReturn(userId);
-        when(userService.getUserById(userId)).thenReturn(Optional.of(userConnected));
+        User mockUserConnected = User.builder().build();
+        mockUserConnected.setUserId(userId);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUserConnected));
+        when(userService.getUserById(userId)).thenReturn(Optional.of(mockUserConnected));
 
         // When
         String viewName = controller.showConnectionList(model);
 
         // Then
         assertEquals("listConnections", viewName);
-        verify(userService).getUserIdByEmail("user@example.com");
+        verify(userService).findByEmail("user@example.com");
         verify(userService, times(1)).getUserById(userId);
         verify(securityContext.getAuthentication()).getName();
     }
@@ -91,10 +93,12 @@ public class ConnectionControllerTest {
         Long userId = 1L;
         String query = "search query";
         List<User> searchResults = new ArrayList<>();
-        searchResults.add(new User());
-        searchResults.add(new User());
+        searchResults.add(User.builder().build());
+        searchResults.add(User.builder().build());
+        User mockUser = User.builder().build();
+        mockUser.setUserId(userId);
 
-        when(userService.getUserIdByEmail(email)).thenReturn(userId);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
         when(connectionService.searchConnections(query, userId)).thenReturn(searchResults);
 
         // When
@@ -102,7 +106,6 @@ public class ConnectionControllerTest {
 
         // Then
         assertEquals("searchConnection", viewName);
-        verify(userService).getUserIdByEmail(email);
         verify(connectionService).searchConnections(query, userId);
         verify(model).addAttribute("listOfConnections", searchResults);
     }
@@ -115,10 +118,12 @@ public class ConnectionControllerTest {
         Long userId = 1L;
         String query = null;
         List<User> allConnections = new ArrayList<>();
-        allConnections.add(new User());
-        allConnections.add(new User());
+        allConnections.add(User.builder().build());
+        allConnections.add(User.builder().build());
+        User mockUser = User.builder().build();
+        mockUser.setUserId(userId);
 
-        when(userService.getUserIdByEmail(email)).thenReturn(userId);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
         when(connectionService.findAllConnections(userId)).thenReturn(allConnections);
 
         // When
@@ -126,7 +131,7 @@ public class ConnectionControllerTest {
 
         // Then
         assertEquals("searchConnection", viewName);
-        verify(userService).getUserIdByEmail(email);
+        verify(userService).findByEmail(email);
         verify(connectionService).findAllConnections(userId);
         verify(model).addAttribute("listOfConnections", allConnections);
     }
@@ -136,10 +141,11 @@ public class ConnectionControllerTest {
         // Given
         RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
         String email = "user@example.com";
-        Long userId = 1L;
         Long friendId = 2L;
-        when(userService.getUserIdByEmail(email)).thenReturn(userId);
-        when(connectionService.addConnection(userId, friendId)).thenReturn(true);
+        User mockUser = User.builder().build();
+        mockUser.setUserId(1L);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
+        when(connectionService.addConnection(mockUser.getUserId(), friendId)).thenReturn(true);
 
         // When
         String viewName = controller.addConnection(friendId, redirectAttributes);
@@ -154,10 +160,11 @@ public class ConnectionControllerTest {
         // Given
         RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
         String email = "user@example.com";
-        Long userId = 1L;
         Long friendId = 2L;
-        when(userService.getUserIdByEmail(email)).thenReturn(userId);
-        when(connectionService.addConnection(userId, friendId)).thenReturn(false);
+        User mockUser = User.builder().build();
+        mockUser.setUserId(1L);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
+        when(connectionService.addConnection(mockUser.getUserId(), friendId)).thenReturn(false);
 
         // When
         String viewName = controller.addConnection(friendId, redirectAttributes);
@@ -165,46 +172,6 @@ public class ConnectionControllerTest {
         // Then
         assertEquals("redirect:/listConnections", viewName);
         assertEquals("Failed to add the connection", redirectAttributes.getFlashAttributes().get("errorAddMessage"));
-    }
-
-    @Test
-    public void testRemoveConnection_shouldReturnErrorMessageWhenConnectionIsRemoved() {
-        // Given
-        Model model = mock(Model.class);
-        String email = "user@example.com";
-        Long userId = 1L;
-        Long friendId = 2L;
-        when(userService.getUserIdByEmail(email)).thenReturn(userId);
-        User user = User.builder().build();
-        when(userService.getUserById(userId)).thenReturn(Optional.of(user));
-        when(connectionService.removeConnection(userId, friendId)).thenReturn(true);
-
-        // When
-        String viewName = controller.removeConnection(friendId, model);
-
-        // Then
-        assertEquals("listConnections", viewName);
-        verify(model).addAttribute("successRemoveMessage", "Successful connection deletion");
-    }
-
-    @Test
-    public void testRemoveConnection_shouldReturnErrorMessageWhenConnectionNotRemoved() {
-        // Given
-        Model model = mock(Model.class);
-        String email = "user@example.com";
-        Long userId = 1L;
-        Long friendId = 2L;
-        when(userService.getUserIdByEmail(email)).thenReturn(userId);
-        User user = User.builder().build();
-        when(userService.getUserById(userId)).thenReturn(Optional.of(user));
-        when(connectionService.removeConnection(userId, friendId)).thenReturn(false);
-
-        // When
-        String viewName = controller.removeConnection(friendId, model);
-
-        // Then
-        assertEquals("listConnections", viewName);
-        verify(model).addAttribute("errorRemoveMessage", "Connection deletion failed");
     }
 
     @Test

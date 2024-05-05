@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
@@ -170,28 +171,63 @@ public class UserTest {
     }
 
     @Test
-    public void testUserAccountSetter() {
+    public void testEmailGetterAndSetter() {
         // Given
-        UserAccount userAccount = UserAccount.builder().build();
+        String email = "test@example.com";
 
         // When
-        user.setUserAccount(userAccount);
+        user.setEmail(email);
 
         // Then
-        assertEquals(userAccount, user.getUserAccount());
+        assertEquals(email, user.getEmail());
     }
 
     @Test
-    public void testUserAccountGetter() {
+    public void testPasswordGetterAndSetter() {
         // Given
-        UserAccount userAccount = UserAccount.builder().build();
-        user.setUserAccount(userAccount);
+        String password = "password";
 
         // When
-        UserAccount retrievedUserAccount = user.getUserAccount();
+        user.setPassword(password);
 
         // Then
-        assertEquals(userAccount, retrievedUserAccount);
+        assertEquals(password, user.getPassword());
+    }
+
+    @Test
+    public void testLastConnectionDateGetterAndSetter() {
+        // Given
+        LocalDateTime lastConnectionDate = LocalDateTime.now();
+
+        // When
+        user.setLastConnectionDate(lastConnectionDate);
+
+        // Then
+        assertEquals(lastConnectionDate, user.getLastConnectionDate());
+    }
+
+    @Test
+    public void testIsActiveGetterAndSetter() {
+        // Given
+        boolean isActive = true;
+
+        // When
+        user.setIsActive(isActive);
+
+        // Then
+        assertEquals(isActive, user.getIsActive());
+    }
+
+    @Test
+    public void testRoleGetterAndSetter() {
+        // Given
+        String role = "USER";
+
+        // When
+        user.setRole(role);
+
+        // Then
+        assertEquals(role, user.getRole());
     }
 
     @Test
@@ -327,7 +363,11 @@ public class UserTest {
         String phone = "123456789";
         String address = "123 Main St";
         AppAccount appAccount = new AppAccount();
-        UserAccount userAccount = new UserAccount();
+        String email = "test@example.com";
+        String password = "password";
+        LocalDateTime lastConnectionDate = LocalDateTime.now();
+        boolean isActive = true;
+        String role = "USER";
 
         // When
         User builtUser = User.builder()
@@ -337,7 +377,11 @@ public class UserTest {
                 .phone(phone)
                 .address(address)
                 .appAccount(appAccount)
-                .userAccount(userAccount)
+                .email(email)
+                .password(password)
+                .lastConnectionDate(lastConnectionDate)
+                .isActive(isActive)
+                .role(role)
                 .build();
 
         // Then
@@ -348,6 +392,10 @@ public class UserTest {
         assertEquals(phone, builtUser.getPhone());
         assertEquals(address, builtUser.getAddress());
         assertEquals(appAccount, builtUser.getAppAccount());
-        assertEquals(userAccount, builtUser.getUserAccount());
+        assertEquals(email, builtUser.getEmail());
+        assertEquals(password, builtUser.getPassword());
+        assertEquals(lastConnectionDate, builtUser.getLastConnectionDate());
+        assertEquals(isActive, builtUser.getIsActive());
+        assertEquals(role, builtUser.getRole());
     }
 }

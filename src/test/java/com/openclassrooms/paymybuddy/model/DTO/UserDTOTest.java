@@ -14,7 +14,9 @@ public class UserDTOTest {
             .lastname("Doe")
             .address("123 Main St")
             .phone("1234567890")
-            .balance("100.00").build();
+            .iban("FR7630006000011234567890199")
+            .balance("100.00")
+            .build();
 
     @Test
     public void testFirstnameGetter() {
@@ -137,6 +139,30 @@ public class UserDTOTest {
     }
 
     @Test
+    public void testIBANGetter() {
+        // Given
+        String iban = "FR7630006000011234567890199";
+
+        // When
+        String retrievedIban = dto.getIban();
+
+        // Then
+        assertEquals(iban, retrievedIban);
+    }
+
+    @Test
+    public void testIBANSetter() {
+        // Given
+        String iban = "FR7630006000011234567999999";
+
+        // When
+        dto.setIban(iban);
+
+        // Then
+        assertEquals(iban, dto.getIban());
+    }
+
+    @Test
     public void testHashCode_withEqualObjects_shouldReturnEqualHashCodes() {
         // Given
         UserDTO dto1 = UserDTO.builder()
@@ -199,13 +225,14 @@ public class UserDTOTest {
                 .address("123 Main St")
                 .phone("1234567890")
                 .balance("100.00")
+                .iban("FR7630006000011234567890199")
                 .build();
 
         // When
         String result = dto.toString();
 
         // Then
-        String expected = "UserDTO(firstname=John, lastname=Doe, address=123 Main St, phone=1234567890, balance=100.00)";
+        String expected = "UserDTO(firstname=John, lastname=Doe, address=123 Main St, phone=1234567890, balance=100.00, iban=FR7630006000011234567890199)";
         assertEquals(expected, result);
     }
 

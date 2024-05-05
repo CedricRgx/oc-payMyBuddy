@@ -1,5 +1,6 @@
 package com.openclassrooms.paymybuddy.service.impl;
 
+import com.openclassrooms.paymybuddy.model.AppAccount;
 import com.openclassrooms.paymybuddy.model.DTO.ProfileDTO;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.service.IProfileService;
@@ -47,26 +48,13 @@ public class ProfileService implements IProfileService {
      *
      * @param profileDTO A ProfileDTO containing the new profile information to be updated.
      * @return The updated User entity.
-     * @throws UsernameNotFoundException if the user or user account cannot be found based on the provided email.
      */
     public User saveProfile(ProfileDTO profileDTO){
         log.info("updating an user profile");
 
-        Optional<User> existingUserAccount = userService.findByEmail(profileDTO.getEmail());
-        if (!existingUserAccount.isPresent()) {
-            throw new UsernameNotFoundException("UserAccount not found with email: " + profileDTO.getEmail());
-        }
-        User userAccount = existingUserAccount.get();
-        userAccount.setLastConnectionDate(LocalDateTime.now());
-
-        userService.addUser(userAccount);
-
-        Long existingUserId = userService.findByEmail(profileDTO.getEmail()).get().getUserId();
-        Optional<User> existingUser = userService.getUserById(existingUserId);
-        if(existingUser == null){
+        Optional<User> existingUser = userService.findByEmail(profileDTO.getEmail());
+        if (!existingUser.isPresent()) {
             throw new UsernameNotFoundException("User not found with email: " + profileDTO.getEmail());
-        } else if(!existingUser.isPresent()){
-            throw new UsernameNotFoundException("User not found with ID: " + existingUserId);
         }
         User user = existingUser.get();
         user.setFirstname(profileDTO.getFirstname());
@@ -75,8 +63,8 @@ public class ProfileService implements IProfileService {
         user.setAddress(profileDTO.getAddress());
         user.setPhone(profileDTO.getPhone());
         user.getAppAccount().setIban(profileDTO.getIban());
-        userService.addUser(user);
 
+        userService.addUser(user);
         log.info("User profile updated successfully");
 
         return user;

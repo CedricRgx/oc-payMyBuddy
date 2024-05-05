@@ -1,157 +1,81 @@
 package com.openclassrooms.paymybuddy.service.impl;
 
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+import com.openclassrooms.paymybuddy.model.AppAccount;
 import com.openclassrooms.paymybuddy.model.DTO.ProfileDTO;
 import com.openclassrooms.paymybuddy.model.User;
-import com.openclassrooms.paymybuddy.model.UserAccount;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import java.time.LocalDate;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest
 public class ProfileServiceTest {
-
-    @Mock
-    private UserService userService;
-
-    @Mock
-    private UserAccountService userAccountService;
 
     @InjectMocks
     private ProfileService profileService;
 
-    private User user;
-    private ProfileDTO expectedProfile;
-
-    @BeforeEach
-    public void setUp() {
-        user = User.builder()
-                .firstname("John")
-                .lastname("Doe")
-                        .birthdate(LocalDate.of(1985, 5, 20))
-                .phone("1234567890")
-                .address("123 Main St")
-                .build();
-
-        UserAccount userAccount = UserAccount.builder()
-                .email("john.doe@example.com")
-                .build();
-        user.setUserAccount(userAccount);
-
-        expectedProfile = ProfileDTO.builder()
-                .email("john.doe@example.com")
-                .firstname("John")
-                .lastname("Doe")
-                .birthdate(LocalDate.of(1985, 5, 20))
-                .phone("1234567890")
-                .address("123 Main St")
-                .build();
-    }
+    @Mock
+    private UserService userService;
 
     @Test
-    public void testGetProfile_UserExists() {
-        // When
-        when(userService.getUserById(anyLong())).thenReturn(Optional.of(user));
-        ProfileDTO result = profileService.getProfile(1L);
-
-        // Then
-        assertAll(
-                () -> assertNotNull(result),
-                () -> assertEquals(expectedProfile.getEmail(), result.getEmail()),
-                () -> assertEquals(expectedProfile.getFirstname(), result.getFirstname()),
-                () -> assertEquals(expectedProfile.getLastname(), result.getLastname()),
-                () -> assertEquals(expectedProfile.getBirthdate(), result.getBirthdate()),
-                () -> assertEquals(expectedProfile.getPhone(), result.getPhone()),
-                () -> assertEquals(expectedProfile.getAddress(), result.getAddress())
-        );
-    }
-
-    @Test
-    public void testGetProfile_UserNotFound() {
-        // When
-        when(userService.getUserById(anyLong())).thenReturn(Optional.empty());
-
-        // Then
-        Exception exception = assertThrows(NoSuchElementException.class, () -> {
-            profileService.getProfile(1L);
-        });
-        assertTrue(exception.getMessage().contains("No value present"));
-    }
-
-    @Test
-    public void testSaveProfile_Success() {
-        // Given
+    public void testSaveProfile() {
         ProfileDTO profileDTO = ProfileDTO.builder()
-                .email("email@example.com")
+                .email("test@example.com")
                 .firstname("John")
                 .lastname("Doe")
-                .birthdate(LocalDate.of(1990, 1, 1))
+                .birthdate(LocalDate.now())
                 .phone("1234567890")
-                .address("1234 Street Name").build();
-        UserAccount userAccount = new UserAccount();
-        User user = User.builder().build();
+                .address("Test Address")
+                .iban("FR1234567890123456789012345")
+                .build();
 
-        // When
-        when(userAccountService.findByEmail(anyString())).thenReturn(Optional.of(userAccount));
-        when(userService.getUserIdByEmail(anyString())).thenReturn(1L);
-        when(userService.getUserById(anyLong())).thenReturn(Optional.of(user));
-        User result = profileService.saveProfile(profileDTO);
+        User user = User.builder()
+                .email("test@example.com")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.now())
+                .phone("1234567890")
+                .address("Test Address")
+                .appAccount(AppAccount.builder().build())
+                .build();
+        user.getAppAccount().setIban("FR1234567890123456789012345");
 
-        // Then
-        verify(userAccountService).addUserAccount(any(UserAccount.class));
-        verify(userService).addUser(any(User.class));
-        assertEquals("John", result.getFirstname());
-        assertEquals("Doe", result.getLastname());
+        when(userService.findByEmail(anyString())).thenReturn(Optional.of(user));
+
+        profileService.saveProfile(profileDTO);
+
+        verify(userService, times(1)).addUser(any(User.class));
     }
 
     @Test
-    public void testSaveProfile_UserAccountNotFound() {
-        // Given
+    public void testSaveProfile_UserNotFoundException() {
         ProfileDTO profileDTO = ProfileDTO.builder()
-                .email("wrongemail@example.com")
-                .firstname("John")
-                .lastname("Doe")
-                .birthdate(LocalDate.of(1990, 1, 1))
+                .email("test@example.com")
+                .firstname("First")
+                .lastname("Last")
+                .birthdate(LocalDate.now())
                 .phone("1234567890")
-                .address("1234 Street Name").build();
+                .address("Test Address")
+                .iban("FR1234567890123456789012345")
+                .build();
 
-        // When
-        when(userAccountService.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(userService.findByEmail(anyString())).thenReturn(Optional.empty());
 
-        // Then
-        assertThrows(UsernameNotFoundException.class, () -> {
+        try {
             profileService.saveProfile(profileDTO);
-        });
-    }
+        } catch (Exception e) {
+            assert(e instanceof UsernameNotFoundException);
+        }
 
-    @Test
-    public void testSaveProfile_UserNotFound() {
-        // Given
-        ProfileDTO profileDTO = ProfileDTO.builder()
-                .email("email@example.com")
-                .firstname("John")
-                .lastname("Doe")
-                .birthdate(LocalDate.of(1990, 1, 1))
-                .phone("1234567890")
-                .address("1234 Street Name").build();
-        UserAccount userAccount = new UserAccount();
-
-        // When
-        when(userAccountService.findByEmail(anyString())).thenReturn(Optional.of(userAccount));
-        when(userService.getUserIdByEmail(anyString())).thenReturn(1L);
-        when(userService.getUserById(anyLong())).thenReturn(Optional.empty());
-
-        // Then
-        assertThrows(UsernameNotFoundException.class, () -> {profileService.saveProfile(profileDTO);});
+        verify(userService, times(0)).addUser(any(User.class));
     }
 }

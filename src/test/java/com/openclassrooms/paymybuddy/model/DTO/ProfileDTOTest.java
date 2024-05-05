@@ -384,9 +384,10 @@ public class ProfileDTOTest {
                 .birthdate(LocalDate.of(1990, 1, 1))
                 .address("123 Main St")
                 .phone("1234567890")
+                .iban("FR7630006000011234567890199")
                 .build();
 
-        String expected = "ProfileDTO(email=john.doe@example.com, firstname=John, lastname=Doe, birthdate=1990-01-01, address=123 Main St, phone=1234567890)";
+        String expected = "ProfileDTO(email=john.doe@example.com, firstname=John, lastname=Doe, birthdate=1990-01-01, address=123 Main St, phone=1234567890, iban=FR7630006000011234567890199)";
 
         // When
         String actual = dto.toString();

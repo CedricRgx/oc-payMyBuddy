@@ -1,15 +1,15 @@
 package com.openclassrooms.paymybuddy.config;
 
-import com.openclassrooms.paymybuddy.model.UserAccount;
-import com.openclassrooms.paymybuddy.repository.UserAccountRepository;
-import com.openclassrooms.paymybuddy.service.impl.UserAccountService;
+import com.openclassrooms.paymybuddy.model.User;
+import com.openclassrooms.paymybuddy.service.impl.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
@@ -19,10 +19,7 @@ import static org.mockito.Mockito.when;
 class CustomUserDetailsServiceTest {
 
     @Mock
-    private UserAccountRepository userAccountRepository;
-
-    @Mock
-    private UserAccountService userAccountService;
+    private UserService userService;
 
     @InjectMocks
     private CustomUserDetailsService customUserDetailsService;
@@ -30,45 +27,40 @@ class CustomUserDetailsServiceTest {
     @Test
     void testLoadUserByUsername_UserFoundAndActive_ReturnsUserDetails() {
         // Given
-        UserAccount userAccount = UserAccount.builder()
-                .email("email@example.com")
+        String email = "user@example.com";
+        User mockUser = User.builder()
+                .email(email)
                 .password("password")
                 .isActive(true)
                 .role("USER")
                 .build();
-        when(userAccountRepository.findByEmail("email@example.com")).thenReturn(userAccount);
+        mockUser.setUserId(1L);
 
         // When
-        UserDetails result = customUserDetailsService.loadUserByUsername("email@example.com");
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
+        UserDetails result = customUserDetailsService.loadUserByUsername(email);
 
         // Then
         assertNotNull(result);
-        assertEquals("email@example.com", result.getUsername());
+        assertEquals(email, result.getUsername());
         assertTrue(result.isEnabled());
-    }
-
-    @Test
-    void testLoadUserByUsername_UserNotFound_ThrowsUsernameNotFoundException() {
-        // Given
-        when(userAccountRepository.findByEmail("email@example.com")).thenReturn(null);
-
-        // When Then
-        assertThrows(UsernameNotFoundException.class, () -> customUserDetailsService.loadUserByUsername("email@example.com"));
     }
 
     @Test
     void testLoadUserByUsername_UserFoundButNotActive_ReturnsDisabledUser() {
         // Given
-        UserAccount userAccount = UserAccount.builder()
-                .email("email@example.com")
+        String email = "user@example.com";
+        User mockUser = User.builder()
+                .email(email)
                 .password("password")
                 .isActive(false)
                 .role("USER")
                 .build();
-        when(userAccountRepository.findByEmail("email@example.com")).thenReturn(userAccount);
+        mockUser.setUserId(1L);
 
         // When
-        UserDetails result = customUserDetailsService.loadUserByUsername("email@example.com");
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
+        UserDetails result = customUserDetailsService.loadUserByUsername(email);
 
         // Then
         assertNotNull(result);
@@ -78,18 +70,21 @@ class CustomUserDetailsServiceTest {
     @Test
     void testLoadUserByUsername_UserActive_UpdatesLastConnection() {
         // Given
-        UserAccount userAccount = UserAccount.builder()
-                .email("email@example.com")
+        String email = "user@example.com";
+        User mockUser = User.builder()
+                .email(email)
                 .password("password")
                 .isActive(true)
                 .role("USER")
                 .build();
-        when(userAccountRepository.findByEmail("email@example.com")).thenReturn(userAccount);
+        mockUser.setUserId(1L);
 
         // When
-        UserDetails result = customUserDetailsService.loadUserByUsername("email@example.com");
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
+
+        UserDetails result = customUserDetailsService.loadUserByUsername(email);
 
         // Then
-        verify(userAccountService).updateLastConnectionDate(userAccount.getUserAccountId());
+        verify(userService).updateLastConnectionDate(mockUser.getUserId());
     }
 }

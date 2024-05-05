@@ -7,7 +7,6 @@ import com.openclassrooms.paymybuddy.exceptions.EmailAlreadyUsedException;
 import com.openclassrooms.paymybuddy.model.AppAccount;
 import com.openclassrooms.paymybuddy.model.DTO.RegisterDTO;
 import com.openclassrooms.paymybuddy.model.User;
-import com.openclassrooms.paymybuddy.model.UserAccount;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,9 +20,6 @@ import java.time.LocalDate;
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
 public class RegisterServiceTest {
-
-    @Mock
-    private UserAccountService userAccountService;
 
     @Mock
     private UserService userService;
@@ -50,18 +46,18 @@ public class RegisterServiceTest {
                 .phone("1234567890").build();
 
         // When
-        when(userAccountService.isEmailUnique(anyString())).thenReturn(true);
+        when(userService.isEmailUnique(anyString())).thenReturn(true);
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         User result = registerService.addUser(registerDTO);
 
         // Then
         assertNotNull(result);
-        verify(userAccountService).addUserAccount(any(UserAccount.class));
-        verify(appAccountService).addAppAccount(any(AppAccount.class));
+        verify(userService, times(1)).addUser(any(User.class));
+        verify(appAccountService, times(1)).addAppAccount(any(AppAccount.class));
         verify(userService).addUser(any(User.class));
         assertEquals("John", result.getFirstname());
         assertEquals("Doe", result.getLastname());
-        assertEquals("encodedPassword", result.getUserAccount().getPassword());
+        assertEquals("encodedPassword", result.getPassword());
     }
 
     @Test
@@ -77,7 +73,7 @@ public class RegisterServiceTest {
                 .phone("1234567890").build();
 
         // When
-        when(userAccountService.isEmailUnique(anyString())).thenReturn(false);
+        when(userService.isEmailUnique(anyString())).thenReturn(false);
 
         // Then
         assertThrows(EmailAlreadyUsedException.class, () -> {registerService.addUser(registerDTO);});

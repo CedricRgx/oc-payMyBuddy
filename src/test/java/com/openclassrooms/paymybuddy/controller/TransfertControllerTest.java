@@ -62,7 +62,10 @@ public class TransfertControllerTest {
     @Test
     public void testViewTransfertPage_ShouldDisplayTransfertTemplate() {
         // Given
-        when(userService.getUserIdByEmail(anyString())).thenReturn(1L);
+        String email = "user@example.com";
+        User mockUser = User.builder().build();
+        mockUser.setUserId(1L);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
         User user = User.builder().friends(new ArrayList<>()).build();
         Optional<User> optionalUser = Optional.of(user);
         when(userService.getUserById(anyLong())).thenReturn(optionalUser);
@@ -86,7 +89,11 @@ public class TransfertControllerTest {
     @Test
     public void testViewTransfertPage_ShouldDisplayTransfertTemplateWithListConnectionsNull() {
         // Given
-        when(userService.getUserIdByEmail(anyString())).thenReturn(1L);
+        String email = "user@example.com";
+        User mockUser = User.builder().build();
+        mockUser.setUserId(1L);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
+
         User user = User.builder().friends(new ArrayList<>()).build();
         Optional<User> optionalUser = Optional.of(user);
         when(userService.getUserById(anyLong())).thenReturn(optionalUser);
@@ -105,6 +112,10 @@ public class TransfertControllerTest {
     @Test
     public void testViewTransfertPage_ShouldAddErrorMessageToModelWhenSessionContainsErrorMessage() {
         // Given
+        String email = "user@example.com";
+        User mockUser = User.builder().build();
+        mockUser.setUserId(1L);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
         User user = User.builder().friends(new ArrayList<>()).build();
         Optional<User> optionalUser = Optional.of(user);
         when(userService.getUserById(anyLong())).thenReturn(optionalUser);
@@ -121,6 +132,10 @@ public class TransfertControllerTest {
     @Test
     public void testViewTransfertPage_ShouldAddSuccessMessageToModelWhenSessionContainsSuccessMessage() {
         // Given
+        String email = "user@example.com";
+        User mockUser = User.builder().build();
+        mockUser.setUserId(1L);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
         User user = User.builder().friends(new ArrayList<>()).build();
         Optional<User> optionalUser = Optional.of(user);
         when(userService.getUserById(anyLong())).thenReturn(optionalUser);
@@ -139,7 +154,11 @@ public class TransfertControllerTest {
     @Test
     public void testViewTransfertPage_ShouldHandleNullSessionAttributes(){
         // Given
-        when(userService.getUserIdByEmail(anyString())).thenReturn(1L);
+        String email = "user@example.com";
+        User mockUser = User.builder().build();
+        mockUser.setUserId(1L);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
+
         User user = User.builder().friends(new ArrayList<>()).build();
         when(userService.getUserById(anyLong())).thenReturn(Optional.of(user));
         when(session.getAttribute(anyString())).thenReturn(null);

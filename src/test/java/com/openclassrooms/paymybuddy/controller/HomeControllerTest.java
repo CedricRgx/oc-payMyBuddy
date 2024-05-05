@@ -1,6 +1,7 @@
 package com.openclassrooms.paymybuddy.controller;
 
 import com.openclassrooms.paymybuddy.model.DTO.UserDTO;
+import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.service.impl.AppAccountService;
 import com.openclassrooms.paymybuddy.service.impl.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -63,8 +66,9 @@ public class HomeControllerTest {
         Long userId = 1L;
         Model model = mock(Model.class);
         RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
-
-        when(userService.findByEmail(email).get().getUserId()).thenReturn(userId);
+        User mockUser = User.builder().build();
+        mockUser.setUserId(userId);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
 
         // When
         String result = homeController.creditBalance(amount, model, redirectAttributes);
@@ -72,7 +76,7 @@ public class HomeControllerTest {
         // Then
         verify(userService).findByEmail(email);
         verify(userService).creditUserBalance(userId, amount);
-        verify(redirectAttributes).addFlashAttribute("successMessage", "Balance credited successfully.");
+        verify(redirectAttributes).addFlashAttribute("successCreditMessage", "Balance credited successfully.");
         assertEquals("redirect:home", result);
     }
 

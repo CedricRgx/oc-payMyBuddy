@@ -3,7 +3,6 @@ package com.openclassrooms.paymybuddy.service.impl;
 import com.openclassrooms.paymybuddy.model.AppAccount;
 import com.openclassrooms.paymybuddy.model.DTO.ConnectionDTO;
 import com.openclassrooms.paymybuddy.model.User;
-import com.openclassrooms.paymybuddy.model.UserAccount;
 import com.openclassrooms.paymybuddy.repository.AppAccountRepository;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
 import jakarta.persistence.EntityManager;
@@ -15,9 +14,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
@@ -108,40 +109,17 @@ class UserServiceTest {
     }
 
     @Test
-    public void testGetUserIdByEmail_shouldReturnUserId() {
-        // Given
-        String email = "user@example.com";
-        Long expectedUserId = 1L;
-        TypedQuery<Long> query = mock(TypedQuery.class);
-
-        when(entityManager.createQuery(anyString(), eq(Long.class))).thenReturn(query);
-        when(query.setParameter("email", email)).thenReturn(query);
-        when(query.getSingleResult()).thenReturn(expectedUserId);
-
-        // When
-        Long actualUserId = userService.getUserIdByEmail(email);
-
-        // Then
-        assertEquals(expectedUserId, actualUserId);
-        verify(entityManager).createQuery("SELECT u.id FROM User u JOIN u.userAccount ua WHERE ua.email = :email", Long.class);
-        verify(query).setParameter("email", email);
-        verify(query).getSingleResult();
-    }
-
-    @Test
     public void testGetActiveFriends_shouldReturnListOfActiveFriends() {
         // Given
         List<User> listOfFriends = new ArrayList<>();
-        User activeFriend = new User();
-        activeFriend.setUserAccount(UserAccount.builder()
+        User activeFriend = User.builder()
                 .email("john.doe@example.com")
                 .password("XXXX")
                 .isActive(true)
                 .lastConnectionDate(LocalDateTime.now())
-                .role("USER").build());
+                .role("USER").build();
         listOfFriends.add(activeFriend);
-        User inactiveFriend = new User();
-        inactiveFriend.setUserAccount(UserAccount.builder().isActive(false).build());
+        User inactiveFriend = User.builder().isActive(false).build();
         listOfFriends.add(inactiveFriend);
 
         // When
@@ -150,6 +128,23 @@ class UserServiceTest {
         // Then
         assertEquals(1, result.size());
         assertEquals(activeFriend.getUserId(), result.get(0).getUserId());
+    }
+
+    @Test
+    public void findByEmailTest() {
+        // Given
+        String email = "testEmail@example.com";
+        User user = new User();
+        user.setEmail(email);
+
+        // When
+        when(userRepository.findByEmail(email)).thenReturn(user);
+        Optional<User> optionalUser = userService.findByEmail(email);
+
+        // Then
+        assertTrue(optionalUser.isPresent());
+        assertEquals(optionalUser.get().getEmail(), email);
+        verify(userRepository, times(1)).findByEmail(email);
     }
 
 
@@ -263,6 +258,114 @@ class UserServiceTest {
         // Then
         Exception exception = assertThrows(IllegalStateException.class, () -> {userService.creditUserBalance(userId, amount);});
         assertEquals("AppAccount not found for User with ID: " + userId, exception.getMessage());
+    }
+
+    @Test
+    public void testIsEmailUnique_True() {
+        // Given
+        String email = "test@example.com";
+        long count = 0;
+
+        TypedQuery<Long> query = mock(TypedQuery.class);
+        when(entityManager.createQuery(anyString(), eq(Long.class))).thenReturn(query);
+        when(query.setParameter(anyString(), any())).thenReturn(query);
+        when(query.getSingleResult()).thenReturn(count);
+
+        // When
+        boolean isUnique = userService.isEmailUnique(email);
+
+        // Then
+        assertTrue(isUnique);
+    }
+
+    @Test
+    public void testIsEmailUnique_False() {
+        // Given
+        String email = "test@example.com";
+        long count = 1;
+
+        TypedQuery<Long> query = mock(TypedQuery.class);
+        when(entityManager.createQuery(anyString(), eq(Long.class))).thenReturn(query);
+        when(query.setParameter(anyString(), any())).thenReturn(query);
+        when(query.getSingleResult()).thenReturn(count);
+
+        // When
+        boolean isUnique = userService.isEmailUnique(email);
+
+        // Then
+        assertFalse(isUnique);
+    }
+
+    @Test
+    public void testUpdateLastConnectionDate_Success() {
+        // Given
+        Long userAccountId = 1L;
+        LocalDateTime previousLastConnectionDate = LocalDateTime.now().minusDays(1);
+
+        User user = User.builder().build();
+        user.setLastConnectionDate(previousLastConnectionDate);
+
+        when(userRepository.findById(userAccountId)).thenReturn(Optional.of(user));
+
+        // When
+        userService.updateLastConnectionDate(userAccountId);
+
+        // Then
+        LocalDateTime afterUpdate = user.getLastConnectionDate();
+        assertTrue(Duration.between(afterUpdate, LocalDateTime.now()).getSeconds() < 1);
+
+        verify(userRepository, times(1)).findById(userAccountId);
+        verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
+    public void testUpdateLastConnectionDate_Failure_AccountNotFound() {
+        // Given
+        Long userAccountId = 1L;
+
+        when(userRepository.findById(userAccountId)).thenReturn(Optional.empty());
+
+        // When Then
+        assertThrows(NoSuchElementException.class, () -> {
+            userService.updateLastConnectionDate(userAccountId);
+        });
+
+        verify(userRepository, times(1)).findById(userAccountId);
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    public void testSavePassword_Success() {
+        // Given
+        String email = "user@example.com";
+        String password = "newSecurePassword";
+        User user = User.builder().build();
+        when(userRepository.findByEmail(email)).thenReturn(user);
+
+        // When
+        boolean result = userService.savePassword(password, email);
+
+        // Then
+        assertEquals(true, result);
+        verify(userRepository, times(1)).findByEmail(email);
+        verify(userRepository, times(1)).save(user);
+        assertEquals(user.getPassword(), password);
+    }
+
+    @Test
+    public void testSavePassword_UserNotFound() {
+        // Given
+        String email = "nonexistent@example.com";
+        String password = "password";
+        when(userRepository.findByEmail(email)).thenReturn(null);
+
+        // When Then
+        Exception exception = assertThrows(NullPointerException.class, () -> {
+            userService.savePassword(password, email);
+        });
+        assertEquals("Cannot invoke \"com.openclassrooms.paymybuddy.model.User.setPassword(String)\" because \"user\" is null", exception.getMessage());
+        verify(userRepository, times(1)).findByEmail(email);
+        verify(userRepository, never()).save(any(User.class));
     }
 
 }

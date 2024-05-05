@@ -216,6 +216,7 @@ public class RegisterDTOTest {
                 .birthdate(LocalDate.of(1990, 1, 1))
                 .address("123 Main St")
                 .phone("1234567890")
+                .iban("FR7630006000011234567890199")
                 .build();
 
         // When
@@ -236,6 +237,7 @@ public class RegisterDTOTest {
                 .birthdate(LocalDate.of(1990, 1, 1))
                 .address("123 Main St")
                 .phone("1234567890")
+                .iban("FR7630006000011234567890199")
                 .build();
 
         // When
@@ -258,6 +260,7 @@ public class RegisterDTOTest {
                 .birthdate(LocalDate.of(1990, 1, 1))
                 .address("123 Main St")
                 .phone("1234567890")
+                .iban("FR7630006000011234567890199")
                 .build();
 
         // When
@@ -279,6 +282,7 @@ public class RegisterDTOTest {
                 .birthdate(LocalDate.of(1990, 1, 1))
                 .address("123 Main St")
                 .phone("1234567890")
+                .iban("FR7630006000011234567890199")
                 .build();
 
         // When
@@ -301,6 +305,7 @@ public class RegisterDTOTest {
                 .birthdate(LocalDate.of(1990, 1, 1))
                 .address("123 Main St")
                 .phone("1234567890")
+                .iban("FR7630006000011234567890199")
                 .build();
 
         // When
@@ -323,6 +328,7 @@ public class RegisterDTOTest {
                 .birthdate(LocalDate.now().plusDays(1))
                 .address("123 Main St")
                 .phone("1234567890")
+                .iban("FR7630006000011234567890199")
                 .build();
 
         // When
@@ -345,6 +351,7 @@ public class RegisterDTOTest {
                 .birthdate(LocalDate.of(1990, 1, 1))
                 .address("") // Invalid address length
                 .phone("1234567890")
+                .iban("FR7630006000011234567890199")
                 .build();
 
         // When
@@ -367,6 +374,7 @@ public class RegisterDTOTest {
                 .birthdate(LocalDate.of(1990, 1, 1))
                 .address("123 Main St")
                 .phone("not a number")
+                .iban("FR7630006000011234567890199")
                 .build();
 
         // When
@@ -376,6 +384,29 @@ public class RegisterDTOTest {
         assertFalse(violations.isEmpty());
         assertEquals(1, violations.size());
         assertEquals("phone", violations.iterator().next().getPropertyPath().toString());
+    }
+
+    @Test
+    public void testInvalidIBAN() {
+        // Given
+        RegisterDTO dto = RegisterDTO.builder()
+                .email("john.doe@example.com")
+                .password("password123")
+                .firstname("John")
+                .lastname("Doe")
+                .birthdate(LocalDate.of(1990, 1, 1))
+                .address("123 Main St")
+                .phone("1234567890")
+                .iban("FR763")
+                .build();
+
+        // When
+        Set<ConstraintViolation<RegisterDTO>> violations = validator.validate(dto);
+
+        // Then
+        assertFalse(violations.isEmpty());
+        assertEquals(1, violations.size());
+        assertEquals("iban", violations.iterator().next().getPropertyPath().toString());
     }
 
     @Test
@@ -451,10 +482,11 @@ public class RegisterDTOTest {
                 .birthdate(LocalDate.of(1990, 1, 1))
                 .address("123 Main St")
                 .phone("1234567890")
+                .iban("FR7630006000011234567890199")
                 .build();
 
         String expectedString = "RegisterDTO(email=john.doe@example.com, password=password123, " +
-                "firstname=John, lastname=Doe, birthdate=1990-01-01, address=123 Main St, phone=1234567890)";
+                "firstname=John, lastname=Doe, birthdate=1990-01-01, address=123 Main St, phone=1234567890, iban=FR7630006000011234567890199)";
 
         // When
         String actualString = dto.toString();

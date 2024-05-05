@@ -25,8 +25,6 @@ import java.util.*;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import jakarta.persistence.*;
-
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
 public class TransfertServiceTest {
@@ -173,6 +171,10 @@ public class TransfertServiceTest {
     @Test
     public void testAddNewTransfert_ShouldFail_WhenAmountIsInvalid() {
         // Given
+        String email = "user@example.com";
+        User mockUser = new User();
+        mockUser.setUserId(1L);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
         NewTransfertDTO newTransfertDTO = NewTransfertDTO.builder()
                 .amount(-10.0).build();
 
@@ -183,8 +185,11 @@ public class TransfertServiceTest {
     @Test
     public void testAddNewTransfert_ShouldFail_WhenBalanceIsInsufficient() {
         // Given
-        when(userService.getUserIdByEmail("user@example.com")).thenReturn(1L);
-        when(userService.getUserById(1L)).thenReturn(Optional.of(new User()));
+        String email = "user@example.com";
+        User mockUser = User.builder().build();
+        mockUser.setUserId(1L);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
+        when(userService.getUserById(1L)).thenReturn(Optional.of(mockUser));
         when(userService.getUserBalance(1L)).thenReturn(5.0);
 
         // When
@@ -199,7 +204,10 @@ public class TransfertServiceTest {
     @Test
     public void testAddNewTransfert_ShouldFail_WhenUserNotFound() {
         // When
-        when(userService.getUserIdByEmail("user@example.com")).thenReturn(1L);
+        String email = "user@example.com";
+        User mockUser = User.builder().build();
+        mockUser.setUserId(1L);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
         when(userService.getUserById(1L)).thenReturn(Optional.empty());
 
         NewTransfertDTO newTransfertDTO = NewTransfertDTO.builder()
@@ -213,7 +221,10 @@ public class TransfertServiceTest {
     @Test
     public void testAddNewTransfert_ShouldSucceed_WhenValidRequest() {
         // When
-        when(userService.getUserIdByEmail("user@example.com")).thenReturn(1L);
+        String email = "user@example.com";
+        User mockUser = User.builder().build();
+        mockUser.setUserId(1L);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
         when(userService.getUserById(1L)).thenReturn(Optional.of(new User()));
         when(userService.getUserById(2L)).thenReturn(Optional.of(new User()));
         when(userService.getUserBalance(1L)).thenReturn(100.0);
@@ -229,7 +240,10 @@ public class TransfertServiceTest {
     @Test
     public void testAddNewTransfert_ShouldFail_WhenRecipientNotFound() {
         // Given
-        when(userService.getUserIdByEmail("user@example.com")).thenReturn(1L);
+        String email = "user@example.com";
+        User mockUser = User.builder().build();
+        mockUser.setUserId(1L);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
         when(userService.getUserById(1L)).thenReturn(Optional.of(new User()));
         when(userService.getUserBalance(1L)).thenReturn(100.0);
         when(userService.getUserById(2L)).thenReturn(Optional.empty());
@@ -246,7 +260,10 @@ public class TransfertServiceTest {
     @Test
     public void testAddNewTransfert_ShouldFail_WhenAmountIsNonPositive() {
         // Given
-        when(userService.getUserIdByEmail("user@example.com")).thenReturn(1L);
+        String email = "user@example.com";
+        User mockUser = User.builder().build();
+        mockUser.setUserId(1L);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
         when(userService.getUserById(1L)).thenReturn(Optional.of(new User()));
         when(userService.getUserBalance(1L)).thenReturn(100.0);
 
@@ -263,7 +280,10 @@ public class TransfertServiceTest {
     @Test
     public void testAddNewTransfert_ShouldFail_WhenBalanceIsNull() {
         // Given
-        when(userService.getUserIdByEmail("user@example.com")).thenReturn(1L);
+        String email = "user@example.com";
+        User mockUser = User.builder().build();
+        mockUser.setUserId(1L);
+        when(userService.findByEmail(email)).thenReturn(Optional.of(mockUser));
         when(userService.getUserById(1L)).thenReturn(Optional.of(new User()));
         when(userService.getUserBalance(1L)).thenReturn(null);
 

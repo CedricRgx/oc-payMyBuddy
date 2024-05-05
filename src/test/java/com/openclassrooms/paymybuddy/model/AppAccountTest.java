@@ -26,7 +26,7 @@ public class AppAccountTest {
         mockUser = new User();
         appAccount = AppAccount.builder()
                 .balance(100.0)
-                .appOwner(mockUser)
+                //.appOwner(mockUser) A REMPLACER PAR IBAN
                 .build();
     }
 
@@ -95,7 +95,7 @@ public class AppAccountTest {
         // Given
         AppAccount anotherAppAccount = AppAccount.builder()
                 .balance(100.0)
-                .appOwner(mockUser)
+                //.appOwner(mockUser) A REMPLACER PAR IBAN
                 .build();
 
         // When
@@ -110,7 +110,7 @@ public class AppAccountTest {
         // Given
         AppAccount differentAppAccount = AppAccount.builder()
                 .balance(200.0)
-                .appOwner(new User())
+                //.appOwner(User.builder().build()) A REMPLACER PAR IBAN
                 .build();
 
         // When
@@ -149,7 +149,7 @@ public class AppAccountTest {
         // Given
         AppAccount anotherAppAccount = AppAccount.builder()
                 .balance(100.0)
-                .appOwner(mockUser)
+                //.appOwner(mockUser) A REMPLACER PAR IBAN
                 .build();
 
         // When
@@ -165,11 +165,11 @@ public class AppAccountTest {
         // Given
         AppAccount account1 = AppAccount.builder()
                 .balance(100.0)
-                .appOwner(mockUser)
+                //.appOwner(mockUser) A REMPLACER PAR IBAN
                 .build();
         AppAccount account2 = AppAccount.builder()
                 .balance(200.0)
-                .appOwner(mockUser)
+                //.appOwner(mockUser) A REMPLACER PAR IBAN
                 .build();
 
         // When Then
@@ -181,7 +181,7 @@ public class AppAccountTest {
         // Given
         AppAccount accountWithNullOwner = AppAccount.builder()
                 .balance(100.0)
-                .appOwner(null)
+                //.appOwner(null) A REMPLACER PAR IBAN
                 .build();
 
         // When Then
@@ -193,11 +193,11 @@ public class AppAccountTest {
         // Given
         AppAccount baseAccount = AppAccount.builder()
                 .balance(100.0)
-                .appOwner(mockUser)
+                //.appOwner(mockUser) A REMPLACER PAR IBAN
                 .build();
         AppAccount changedBalance = AppAccount.builder()
                 .balance(200.0)
-                .appOwner(mockUser)
+                //.appOwner(mockUser) A REMPLACER PAR IBAN
                 .build();
 
         // When Then
@@ -209,7 +209,7 @@ public class AppAccountTest {
         // Given
         AppAccount anotherAppAccount = AppAccount.builder()
                 .balance(100.0)
-                .appOwner(mockUser)
+                //.appOwner(mockUser) A REMPLACER PAR IBAN
                 .build();
 
         // When Then
@@ -221,15 +221,15 @@ public class AppAccountTest {
         // Given
         AppAccount firstAccount = AppAccount.builder()
                 .balance(100.0)
-                .appOwner(mockUser)
+                //.appOwner(mockUser) A REMPLACER PAR IBAN
                 .build();
         AppAccount secondAccount = AppAccount.builder()
                 .balance(100.0)
-                .appOwner(mockUser)
+                //.appOwner(mockUser) A REMPLACER PAR IBAN
                 .build();
         AppAccount thirdAccount = AppAccount.builder()
                 .balance(100.0)
-                .appOwner(mockUser)
+                //.appOwner(mockUser) A REMPLACER PAR IBAN
                 .build();
 
         // When Then
@@ -241,7 +241,7 @@ public class AppAccountTest {
         // Given
         AppAccount anotherAppAccount = AppAccount.builder()
                 .balance(100.0)
-                .appOwner(mockUser)
+                //.appOwner(mockUser) A REMPLACER PAR IBAN
                 .build();
 
         // When Then
@@ -253,7 +253,7 @@ public class AppAccountTest {
         // Given
         AppAccount identicalAccount = AppAccount.builder()
                 .balance(100.0)
-                .appOwner(mockUser)
+                //.appOwner(mockUser) A REMPLACER PAR IBAN
                 .build();
 
         // When Then
@@ -274,7 +274,7 @@ public class AppAccountTest {
         // Given
         AppAccount anotherAppAccount = AppAccount.builder()
                 .balance(100.0)
-                .appOwner(mockUser)
+                //.appOwner(mockUser) A REMPLACER PAR IBAN
                 .build();
 
         // When Then
@@ -287,7 +287,7 @@ public class AppAccountTest {
         // Given
         AppAccount differentAppAccount = AppAccount.builder()
                 .balance(200.0)
-                .appOwner(new User())
+                //.appOwner(User.builder().build()) A REMPLACER PAR IBAN
                 .build();
 
         // When Then
@@ -299,7 +299,7 @@ public class AppAccountTest {
         // Given
         AppAccount accountWithNullOwner = AppAccount.builder()
                 .balance(100.0)
-                .appOwner(null)
+                //.appOwner(null) A REMPLACER PAR IBAN
                 .build();
 
         // When Then
@@ -311,11 +311,11 @@ public class AppAccountTest {
         // Given
         AppAccount account1 = AppAccount.builder()
                 .balance(100.0)
-                .appOwner(mockUser)
+                //.appOwner(mockUser) A REMPLACER PAR IBAN
                 .build();
         AppAccount account2 = AppAccount.builder()
                 .balance(200.0)
-                .appOwner(mockUser)
+                //.appOwner(mockUser) A REMPLACER PAR IBAN
                 .build();
 
         // When Then
@@ -347,7 +347,7 @@ public class AppAccountTest {
         // Given
         AppAccount newAccount = AppAccount.builder()
                 .balance(0.0)
-                .appOwner(mockUser)
+                //.appOwner(mockUser) A REMPLACER PAR IBAN
                 .build();
 
         // When Then

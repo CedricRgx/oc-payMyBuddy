@@ -1,7 +1,6 @@
 package com.openclassrooms.paymybuddy.service.ti;
 
 import com.openclassrooms.paymybuddy.model.User;
-import com.openclassrooms.paymybuddy.repository.UserRepository;
 import com.openclassrooms.paymybuddy.service.impl.UserService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
