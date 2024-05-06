@@ -3,6 +3,7 @@ package com.openclassrooms.paymybuddy.service.impl;
 import com.openclassrooms.paymybuddy.model.Deposit;
 import com.openclassrooms.paymybuddy.repository.DepositRepository;
 import com.openclassrooms.paymybuddy.service.IDepositService;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,7 @@ public class DepositService implements IDepositService {
      * @param deposit The Deposit object to be added.
      * @return The added Deposit object.
      */
+    @Transactional
     public Deposit addDeposit(Deposit deposit){
         log.info("Adding an deposit");
         return depositRepository.save(deposit);
@@ -51,6 +53,7 @@ public class DepositService implements IDepositService {
      * Deletes a deposit by its ID.
      * @param id The ID of the deposit to be deleted.
      */
+    @Transactional
     public void deleteDepositById(Long id){
         log.info("Deleting an deposit");
         depositRepository.deleteById(id);

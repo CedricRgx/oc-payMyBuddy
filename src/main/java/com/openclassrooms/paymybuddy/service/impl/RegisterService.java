@@ -5,6 +5,7 @@ import com.openclassrooms.paymybuddy.model.AppAccount;
 import com.openclassrooms.paymybuddy.model.DTO.RegisterDTO;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.service.IRegisterService;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,7 +37,7 @@ public class RegisterService implements IRegisterService {
      * @return The newly created User entity.
      * @throws EmailAlreadyUsedException if the provided email address is already in use.
      */
-    @Override
+    @Transactional
     public User addUser(RegisterDTO registerDTO) {
         log.info("Register of an user");
 

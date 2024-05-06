@@ -3,6 +3,7 @@ package com.openclassrooms.paymybuddy.service.impl;
 import com.openclassrooms.paymybuddy.model.AppAccount;
 import com.openclassrooms.paymybuddy.repository.AppAccountRepository;
 import com.openclassrooms.paymybuddy.service.IAppAccountService;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,7 @@ public class AppAccountService implements IAppAccountService {
      * @param appAccount The AppAccount object to be added.
      * @return The added AppAccount object.
      */
+    @Transactional
     public AppAccount addAppAccount(AppAccount appAccount){
         log.info("Adding an app account");
         return appAccountRepository.save(appAccount);
@@ -51,6 +53,7 @@ public class AppAccountService implements IAppAccountService {
      * Deletes an app account by their ID.
      * @param id The ID of the app account to be deleted.
      */
+    @Transactional
     public void deleteAppAccountById(Long id){
         log.info("Deleting an app account");
         appAccountRepository.deleteById(id);

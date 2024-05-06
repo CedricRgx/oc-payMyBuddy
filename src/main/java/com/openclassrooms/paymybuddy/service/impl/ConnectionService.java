@@ -54,6 +54,7 @@ public class ConnectionService implements IConnectionService{
      * @param friendId The user ID of the friend to connect with.
      * @return True if the connection was successfully added, False otherwise.
      */
+    @Transactional
     public boolean addConnection(Long userId, Long friendId){
         log.info("addConnection in ConnectionService");
         try {

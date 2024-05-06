@@ -102,7 +102,7 @@ public class TransfertController {
     public String addTransfertPage(@Valid @ModelAttribute("newTransfertDTO") NewTransfertDTO newTransfertDTO, BindingResult result, Model model, HttpSession session) throws Exception {
         log.info("Attempting to add transfert on transfert template");
         if(result.hasErrors()){
-            model.addAttribute("errorMessage", "Please correct any errors in the form.");
+            model.addAttribute("errorMessage", "Please enter a valid amount in the form.");
             return "transfert";
         }
         boolean transferSuccess = false;

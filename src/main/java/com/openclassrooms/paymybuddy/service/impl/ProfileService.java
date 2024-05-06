@@ -4,6 +4,7 @@ import com.openclassrooms.paymybuddy.model.AppAccount;
 import com.openclassrooms.paymybuddy.model.DTO.ProfileDTO;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.service.IProfileService;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -49,6 +50,7 @@ public class ProfileService implements IProfileService {
      * @param profileDTO A ProfileDTO containing the new profile information to be updated.
      * @return The updated User entity.
      */
+    @Transactional
     public User saveProfile(ProfileDTO profileDTO){
         log.info("updating an user profile");
 

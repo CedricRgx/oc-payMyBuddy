@@ -8,6 +8,7 @@ import com.openclassrooms.paymybuddy.repository.TransfertRepository;
 import com.openclassrooms.paymybuddy.service.ITransfertService;
 import com.openclassrooms.paymybuddy.util.Formatter;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -54,6 +55,7 @@ public class TransfertService implements ITransfertService {
      * @param transfert The Transfert object to be added.
      * @return The added Transfert object.
      */
+    @Transactional
     public Transfert addTransfert(Transfert transfert){
         log.info("Adding an transfert");
         return transfertRepository.save(transfert);
@@ -63,6 +65,7 @@ public class TransfertService implements ITransfertService {
      * Deletes a transfert by its ID.
      * @param id The ID of the transfert to be deleted.
      */
+    @Transactional
     public void deleteTransfertById(Long id){
         log.info("Deleting an transfert");
         transfertRepository.deleteById(id);
@@ -108,6 +111,7 @@ public class TransfertService implements ITransfertService {
      * @param newTransfertDTO The DTO containing the details of the new transfer.
      * @return true if the transfer is successfully added, false otherwise.
      */
+    @Transactional
     public boolean addNewTransfert(NewTransfertDTO newTransfertDTO){
         log.info("addNewTransfert service");
         double fee = 0.05;

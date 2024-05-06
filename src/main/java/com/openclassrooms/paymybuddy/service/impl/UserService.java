@@ -9,6 +9,7 @@ import com.openclassrooms.paymybuddy.repository.AppAccountRepository;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
 import com.openclassrooms.paymybuddy.service.IUserService;
 import com.openclassrooms.paymybuddy.util.Formatter;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,6 +56,7 @@ public class UserService implements IUserService {
      * @param user The User object to be added.
      * @return The added User object.
      */
+    @Transactional
     public User addUser(User user){
         log.info("Adding an user");
         return userRepository.save(user);
@@ -64,6 +66,7 @@ public class UserService implements IUserService {
      * Deletes a user by their ID.
      * @param id The ID of the user to be deleted.
      */
+    @Transactional
     public void deleteUserById(Long id){
         log.info("Deleting an user");
         userRepository.deleteById(id);
@@ -139,6 +142,7 @@ public class UserService implements IUserService {
      * @param newBalance the new balance to be assigned to the user
      * @return true if the balance update was successful, false otherwise
      */
+    @Transactional
     public boolean updateUserBalance(Long userId, Double newBalance) {
         User user = userRepository.findById(userId).get();
         AppAccount appAccount = user.getAppAccount();
@@ -159,6 +163,7 @@ public class UserService implements IUserService {
      * @throws IllegalArgumentException If the user with the specified ID is not found.
      * @throws IllegalStateException    If the app account associated with the user is not found.
      */
+    @Transactional
     public void creditUserBalance(Long userId, double amount) {
         User user = userRepository.findById(userId).orElse(null);
         if (user != null) {
@@ -183,6 +188,7 @@ public class UserService implements IUserService {
      * @throws IllegalArgumentException If the user with the specified ID is not found.
      * @throws IllegalStateException    If the app account associated with the user is not found.
      */
+    @Transactional
     public void debitUserBalance(Long userId, double amount) {
         User user = userRepository.findById(userId).orElse(null);
         if (user != null) {
@@ -227,6 +233,7 @@ public class UserService implements IUserService {
      * @param userId The ID of the user account to update.
      * @throws UpdateLastConnectionDateFailedException if the update operation fails.
      */
+    @Transactional
     public void updateLastConnectionDate(Long userId) {
         log.info("updateLastConnectionDate in UserAccountService");
         User user = userRepository.findById(userId).get();
@@ -241,6 +248,7 @@ public class UserService implements IUserService {
      * @param email The email address of the user account to update.
      * @return True if the password was successfully updated, False otherwise.
      */
+    @Transactional
     public boolean savePassword(String password, String email) {
         log.info("savePassword in UserAccountService");
         User user = userRepository.findByEmail(email);
