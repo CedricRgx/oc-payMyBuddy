@@ -34,7 +34,7 @@ public class AppAccount implements Serializable {
     /**
      * The iban of the transfert.
      */
-    @Column(name= "iban1")
+    @Column(name= "iban")
     private String iban;
 
     /**
