@@ -1,12 +1,8 @@
 package com.openclassrooms.paymybuddy.service.impl;
 
-import com.openclassrooms.paymybuddy.model.DTO.ConnectionDTO;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
 import com.openclassrooms.paymybuddy.service.IConnectionService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +21,6 @@ public class ConnectionService implements IConnectionService{
     @Autowired
     private UserService userService;
 
-    @PersistenceContext
-    private EntityManager entityManager;
     @Autowired
     private UserRepository userRepository;
 
@@ -88,8 +82,8 @@ public class ConnectionService implements IConnectionService{
     @Transactional
     public boolean removeConnection(Long userId, Long friendId){
         log.info("removeConnection in ConnectionService");
-        User user = entityManager.find(User.class, userId);
-        if (user == null) {
+        User user = userService.getUserById(userId).get();
+        if (user == null){
             log.error("User not found with ID: {}", userId);
             return false;
         }
@@ -104,7 +98,9 @@ public class ConnectionService implements IConnectionService{
                 break;
             }
         }
-        if(result){entityManager.merge(user);}
+        if(result){
+            user.setFriends(listFriends);
+        }
         return result;
     }
 
