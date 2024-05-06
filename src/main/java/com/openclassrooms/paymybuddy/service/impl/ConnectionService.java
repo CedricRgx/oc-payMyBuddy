@@ -2,6 +2,7 @@ package com.openclassrooms.paymybuddy.service.impl;
 
 import com.openclassrooms.paymybuddy.model.DTO.ConnectionDTO;
 import com.openclassrooms.paymybuddy.model.User;
+import com.openclassrooms.paymybuddy.repository.UserRepository;
 import com.openclassrooms.paymybuddy.service.IConnectionService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -26,6 +27,8 @@ public class ConnectionService implements IConnectionService{
 
     @PersistenceContext
     private EntityManager entityManager;
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * Finds and returns all connections for a given user that are not already friends.
@@ -47,16 +50,7 @@ public class ConnectionService implements IConnectionService{
      */
     public List<User> searchConnections(String email, Long userId){
         log.info("searchConnections in ConnectionService");
-        String jpql = "SELECT u FROM User u " +
-                "WHERE LOWER(u.email) LIKE LOWER(:email) " +
-                "AND u.id <> :userId AND isActive = true " +
-                "AND NOT EXISTS (" +
-                "SELECT 1 FROM User f JOIN f.friends fr WHERE fr.id = u.id AND f.id = :userId)";
-        TypedQuery<User> query = entityManager.createQuery(jpql, User.class);
-        query.setParameter("email", "%" + email + "%");
-        query.setParameter("userId", userId);
-
-        return query.getResultList();
+        return userRepository.searchConnections(email, userId);
     }
 
     /**

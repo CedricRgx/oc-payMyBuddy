@@ -76,22 +76,6 @@ public class UserService implements IUserService {
     }
 
     /**
-     * Retrieve userId of an user from its email address
-     * @param email email of the user
-     * @return userId
-     */
-/*    public Long getUserIdByEmail(String email) {
-        log.info("getUserIdByEmail in UserService");
-        String jpql = "SELECT u.id FROM User u " +
-                "JOIN u.userAccount ua " +
-                "WHERE ua.email = :email";
-        Long userId = entityManager.createQuery(jpql, Long.class)
-                .setParameter("email", email)
-                .getSingleResult();
-        return userId;
-    }*/
-
-    /**
      * Retrieves a list of active friends for a given list of user friends.
      *
      * @param listOfFriends The list of user friends.
@@ -239,10 +223,7 @@ public class UserService implements IUserService {
      */
     public boolean isEmailUnique(String email){
         log.info("isEmailUnique in UserAccountService");
-        String jpql = "SELECT COUNT(ua) FROM UserAccount ua WHERE ua.email = :email";
-        TypedQuery<Long> query = entityManager.createQuery(jpql, Long.class);
-        query.setParameter("email", email);
-        Long count = query.getSingleResult();
+        int count = userRepository.isEmailUnique(email);
         return count==0;
     }
 
