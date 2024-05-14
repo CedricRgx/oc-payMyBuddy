@@ -1,5 +1,6 @@
 package com.openclassrooms.paymybuddy.controller;
 
+import com.openclassrooms.paymybuddy.exceptions.UserNotFoundException;
 import com.openclassrooms.paymybuddy.model.DTO.UserDTO;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.service.impl.AppAccountService;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,6 +34,9 @@ public class HomeControllerTest {
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private RedirectAttributes redirectAttributes;
 
     @BeforeEach
     public void setUp() {
@@ -79,5 +84,52 @@ public class HomeControllerTest {
         verify(redirectAttributes).addFlashAttribute("successCreditMessage", "Balance credited successfully.");
         assertEquals("redirect:home", result);
     }
+
+    @Test
+    public void testCreditBalance_rejectZeroCredit() {
+        // Given
+        User mockUser = User.builder().build();
+        when(userService.findByEmail(anyString())).thenReturn(Optional.of(mockUser));
+        double creditAmount = 0.0;
+
+        // When
+        String redirectPath = homeController.creditBalance(creditAmount, model, redirectAttributes);
+
+        // Then
+        assertEquals("redirect:home", redirectPath);
+        verify(redirectAttributes, times(1)).addFlashAttribute("errorCreditMinusZeroMessage", "Balance credit unsuccessful. The amount must higher than zero.");
+    }
+
+    @Test
+    public void debitBalance_AmountLessThanEqualToZero() {
+        // Given
+        User mockUser = User.builder().build();
+        when(userService.findByEmail(anyString())).thenReturn(Optional.of(mockUser));
+        double amount = 0;
+
+        // When
+        String result = homeController.debitBalance(amount, model, redirectAttributes);
+
+        // Then
+        verify(redirectAttributes).addFlashAttribute("errorDebitMinusZeroMessage", "Balance debit unsuccessful. The amount must be higher than zero.");
+        assertEquals("redirect:home", result);
+    }
+
+    @Test
+    public void debitBalance_AmountGreaterThanBalance() {
+        // Given
+        User mockUser = User.builder().build();
+        when(userService.findByEmail(anyString())).thenReturn(Optional.of(mockUser));
+        double amount = 5000;
+
+        // When
+        String result = homeController.debitBalance(amount, model, redirectAttributes);
+
+        // Then
+        verify(redirectAttributes).addFlashAttribute("errorDebitLowerThanBalanceMessage", "Balance debit unsuccessful. The amount must be lower than your current balance.");
+        assertEquals("redirect:home", result);
+    }
+
+
 
 }

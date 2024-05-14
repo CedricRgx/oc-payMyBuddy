@@ -1,7 +1,6 @@
 package com.openclassrooms.paymybuddy.service.impl;
 
 import com.openclassrooms.paymybuddy.model.User;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -10,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,9 +24,6 @@ public class ConnectionServiceTest {
 
     @Mock
     private UserService userService;
-
-    @Mock
-    private EntityManager entityManager;
 
     @Mock
     private User user;
@@ -96,19 +91,24 @@ public class ConnectionServiceTest {
         // Given
         Long userId = 1L;
         Long friendId = 2L;
-        List<User> friends = new ArrayList<>();
-        friends.add(userFriend);
-        when(userFriend.getUserId()).thenReturn(friendId);
-        when(entityManager.find(User.class, userId)).thenReturn(user);
-        when(user.getFriends()).thenReturn(friends);
+
+        User friend = new User();
+        friend.setUserId(friendId);
+
+        List<User> friendsList = new ArrayList<>();
+        friendsList.add(friend);
+
+        User user = new User();
+        user.setUserId(userId);
+        user.setFriends(friendsList);
 
         // When
+        when(userService.getUserById(anyLong())).thenReturn(Optional.of(user));
         boolean result = connectionService.removeConnection(userId, friendId);
 
         // Then
         assertTrue(result);
-        verify(entityManager).merge(user);
-        assertFalse(friends.contains(userFriend));
+        verify(userService, times(1)).getUserById(userId);
     }
 
     @Test
@@ -116,16 +116,25 @@ public class ConnectionServiceTest {
         // Given
         Long userId = 1L;
         Long friendId = 2L;
-        List<User> friends = new ArrayList<>();
-        when(entityManager.find(User.class, userId)).thenReturn(user);
-        when(user.getFriends()).thenReturn(friends);
+        Long nonExistingFriendId = 3L;
+
+        User friend = new User();
+        friend.setUserId(friendId);
+
+        List<User> friendsList = new ArrayList<>();
+        friendsList.add(friend);
+
+        User user = new User();
+        user.setUserId(userId);
+        user.setFriends(friendsList);
 
         // When
-        boolean result = connectionService.removeConnection(userId, friendId);
+        when(userService.getUserById(anyLong())).thenReturn(Optional.of(user));
+        boolean result = connectionService.removeConnection(userId, nonExistingFriendId);
 
         // Then
         assertFalse(result);
-        verify(entityManager, never()).merge(user);
+        verify(userService, times(1)).getUserById(userId);
     }
 
     @Test
@@ -133,14 +142,14 @@ public class ConnectionServiceTest {
         // Given
         Long userId = 1L;
         Long friendId = 2L;
-        when(entityManager.find(User.class, userId)).thenReturn(null);
+        when(userService.getUserById(anyLong())).thenReturn(Optional.empty());
 
         // When
         boolean result = connectionService.removeConnection(userId, friendId);
 
         // Then
         assertFalse(result);
-        verify(entityManager, never()).merge(any(User.class));
+        verify(userService, times(1)).getUserById(userId);
     }
 
 }

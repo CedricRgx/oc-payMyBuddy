@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Implements the IConnectionService interface to manage user connections in PayMyBuddy application.
@@ -83,11 +84,12 @@ public class ConnectionService implements IConnectionService{
     @Transactional
     public boolean removeConnection(Long userId, Long friendId){
         log.info("removeConnection in ConnectionService");
-        User user = userService.getUserById(userId).get();
-        if (user == null){
+        Optional<User> optionalUser = userService.getUserById(userId);
+        if (!optionalUser.isPresent()){
             log.error("User not found with ID: {}", userId);
             return false;
         }
+        User user = optionalUser.get();
         List<User> listFriends = user.getFriends();
         Iterator<User> iterator = listFriends.iterator();
         boolean result = false;

@@ -5,8 +5,6 @@ import com.openclassrooms.paymybuddy.model.DTO.ConnectionDTO;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.repository.AppAccountRepository;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,9 +32,6 @@ class UserServiceTest {
 
     @Mock
     private AppAccountRepository appAccountRepository;
-
-    @Mock
-    private EntityManager entityManager;
 
     @InjectMocks
     private UserService userService;
@@ -264,14 +259,9 @@ class UserServiceTest {
     public void testIsEmailUnique_True() {
         // Given
         String email = "test@example.com";
-        long count = 0;
-
-        TypedQuery<Long> query = mock(TypedQuery.class);
-        when(entityManager.createQuery(anyString(), eq(Long.class))).thenReturn(query);
-        when(query.setParameter(anyString(), any())).thenReturn(query);
-        when(query.getSingleResult()).thenReturn(count);
 
         // When
+        when(userRepository.isEmailUnique(email)).thenReturn(0);
         boolean isUnique = userService.isEmailUnique(email);
 
         // Then
@@ -282,14 +272,9 @@ class UserServiceTest {
     public void testIsEmailUnique_False() {
         // Given
         String email = "test@example.com";
-        long count = 1;
-
-        TypedQuery<Long> query = mock(TypedQuery.class);
-        when(entityManager.createQuery(anyString(), eq(Long.class))).thenReturn(query);
-        when(query.setParameter(anyString(), any())).thenReturn(query);
-        when(query.getSingleResult()).thenReturn(count);
 
         // When
+        when(userRepository.isEmailUnique(email)).thenReturn(1);
         boolean isUnique = userService.isEmailUnique(email);
 
         // Then

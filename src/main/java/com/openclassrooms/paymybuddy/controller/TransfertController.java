@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.List;
 
 /**
@@ -99,11 +101,11 @@ public class TransfertController {
      * @throws Exception if an unexpected error occurs during the transfer addition process.
      */
     @PostMapping("/actionTransfert")
-    public String addTransfertPage(@Valid @ModelAttribute("newTransfertDTO") NewTransfertDTO newTransfertDTO, BindingResult result, Model model, HttpSession session) throws Exception {
+    public String addTransfertPage(@Valid @ModelAttribute("newTransfertDTO") NewTransfertDTO newTransfertDTO, BindingResult result, Model model, HttpSession session, RedirectAttributes redirectAttributes) throws Exception {
         log.info("Attempting to add transfert on transfert template");
         if(result.hasErrors()){
-            model.addAttribute("errorMessage", "Please enter a valid amount in the form.");
-            return "transfert";
+            redirectAttributes.addFlashAttribute("errorMessage", "Please enter a valid amount in the form.");
+            return "redirect:/transfert";
         }
         boolean transferSuccess = false;
         try {

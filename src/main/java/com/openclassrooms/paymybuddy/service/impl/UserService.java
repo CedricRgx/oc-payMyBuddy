@@ -82,7 +82,7 @@ public class UserService implements IUserService {
         log.info("getActiveFriends in UserService");
         List<ConnectionDTO> listOfActiveFriends = new ArrayList<ConnectionDTO>();
         for(User u : listOfFriends) {
-            if(u.getIsActive() == true) {
+            if(u.getIsActive()) {
                 ConnectionDTO connectionDTO = ConnectionDTO.builder()
                         .userId(u.getUserId())
                         .firstname(u.getFirstname())
