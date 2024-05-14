@@ -24,7 +24,6 @@ public class ConnectionServiceIntegrationTest {
     private UserRepository userRepository;
 
     @Test
-    @Transactional
     public void testFindAllConnections() {
         // Given
         User friend = User.builder()

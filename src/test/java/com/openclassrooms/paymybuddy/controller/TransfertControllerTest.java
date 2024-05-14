@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
 
@@ -35,6 +36,9 @@ public class TransfertControllerTest {
 
     @Mock
     private HttpSession session;
+
+    @Mock
+    private RedirectAttributes redirectAttributes;
 
     @Mock
     private BindingResult bindingResult;
@@ -180,7 +184,7 @@ public class TransfertControllerTest {
         when(transfertService.addNewTransfert(dto)).thenReturn(true);
 
         // When
-        String viewName = transfertController.addTransfertPage(dto, bindingResult, model, session);
+        String viewName = transfertController.addTransfertPage(dto, bindingResult, model, session, redirectAttributes);
 
         // Then
         verify(session).setAttribute("successMessage", "Transfer completed successfully!");
@@ -193,11 +197,11 @@ public class TransfertControllerTest {
         when(bindingResult.hasErrors()).thenReturn(true);
 
         // When
-        String viewName = transfertController.addTransfertPage(NewTransfertDTO.builder().build(), bindingResult, model, session);
+        String viewName = transfertController.addTransfertPage(NewTransfertDTO.builder().build(), bindingResult, model, session, redirectAttributes);
 
         // Then
-        verify(model).addAttribute(eq("errorMessage"), anyString());
-        assertEquals("transfert", viewName);
+        verify(redirectAttributes).addFlashAttribute(eq("errorMessage"), anyString());
+        assertEquals("redirect:/transfert", viewName);
     }
 
     @Test
@@ -207,7 +211,7 @@ public class TransfertControllerTest {
         doThrow(new RuntimeException("Service failure")).when(transfertService).addNewTransfert(any(NewTransfertDTO.class));
 
         // When
-        String viewName = transfertController.addTransfertPage(NewTransfertDTO.builder().build(), bindingResult, model, session);
+        String viewName = transfertController.addTransfertPage(NewTransfertDTO.builder().build(), bindingResult, model, session, redirectAttributes);
 
         // Then
         verify(model).addAttribute("errorMessage", "An unexpected error occurred.");
@@ -222,7 +226,7 @@ public class TransfertControllerTest {
         when(transfertService.addNewTransfert(dto)).thenReturn(false);
 
         // When
-        String viewName = transfertController.addTransfertPage(dto, bindingResult, model, session);
+        String viewName = transfertController.addTransfertPage(dto, bindingResult, model, session, redirectAttributes);
 
         // Then
         verify(session).setAttribute("errorMessage", "Insufficient balance to make the transfer");
