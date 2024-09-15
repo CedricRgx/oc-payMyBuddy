@@ -258,7 +258,7 @@ public class UserService implements IUserService {
     }
 
     private void getCommit(){
-        log.info("getCommit in UserAccountService");
+        log.info("getCommit in UserAccountService2");
     }
 
 }
