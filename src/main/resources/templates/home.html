@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{menu}">
+<head>
+  <meta charset="UTF-8">
+  <title>User home</title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+<div layout:fragment="content">
+  <div class="container col-6 d-flex flex-column align-items-center justify-content-center">
+    <div class="mb-5 text-center">
+      <h3>Welcome <span th:text="${#strings.concat(userDTO.firstname, ' ', userDTO.lastname)}"></span>, there are <span th:text="${userDTO.balance}"></span> on your account.</h3>
+      <h6>This bank account <span th:text="${userDTO.iban}"></span> is linked to your PayMyBuddy account. You can modify it on your profile settings (Profile page).</h6>
+    </div>
+
+    <form th:action="@{/creditBalance}" method="post" class="mb-3">
+      <div class="row g-3 align-items-center bg-light">
+        <div class="col">
+          <label for="creditAmount">Enter amount to credit:</label>
+        </div>
+        <div class="col">
+          <input type="number" id="creditAmount" name="creditAmount" class="form-control" placeholder="0€" required>
+        </div>
+        <div class="col">
+          <button type="submit" class="btn btn-primary">Credit</button>
+        </div>
+      </div>
+    </form>
+
+    <form th:action="@{/debitBalance}" method="post" class="mb-3">
+      <div class="row g-3 align-items-center bg-light">
+        <div class="col">
+          <label for="debitAmount">Enter amount to debit:</label>
+        </div>
+        <div class="col">
+          <input type="number" id="debitAmount" name="debitAmount" class="form-control" placeholder="0€" required>
+        </div>
+        <div class="col">
+          <button type="submit" class="btn btn-primary">Debit</button>
+        </div>
+      </div>
+    </form>
+
+    <div th:if="${successCreditMessage}" class="alert alert-success" role="alert">
+      <p th:text="${successCreditMessage}"></p>
+    </div>
+
+    <div th:if="${errorCreditMinusZeroMessage}" class="alert alert-danger" role="alert">
+      <p th:text="${errorCreditMinusZeroMessage}"></p>
+    </div>
+
+    <div th:if="${successDebitMessage}" class="alert alert-success" role="alert">
+      <p th:text="${successDebitMessage}"></p>
+    </div>
+
+    <div th:if="${errorDebitMinusZeroMessage}" class="alert alert-danger" role="alert">
+      <p th:text="${errorDebitMinusZeroMessage}"></p>
+    </div>
+
+    <div th:if="${errorDebitLowerThanBalanceMessage}" class="alert alert-danger" role="alert">
+      <p th:text="${errorDebitLowerThanBalanceMessage}"></p>
+    </div>
+
+    <img th:src="@{/images/payMyBuddy.jpeg}" class="rounded" alt="Image of PayMyBuddy">
+  </div>
+</div>
+</body>
+</html>

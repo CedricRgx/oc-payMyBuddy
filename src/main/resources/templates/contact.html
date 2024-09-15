@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{menu}">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact</title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+<div layout:fragment="content">
+  <div class="text-center">
+    <div>You are <b th:text="${#strings.concat(userDTO.firstname, ' ', userDTO.lastname)}"/>, your phone is <b th:text="${userDTO.phone}"/> and your address is <b th:text="${userDTO.address}"/>.</div>
+    <div>In the event of a technical problem, you can contact contact@paymybuddy.com.</div>
+  </div>
+</div>
+</body>
+</html>
