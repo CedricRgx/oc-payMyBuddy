@@ -257,4 +257,8 @@ public class UserService implements IUserService {
         return true;
     }
 
+    private void getCommit(){
+        log.info("getCommit in UserAccountService");
+    }
+
 }
